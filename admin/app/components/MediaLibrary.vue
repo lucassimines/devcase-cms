@@ -110,7 +110,7 @@ const { width } = useElementSize(() => scrollArea.value?.$el)
 
 const lanes = computed(() => Math.max(1, Math.min(5, Math.floor(width.value / 80))))
 
-const insertImage = (file: File, close: () => void) => {
+const insertImage = (file: FileEntity, close: () => void) => {
   model.value = file.filename
   close()
 }
@@ -124,12 +124,12 @@ const {
   data: files,
   status,
   execute: fetchFiles
-} = await useAdminApi<PaginatedTableList<File>>('/file', {
+} = await useAdminApi<PaginatedTableList<FileEntity>>('/file', {
   immediate: false,
   query: paginationQuery
 })
 
-const mediaFiles = ref<File[]>([])
+const mediaFiles = ref<FileEntity[]>([])
 
 watch(files, (newFiles) => {
   mediaFiles.value = newFiles?.data ?? []
@@ -149,7 +149,7 @@ async function uploadFiles(event: Event) {
   isUploading.value = true
 
   try {
-    const res = await $adminApi<File[]>('/file/create', {
+    const res = await $adminApi<FileEntity[]>('/file/create', {
       method: 'POST',
       body: formData
     })

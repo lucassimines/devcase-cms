@@ -5,8 +5,8 @@
         v-model="searchTerm"
         class="w-full max-w-72"
         :loading="status === 'pending'"
-        icon="i-lucide-search"
-        placeholder="Search..."
+        icon="lucide:search"
+        :placeholder="t('placeholder.search')"
         :ui="{ trailing: 'pe-1' }"
       >
         <template v-if="searchTerm?.length" #trailing>
@@ -14,7 +14,7 @@
             color="neutral"
             variant="link"
             size="sm"
-            icon="i-lucide-circle-x"
+            icon="lucide:circle-x"
             aria-label="Clear input"
             @click="clearSearchTerm()"
           />
@@ -26,7 +26,7 @@
         :label="t('delete')"
         color="error"
         variant="subtle"
-        icon="i-lucide-trash"
+        icon="lucide:trash"
         @click="deleteSelectedRows()"
       >
         <template #trailing>

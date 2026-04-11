@@ -10,6 +10,9 @@
   "dark": "Dark",
   "appearance": "Appearance",
   "logout": "Logout",
+  "placeholder": {
+    "search": "Search..."
+  },
   "select": {
     "all": "Select all",
     "image": "Select an image",
