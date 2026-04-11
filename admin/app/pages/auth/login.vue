@@ -5,7 +5,7 @@
         :schema="schema"
         :title="t('login')"
         :description="t('auth.login.description')"
-        icon="i-lucide-user"
+        icon="lucide:user"
         :fields="fields"
         :submit="{
           label: t('login.submit'),

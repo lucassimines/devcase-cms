@@ -5,7 +5,7 @@
         :schema="schema"
         :title="t('signup')"
         :description="t('auth.signup.description')"
-        icon="i-lucide-user-plus"
+        icon="lucide:user-plus"
         :fields="fields"
         :submit="{
           label: t('signup.submit'),

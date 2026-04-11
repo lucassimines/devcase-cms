@@ -12,21 +12,21 @@ const dropdownItems = [
   [
     {
       label: 'Mark as unread',
-      icon: 'i-lucide-check-circle'
+      icon: 'lucide:check-circle'
     },
     {
       label: 'Mark as important',
-      icon: 'i-lucide-triangle-alert'
+      icon: 'lucide:triangle-alert'
     }
   ],
   [
     {
       label: 'Star thread',
-      icon: 'i-lucide-star'
+      icon: 'lucide:star'
     },
     {
       label: 'Mute thread',
-      icon: 'i-lucide-circle-pause'
+      icon: 'lucide:circle-pause'
     }
   ]
 ]
@@ -45,7 +45,7 @@ function onSubmit() {
     toast.add({
       title: 'Email sent',
       description: 'Your email has been sent successfully',
-      icon: 'i-lucide-check-circle',
+      icon: 'lucide:check-circle',
       color: 'success'
     })
 
@@ -59,7 +59,7 @@ function onSubmit() {
     <UDashboardNavbar :title="mail.subject" :toggle="false">
       <template #leading>
         <UButton
-          icon="i-lucide-x"
+          icon="lucide:x"
           color="neutral"
           variant="ghost"
           class="-ms-1.5"
@@ -69,15 +69,15 @@ function onSubmit() {
 
       <template #right>
         <UTooltip text="Archive">
-          <UButton icon="i-lucide-inbox" color="neutral" variant="ghost" />
+          <UButton icon="lucide:inbox" color="neutral" variant="ghost" />
         </UTooltip>
 
         <UTooltip text="Reply">
-          <UButton icon="i-lucide-reply" color="neutral" variant="ghost" />
+          <UButton icon="lucide:reply" color="neutral" variant="ghost" />
         </UTooltip>
 
         <UDropdownMenu :items="dropdownItems">
-          <UButton icon="i-lucide-ellipsis-vertical" color="neutral" variant="ghost" />
+          <UButton icon="lucide:ellipsis-vertical" color="neutral" variant="ghost" />
         </UDropdownMenu>
       </template>
     </UDashboardNavbar>
@@ -116,7 +116,7 @@ function onSubmit() {
         :ui="{ header: 'flex items-center gap-1.5 text-dimmed' }"
       >
         <template #header>
-          <UIcon name="i-lucide-reply" class="size-5" />
+          <UIcon name="lucide:reply" class="size-5" />
 
           <span class="text-sm truncate">
             Reply to {{ mail.from.name }} ({{ mail.from.email }})
@@ -139,7 +139,7 @@ function onSubmit() {
 
           <div class="flex items-center justify-between">
             <UTooltip text="Attach file">
-              <UButton color="neutral" variant="ghost" icon="i-lucide-paperclip" />
+              <UButton color="neutral" variant="ghost" icon="lucide:paperclip" />
             </UTooltip>
 
             <div class="flex items-center justify-end gap-2">
@@ -149,7 +149,7 @@ function onSubmit() {
                 color="neutral"
                 :loading="loading"
                 label="Send"
-                icon="i-lucide-send"
+                icon="lucide:send"
               />
             </div>
           </div>

@@ -56,7 +56,7 @@
               variant="subtle"
               color="neutral"
               :label="t('upload')"
-              icon="i-lucide-upload"
+              icon="lucide:upload"
               :loading="isUploading"
               @click="triggerFileInput"
             />

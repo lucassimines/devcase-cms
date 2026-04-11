@@ -31,7 +31,7 @@
                 color="neutral"
                 variant="link"
                 size="sm"
-                :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                :icon="showPassword ? 'lucide:eye-off' : 'lucide:eye'"
                 :aria-label="showPassword ? t('hide.password') : t('show.password')"
                 :aria-pressed="showPassword"
                 aria-controls="password"

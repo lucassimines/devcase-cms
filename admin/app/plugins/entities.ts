@@ -1,4 +1,5 @@
 import type { Composer } from 'vue-i18n'
+import type { Entities } from '~/types/entity'
 
 export default defineNuxtPlugin({
   name: 'resources',
@@ -9,7 +10,7 @@ export default defineNuxtPlugin({
       project: {
         model: 'project',
         path: '/project',
-        icon: 'i-lucide-terminal',
+        icon: 'lucide:terminal',
         label: i18n.t('entity.project.name', 2)
       }
     } satisfies Entities

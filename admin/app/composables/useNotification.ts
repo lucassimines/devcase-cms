@@ -11,7 +11,7 @@ export function useNotification() {
     toast.add({
       description: t('notification.success.default'),
       color: 'success',
-      icon: 'i-lucide-check-circle',
+      icon: 'lucide:check-circle',
       ...props
     })
   }
@@ -20,7 +20,7 @@ export function useNotification() {
     toast.add({
       description: t('notification.error.default'),
       color: 'error',
-      icon: 'i-lucide-alert-circle',
+      icon: 'lucide:alert-circle',
       ...props
     })
   }
@@ -30,7 +30,7 @@ export function useNotification() {
       description:
         `${t(`server.error.${getApiErrorMessage(err)}`)}` || t('notification.error.default'),
       color: 'error',
-      icon: 'i-lucide-alert-circle'
+      icon: 'lucide:alert-circle'
     })
   }
 

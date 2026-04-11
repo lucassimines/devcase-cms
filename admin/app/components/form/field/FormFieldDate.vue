@@ -5,7 +5,7 @@
         <UButton
           color="neutral"
           variant="link"
-          icon="i-lucide-calendar"
+          icon="lucide:calendar"
           aria-label="Select a date"
           class="px-0"
         />

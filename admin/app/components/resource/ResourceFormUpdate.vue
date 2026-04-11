@@ -39,7 +39,7 @@
       <div class="flex justify-end px-4 sm:px-6 py-3 border-t border-t-default">
         <UButton
           :label="t('save')"
-          icon="i-lucide-circle-check"
+          icon="lucide:circle-check"
           variant="subtle"
           size="lg"
           loading-auto

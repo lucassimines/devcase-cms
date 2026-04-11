@@ -1,6 +1,6 @@
 <template>
   <UModal v-model:open="open" :title="title">
-    <UButton icon="i-lucide-plus" :label="title" variant="soft" />
+    <UButton icon="lucide:plus" :label="title" variant="soft" />
 
     <template #body>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
@@ -22,7 +22,7 @@
           />
           <UButton
             :label="t('create')"
-            icon="i-lucide-plus"
+            icon="lucide:plus"
             color="primary"
             variant="subtle"
             size="lg"

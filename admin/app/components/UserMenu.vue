@@ -8,7 +8,7 @@
       v-bind="{
         ...user,
         label: collapsed ? undefined : user?.name,
-        trailingIcon: collapsed ? undefined : 'i-lucide-chevrons-up-down'
+        trailingIcon: collapsed ? undefined : 'lucide:chevrons-up-down'
       }"
       color="neutral"
       variant="ghost"
@@ -90,14 +90,14 @@ const items = computed<DropdownMenuItem[][]>(() => [
   [
     {
       label: t('profile'),
-      icon: 'i-lucide-user',
+      icon: 'lucide:user',
       to: { name: 'user-profile' }
     }
   ],
   [
     {
       label: t('theme'),
-      icon: 'i-lucide-palette',
+      icon: 'lucide:palette',
       children: [
         {
           label: 'Primary',
@@ -146,11 +146,11 @@ const items = computed<DropdownMenuItem[][]>(() => [
     },
     {
       label: t('appearance'),
-      icon: 'i-lucide-sun-moon',
+      icon: 'lucide:sun-moon',
       children: [
         {
           label: t('light'),
-          icon: 'i-lucide-sun',
+          icon: 'lucide:sun',
           type: 'checkbox',
           checked: colorMode.value === 'light',
           onSelect(e: Event) {
@@ -161,7 +161,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
         },
         {
           label: t('dark'),
-          icon: 'i-lucide-moon',
+          icon: 'lucide:moon',
           type: 'checkbox',
           checked: colorMode.value === 'dark',
           onUpdateChecked(checked: boolean) {
@@ -179,7 +179,7 @@ const items = computed<DropdownMenuItem[][]>(() => [
   [
     {
       label: t('logout'),
-      icon: 'i-lucide-log-out',
+      icon: 'lucide:log-out',
       onSelect: () => {
         authStore.logout()
       }

@@ -1,6 +1,6 @@
 <template>
   <UDropdownMenu :items="actionItems" :content="{ align: 'end' }">
-    <UButton icon="i-lucide-ellipsis-vertical" color="neutral" variant="ghost" class="ml-auto" />
+    <UButton icon="lucide:ellipsis-vertical" color="neutral" variant="ghost" class="ml-auto" />
   </UDropdownMenu>
 </template>
 
@@ -34,7 +34,7 @@ const actionItems = computed<DropdownMenuItem[]>(() => {
     },
     {
       label: t('view.details'),
-      icon: 'i-lucide-list',
+      icon: 'lucide:list',
       to: props.to
     },
     {
@@ -42,7 +42,7 @@ const actionItems = computed<DropdownMenuItem[]>(() => {
     },
     {
       label: t('delete'),
-      icon: 'i-lucide-trash',
+      icon: 'lucide:trash',
       color: 'error',
       onSelect() {
         deleteItem()

@@ -1,7 +1,7 @@
 <template>
   <div class="relative flex flex-col gap-4 size-56">
     <UButton
-      icon="i-lucide-x"
+      icon="lucide:x"
       class="absolute -top-3 -right-3 rounded-full z-2 size-6 flex items-center justify-center"
       color="neutral"
       variant="outline"
@@ -29,7 +29,7 @@
         </div>
 
         <div v-else class="size-full flex flex-col items-center justify-center gap-2">
-          <IconRounded icon="i-lucide-image" size="lg" color="neutral" variant="subtle" square />
+          <IconRounded icon="lucide:image" size="lg" color="neutral" variant="subtle" square />
 
           <p class="text-sm" v-text="t('select.image')" />
         </div>

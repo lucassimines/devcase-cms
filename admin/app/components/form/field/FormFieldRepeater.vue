@@ -13,7 +13,7 @@
         <div class="flex flex-col gap-4 p-4 bg-muted rounded-md" :data-item="`${name}-${index}`">
           <header v-if="max > 1" class="flex items-center justify-between gap-2">
             <UButton
-              icon="i-lucide-grip-vertical"
+              icon="lucide:grip-vertical"
               class="handle cursor-grab active:cursor-grabbing px-0"
               color="neutral"
               variant="link"
@@ -21,7 +21,7 @@
             />
 
             <UButton
-              icon="i-lucide-x"
+              icon="lucide:x"
               class="rounded-full"
               size="xs"
               color="neutral"
