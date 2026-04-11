@@ -1,0 +1,112 @@
+{
+  "light": "Claro",
+  "dark": "Escuro",
+  "appearance": "Aparência",
+  "logout": "Sair",
+  "profile": "Perfil",
+  "theme": "Tema",
+  "name": "Nome",
+  "slug": "Slug",
+  "title": "Título",
+  "description": "Descrição",
+  "email": "Email",
+  "password": "Senha",
+  "hide.password": "Ocultar senha",
+  "show.password": "Mostrar senha",
+  "confirmPassword": "Confirmar senha",
+  "initialDate": "Data inicial",
+  "dueDate": "Data de vencimento",
+  "total": "Total",
+  "remember": "Lembrar-me",
+  "breadcrumbs": "Menu",
+  "login": "Login",
+  "login.submit": "Entrar",
+  "signup": "Cadastre-se",
+  "signup.submit": "Cadastrar",
+  "save.changes": "Salvar alterações",
+  "image": "Imagem",
+  "images": "Imagens",
+  "submit": "Enviar",
+  "save": "Salvar",
+  "delete": "Deletar",
+  "actions": "Ações",
+  "item": "Item | Itens",
+  "upload": "Enviar",
+  "hourlyRate": "Valor hora",
+  "cancel": "Cancelar",
+  "create": "Criar",
+  "status": "Status",
+  "payment": "Pagamento",
+  "type": "Tipo",
+  "totalHours": "Total de horas",
+  "textTotal": "{text} (total)",
+  "general": "Geral",
+  "info": "Informações",
+  "amount": "Valor",
+  "currency": "R$",
+  "goTo": "Ir para",
+  "table": {
+    "noData": "Nenhum item encontrado."
+  },
+  "home": {
+    "payments": {
+      "pending": "Pendentes",
+      "paid": "Recebidos"
+    }
+  },
+  "repeater": {
+    "add": "Adicionar {name}"
+  },
+  "view": {
+    "details": "Ver detalhes"
+  },
+  "select": {
+    "all": "Selecionar todos",
+    "image": "Selecione uma imagem",
+    "label": "Selecione"
+  },
+  "placeholder": {
+    "name": "Digite seu nome",
+    "email": "Digite seu email",
+    "password": "Digite sua senha",
+    "confirmPassword": "Confirme sua senha"
+  },
+  "auth": {
+    "login": {
+      "description": "Acesse sua conta usando suas credenciais."
+    },
+    "signup": {
+      "description": "Crie uma conta usando seu email e senha."
+    }
+  },
+  "model": {},
+  "notification": {
+    "success": {
+      "title": "Sucesso",
+      "default": "A solicitação foi processada com sucesso."
+    },
+    "delete": {
+      "success": "O item foi deletado com sucesso. | { count } itens foram deletados com sucesso."
+    },
+    "error": {
+      "title": "Erro",
+      "default": "Ocorreu um erro ao processar a solicitação.",
+      "401": "Credenciais inválidas"
+    },
+    "file": {
+      "upload": {
+        "success": "Os arquivos foram enviados com sucesso.",
+        "error": "Os arquivos não foram enviados."
+      }
+    }
+  },
+  "server": {
+    "error": {
+      "client": {
+        "name": {
+          "already_exists": "Já existe um cliente com esse nome."
+        }
+      }
+    }
+  }
+}

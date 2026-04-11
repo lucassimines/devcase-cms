@@ -1,0 +1,41 @@
+services:
+  api:
+    environment:
+      FRONT_URL: "http://localhost:8002"
+    expose: [ 80 ]
+    ports:
+      - "${API_PORT:-8000}:80"
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: "trust"
+    ports:
+      - '5432:5432'
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  mailpit:
+    image: axllent/mailpit
+    volumes:
+      - ./mailpit-data:/data
+    ports:
+      - 8025:8025
+      - 1025:1025
+    environment:
+      MP_MAX_MESSAGES: 5000
+      MP_DATABASE: /data/mailpit.db
+      MP_SMTP_AUTH_ACCEPT_ANY: 1
+      MP_SMTP_AUTH_ALLOW_INSECURE: 1
+
+  redis:
+      image: redis:6.2
+      ports:
+        - "6380:6379"
+
+volumes:
+  pgdata:
+    driver: local
