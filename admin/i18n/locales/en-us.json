@@ -27,6 +27,26 @@
     }
   },
   "table": {
-    "noData": "Nenhum item encontrado."
+    "noData": "No items found."
+  },
+  "notification": {
+    "success": {
+      "title": "Success",
+      "default": "The request was processed successfully."
+    },
+    "delete": {
+      "success": "The item was deleted successfully. | { count } items were deleted successfully."
+    },
+    "error": {
+      "title": "Error",
+      "default": "An error occurred while processing the request.",
+      "401": "Invalid credentials"
+    },
+    "file": {
+      "upload": {
+        "success": "The files were sent successfully.",
+        "error": "The files were not sent."
+      }
+    }
   }
 }
