@@ -5,12 +5,20 @@
   },
   "general": "General",
   "name": "Name",
+  "slug": "Slug",
   "profile": "Profile",
   "theme": "Theme",
+  "actions": "Actions",
   "light": "Light",
   "dark": "Dark",
   "appearance": "Appearance",
   "logout": "Logout",
+  "description": "Description",
+  "button": {
+    "save": "Save",
+    "view": "View",
+    "delete": "Delete"
+  },
   "placeholder": {
     "search": "Search..."
   },

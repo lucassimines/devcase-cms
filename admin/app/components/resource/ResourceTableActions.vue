@@ -33,7 +33,7 @@ const actionItems = computed<DropdownMenuItem[]>(() => {
       type: 'separator'
     },
     {
-      label: t('view.details'),
+      label: t('button.view'),
       icon: 'lucide:list',
       to: props.to
     },
@@ -41,7 +41,7 @@ const actionItems = computed<DropdownMenuItem[]>(() => {
       type: 'separator'
     },
     {
-      label: t('delete'),
+      label: t('button.delete'),
       icon: 'lucide:trash',
       color: 'error',
       onSelect() {

@@ -26,12 +26,15 @@ const columns: TableColumn<Project>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    header: t('name'),
-    meta: {
-      class: {
-        th: 'w-0'
-      }
-    }
+    header: t('name')
+  },
+  {
+    id: 'slug',
+    accessorKey: 'slug',
+    header: t('slug')
+  },
+  {
+    id: 'actions'
   }
 ]
 </script>

@@ -65,8 +65,16 @@
         </template>
 
         <template v-for="name in Object.keys($slots)" :key="name" #[name]="slotProps">
-          <slot v-if="name === 'actions-cell'" :name="name" v-bind="slotProps" :refresh="refresh" />
-          <slot v-else :name="name" v-bind="slotProps" />
+          <div class="flex justify-end">
+            <slot
+              v-if="name === 'actions-cell'"
+              :name="name"
+              v-bind="slotProps"
+              :refresh="refresh"
+            />
+
+            <slot v-else :name="name" v-bind="slotProps" />
+          </div>
         </template>
       </UTable>
 

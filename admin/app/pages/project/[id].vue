@@ -15,6 +15,14 @@
         <UFormField :label="t('name')" name="name">
           <UInput v-model="state.name" size="xl" class="w-full" />
         </UFormField>
+
+        <UFormField :label="t('slug')" name="slug">
+          <UInput v-model="state.slug" size="xl" class="w-full" />
+        </UFormField>
+
+        <UFormField :label="t('description')" name="description">
+          <UTextarea v-model="state.description" size="xl" class="w-full" />
+        </UFormField>
       </FormTab>
     </template>
   </ResourceFormUpdate>

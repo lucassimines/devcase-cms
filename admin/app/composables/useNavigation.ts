@@ -3,6 +3,8 @@ import type { NavigationMenuItem } from '@nuxt/ui'
 export function useNavigation() {
   const { t } = useI18n()
 
+  const { $entities } = useNuxtApp()
+
   const navigation: { main: NavigationMenuItem[] } = {
     main: [
       {
@@ -10,11 +12,11 @@ export function useNavigation() {
         icon: 'lucide:home',
         to: '/'
       },
-      {
-        label: t('nav.projects'),
-        icon: 'lucide:terminal',
-        to: { name: 'project' }
-      }
+      ...Object.values($entities).map((entity) => ({
+        label: entity.label,
+        icon: entity.icon,
+        to: entity.path
+      }))
     ]
   }
 
