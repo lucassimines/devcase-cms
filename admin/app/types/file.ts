@@ -1,4 +1,4 @@
-export interface FileEntity {
+export interface File {
   id: string
   extension: string
   filename: string

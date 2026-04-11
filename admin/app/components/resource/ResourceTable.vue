@@ -94,6 +94,8 @@
 
 <script setup lang="ts" generic="T extends { id?: string | number; name?: string; slug?: string }">
 import type { TableColumn, TableRow, TableSlots } from '@nuxt/ui'
+import type { PaginationQuery } from '~/types/pagination'
+import type { PaginatedTableList } from '~/types/table-list'
 
 const props = defineProps<{
   columns: TableColumn<T>[]
