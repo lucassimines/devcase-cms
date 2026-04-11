@@ -1,5 +1,3 @@
-import type { FormTab } from '~/types/form'
-
 export function useFormTabs() {
   const tabs = useState<FormTab[]>('form-tabs', () => [])
 

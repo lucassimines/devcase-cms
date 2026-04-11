@@ -111,12 +111,12 @@ function parseRouteSegments(route: RouteLocationNormalizedLoaded): SegmentMeta[]
 
 export function useBreadcrumbs(options: UseBreadcrumbsOptions = {}) {
   const route = useRoute()
-  const { $resources } = useNuxtApp()
+  const { $entities } = useNuxtApp()
   const { t } = useI18n()
   const internalResource = useEntity<Record<string, unknown>>()
   const entity = options.entity ?? internalResource.entity
 
-  const resources = $resources as Entities
+  const resources = $entities as Entities
   const resourcesByPath: Record<string, Entities[keyof Entities]> = {}
   for (const resource of Object.values(resources)) {
     resourcesByPath[normalizeResourcePath(resource.path)] = resource

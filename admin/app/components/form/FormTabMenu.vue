@@ -13,8 +13,6 @@
 </template>
 
 <script setup lang="ts">
-import type { FormTab } from '~/types/form'
-
 defineProps<{
   tabs: FormTab[]
 }>()

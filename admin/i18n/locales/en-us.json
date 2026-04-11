@@ -21,5 +21,8 @@
       "create": "Create Project",
       "edit": "Edit Project"
     }
+  },
+  "table": {
+    "noData": "Nenhum item encontrado."
   }
 }

@@ -79,9 +79,6 @@
 
 <script setup lang="ts">
 import * as z from 'zod'
-import type { File } from '~/types/file'
-import type { PaginationQuery } from '~/types/pagination'
-import type { PaginatedTableList } from '~/types/table-list'
 
 const model = defineModel<string | null | undefined>({ required: true })
 

@@ -52,8 +52,6 @@
 <script setup lang="ts">
 import type { FormSubmitEvent } from '@nuxt/ui'
 import * as z from 'zod'
-import type { AuthUser } from '~/types/auth'
-import type { ModelInput } from '~/types/utils'
 
 const { t } = useI18n()
 
