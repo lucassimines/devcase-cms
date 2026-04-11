@@ -1,0 +1,23 @@
+import type { Composer } from 'vue-i18n'
+
+export default defineNuxtPlugin({
+  name: 'resources',
+  async setup(nuxtApp) {
+    const i18n = nuxtApp.$i18n as Composer
+
+    const entities = {
+      project: {
+        model: 'project',
+        path: '/project',
+        icon: 'i-lucide-terminal',
+        label: i18n.t('model.project.name', 2)
+      }
+    } satisfies Entities
+
+    return {
+      provide: {
+        entities
+      }
+    }
+  }
+})

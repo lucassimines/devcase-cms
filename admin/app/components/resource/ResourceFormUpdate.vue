@@ -53,7 +53,6 @@
 <script setup lang="ts" generic="T">
 import type { BreadcrumbItem, FormErrorEvent, FormSubmitEvent } from '@nuxt/ui'
 import type * as z from 'zod'
-import type { FormModel, ModelInput } from '~/types/utils'
 
 const props = defineProps<{
   schema: z.ZodSchema<T>
@@ -61,7 +60,7 @@ const props = defineProps<{
   breadcrumbs?: BreadcrumbItem[]
 }>()
 
-const { entity } = useResource<T>()
+const { entity, setEntity } = useEntity<ModelInput<T>>()
 
 defineSlots<{
   left: () => VNode
@@ -91,8 +90,6 @@ const { data: item, status } = await useAdminApi<FormModel<T>>(props.endpoint)
 
 const { mergeState, deepNormalizeArrays } = useSchema<T>()
 
-const resource = useResource<ModelInput<T>>()
-
 function onError(event: FormErrorEvent) {
   console.log('Validation errors:', event.errors)
 }
@@ -108,7 +105,7 @@ watch(item, (newItem) => {
 
   state.value = mergeState(defaultState as T, newItem as T) as ModelInput<Schema>
 
-  resource.setEntity(state.value)
+  setEntity(state.value)
 })
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {

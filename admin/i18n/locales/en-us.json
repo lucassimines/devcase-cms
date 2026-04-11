@@ -1,0 +1,13 @@
+{
+  "nav": {
+    "home": "Home",
+    "projects": "Projects"
+  },
+  "name": "Name",
+  "profile": "Profile",
+  "theme": "Theme",
+  "light": "Light",
+  "dark": "Dark",
+  "appearance": "Appearance",
+  "logout": "Logout"
+}

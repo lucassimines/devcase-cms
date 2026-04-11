@@ -45,14 +45,14 @@ export default defineNuxtConfig({
 
   i18n: {
     strategy: 'no_prefix',
-    defaultLocale: 'pt-BR',
+    defaultLocale: 'en-US',
     experimental: {
       typedOptionsAndMessages: 'all'
     },
     locales: [
       {
-        code: 'pt-BR',
-        file: 'pt-br.json'
+        code: 'en-US',
+        file: 'en-us.json'
       }
     ]
   },

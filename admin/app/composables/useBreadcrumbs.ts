@@ -1,13 +1,12 @@
 import type { BreadcrumbItem } from '@nuxt/ui'
 import type { Ref } from 'vue'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
-import type { Resources } from '~/types/resources'
 
 type BreadcrumbLabelResolver = (context: BreadcrumbResolverContext) => string | undefined
 
 interface BreadcrumbResolverContext {
   route: RouteLocationNormalizedLoaded
-  resources: Resources
+  resources: Entities
   segment: string
   segmentPath: string
   index: number
@@ -114,11 +113,11 @@ export function useBreadcrumbs(options: UseBreadcrumbsOptions = {}) {
   const route = useRoute()
   const { $resources } = useNuxtApp()
   const { t } = useI18n()
-  const internalResource = useResource<Record<string, unknown>>()
+  const internalResource = useEntity<Record<string, unknown>>()
   const entity = options.entity ?? internalResource.entity
 
-  const resources = $resources as Resources
-  const resourcesByPath: Record<string, Resources[keyof Resources]> = {}
+  const resources = $resources as Entities
+  const resourcesByPath: Record<string, Entities[keyof Entities]> = {}
   for (const resource of Object.values(resources)) {
     resourcesByPath[normalizeResourcePath(resource.path)] = resource
   }

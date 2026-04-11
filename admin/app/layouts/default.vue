@@ -13,11 +13,9 @@
       </template>
 
       <template #default="{ collapsed }">
-        <UDashboardSearchButton :collapsed="collapsed" class="bg-transparent ring-default" />
-
         <UNavigationMenu
           :collapsed="collapsed"
-          :items="[$navigation.main]"
+          :items="navigation.main"
           orientation="vertical"
           tooltip
           popover
@@ -36,5 +34,5 @@
 <script setup lang="ts">
 const open = ref(false)
 
-const { $navigation } = useNuxtApp()
+const { navigation } = useNavigation()
 </script>
