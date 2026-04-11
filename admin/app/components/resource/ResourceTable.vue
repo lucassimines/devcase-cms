@@ -2,10 +2,11 @@
   <div class="flex flex-col gap-4 sm:gap-6 flex-1">
     <div class="flex flex-wrap items-center justify-between gap-1.5">
       <UInput
+        :key="status"
         v-model="searchTerm"
         class="w-full max-w-72"
-        :loading="status === 'pending'"
         icon="lucide:search"
+        :loading="status === 'pending'"
         :placeholder="t('placeholder.search')"
         :ui="{ trailing: 'pe-1' }"
       >
@@ -148,6 +149,9 @@ const apiQuery = ref({
 })
 
 watch(searchTermDebounced, (newTerm) => {
+  // Skip to prevent double fetch when clearing search
+  if (!newTerm) return
+
   apiQuery.value = {
     ...apiQuery.value,
     term: newTerm,
