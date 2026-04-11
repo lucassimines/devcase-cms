@@ -1,9 +1,9 @@
-import { UserService } from '@src/admin/repositories/user.service.js'
+import { UserRepository } from '@src/admin/repositories/user.repository.js'
 import { Request, Response } from 'express'
 
 export class UserController {
   static async update(req: Request, res: Response) {
-    await UserService.update(req.body.email, req.body)
+    await UserRepository.update(req.body.email, req.body)
 
     res.json(200)
   }
