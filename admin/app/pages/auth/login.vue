@@ -22,6 +22,7 @@
 <script setup lang="ts">
 import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui'
 import * as z from 'zod'
+import type { AuthUser } from '~/types/auth'
 
 const authStore = useAuthStore()
 

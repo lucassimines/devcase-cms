@@ -22,6 +22,8 @@
 
 <script setup lang="ts">
 import * as z from 'zod'
+import type { Project } from '~/types/project'
+import type { ModelInput } from '~/types/utils'
 
 const { t } = useI18n()
 

@@ -1,3 +1,5 @@
+import type { AuthUser } from '~/types/auth'
+
 export const useAuthStore = defineStore('auth', () => {
   const config = useRuntimeConfig()
 

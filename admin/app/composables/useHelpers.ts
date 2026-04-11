@@ -1,3 +1,5 @@
+import type { TextValue } from '~/types/utils'
+
 export default function useHelpers() {
   // Convert string to slug
   function toSlug(value: string) {

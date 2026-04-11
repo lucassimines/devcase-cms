@@ -53,6 +53,7 @@
 <script setup lang="ts" generic="T">
 import type { BreadcrumbItem, FormErrorEvent, FormSubmitEvent } from '@nuxt/ui'
 import type * as z from 'zod'
+import type { FormModel, ModelInput } from '~/types/utils'
 
 const props = defineProps<{
   schema: z.ZodSchema<T>
