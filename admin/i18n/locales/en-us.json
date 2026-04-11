@@ -9,5 +9,17 @@
   "light": "Light",
   "dark": "Dark",
   "appearance": "Appearance",
-  "logout": "Logout"
+  "logout": "Logout",
+  "select": {
+    "all": "Select all",
+    "image": "Select an image",
+    "label": "Select"
+  },
+  "entity": {
+    "project": {
+      "name": "Project | Projects",
+      "create": "Create Project",
+      "edit": "Edit Project"
+    }
+  }
 }

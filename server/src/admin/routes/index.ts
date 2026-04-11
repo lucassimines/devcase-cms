@@ -4,6 +4,7 @@ import { Router } from 'express'
 
 import dashboardRouter from './dashboard.route.js'
 import fileRouter from './file.route.js'
+import projectRouter from './project.route.js'
 import userRouter from './user.route.js'
 
 const router = Router()
@@ -16,7 +17,8 @@ router.use((req, _res, next) => {
 const routes = [
   ['dashboard', dashboardRouter],
   ['file', fileRouter],
-  ['user', userRouter]
+  ['user', userRouter],
+  ['project', projectRouter]
 ] as const
 
 for (const [path, route] of routes) {

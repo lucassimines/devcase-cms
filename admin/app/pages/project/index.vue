@@ -1,7 +1,7 @@
 <template>
   <ResourceTablePanel>
     <template #header-right>
-      <ResourceFormCreate endpoint="/project" :title="t('model.project.create')" />
+      <ResourceFormCreate endpoint="/project" :title="t('entity.project.create')" />
     </template>
 
     <ResourceTable :columns="columns" endpoint="/project" filter-by="name">

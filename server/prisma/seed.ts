@@ -15,10 +15,25 @@ async function main() {
     ]
   })
 
-  const user = await prisma.user.findFirst({
-    where: {
-      email: 'lucas.simines@gmail.com'
-    }
+  // Seed Project
+  await prisma.project.createMany({
+    data: [
+      {
+        name: 'Project 1',
+        published: true,
+        description: 'Project 1 description',
+        url: 'https://github.com',
+        // unsplash
+        image: 'https://unsplash.com/photos/an-aerial-view-of-the-city-of-london-65kwzlfW6QI',
+        slug: 'project-1',
+        blocks: [
+          {
+            type: 'text',
+            content: 'Project 1 content'
+          }
+        ]
+      }
+    ]
   })
 }
 

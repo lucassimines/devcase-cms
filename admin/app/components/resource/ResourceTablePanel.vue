@@ -22,7 +22,6 @@
 
 <script setup lang="ts" generic="T extends { id?: string | number; name?: string; slug?: string }">
 import type { BreadcrumbItem } from '@nuxt/ui'
-import type { PaginationQuery } from '~/types/pagination'
 
 const props = defineProps<{
   breadcrumbs?: BreadcrumbItem[]

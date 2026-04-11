@@ -38,7 +38,6 @@
 <script setup lang="ts" generic="T">
 import type { FormSubmitEvent } from '@nuxt/ui'
 import * as z from 'zod'
-import type { FormModel } from '~/types/utils'
 
 const props = defineProps<{
   title: string

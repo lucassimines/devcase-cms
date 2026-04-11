@@ -10,7 +10,7 @@ export default defineNuxtPlugin({
         model: 'project',
         path: '/project',
         icon: 'i-lucide-terminal',
-        label: i18n.t('model.project.name', 2)
+        label: i18n.t('entity.project.name', 2)
       }
     } satisfies Entities
 

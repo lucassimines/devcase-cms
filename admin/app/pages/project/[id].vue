@@ -1,15 +1,13 @@
 <template>
-  <ResourceFormUpdate :schema="schema" :endpoint="`/client/${route.params.id}`">
+  <ResourceFormUpdate :schema="schema" :endpoint="`/project/${route.params.id}`">
     <template #right>
       <UButton
         :icon="$entities.project.icon"
-        :label="t('model.task.name', 2)"
+        :label="t('entity.project.name', 2)"
         variant="soft"
         color="neutral"
-        :to="{ name: 'client-id-task', params: { id: route.params.id } }"
+        :to="{ name: 'project-id', params: { id: route.params.id } }"
       />
-
-      <TaskFormCreate />
     </template>
 
     <template #default="{ state }">
@@ -34,7 +32,7 @@ const schema: z.ZodType<ModelInput<Project>> = z.object({
   published: z.boolean().default(false),
   url: z.url().default(''),
   description: z.string().default(''),
-  image: z.string().url().default(''),
+  image: z.url().default(''),
   slug: z.string().default(''),
   blocks: z.array(z.any()).default([])
 })
