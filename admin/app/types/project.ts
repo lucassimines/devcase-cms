@@ -1,4 +1,4 @@
-import type { Block } from '~~/shared/types/block'
+import type { Block } from '~/types/block'
 
 export interface Project {
   id: number

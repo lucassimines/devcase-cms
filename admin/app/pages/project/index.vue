@@ -18,6 +18,7 @@
 
 <script setup lang="ts">
 import type { TableColumn } from '@nuxt/ui'
+import type { Project } from '~/types/project'
 
 const { t } = useI18n()
 

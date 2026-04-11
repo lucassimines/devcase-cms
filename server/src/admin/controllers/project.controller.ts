@@ -5,14 +5,7 @@ import { Request, Response } from 'express'
 
 export class ProjectController {
   static async index(req: Request, res: Response) {
-    const query = {
-      ...req.query,
-      include: {
-        _count: { select: { tasks: true } }
-      }
-    }
-
-    res.json(await paginate(prisma.project, query))
+    res.json(await paginate(prisma.project, req.query))
   }
 
   static async getById(req: Request<{ id: string }>, res: Response) {
