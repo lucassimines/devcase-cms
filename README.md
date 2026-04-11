@@ -1,4 +1,4 @@
-# Hourgrid
+# Devcase
 
 Time-tracking and client management platform for freelancers and agencies.
 
@@ -14,7 +14,7 @@ Time-tracking and client management platform for freelancers and agencies.
 ## Project Structure
 
 ```
-hourgrid/
+devcase-cms/
 ├── admin/             # Nuxt 4 frontend (SPA)
 ├── server/            # Express API
 │   ├── prisma/        # Schema & migrations
@@ -42,7 +42,7 @@ hourgrid/
 
 ```bash
 # Clone the repo
-git clone git@github.com:lucassimines/hourgrid.git
+git clone git@github.com:lucassimines/devcase-cms.git
 
 # Start Postgres, Mailpit, Redis
 make up

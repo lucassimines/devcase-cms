@@ -1,6 +1,6 @@
 .PHONY: help up dev dev-server dev-admin down clean whois db-dump db-dump-prisma db-restore-prisma
 
-PROJECT_NAME := hourgrid
+PROJECT_NAME := devcase
 
 SERVER_DIR := server
 ADMIN_DIR := admin
@@ -89,14 +89,3 @@ db-restore-prisma:
 	CLEAN_URL=$$(echo "$$DATABASE_URL" | sed 's/[&?]pool=[^&]*//g'); \
 	docker run --rm -v "$$(pwd)/db_dump.bak:/db_dump.bak" postgres:17 pg_restore -d "$$CLEAN_URL" -v --no-owner --no-privileges --clean --if-exists /db_dump.bak; \
 	echo "-complete-"
-
-# Whois check — usage: make whois hourgrid
-whois:
-	@domain="$(word 2,$(MAKECMDGOALS))"; \
-	if [ -z "$$domain" ]; then echo "Usage: make whois <domain>"; exit 1; fi; \
-	case "$$domain" in *.com) ;; *) domain="$$domain.com";; esac; \
-	whois "$$domain" 2>/dev/null | grep -E "No match|Domain Name" | tr -d '\r' | awk '{ gsub(/^[ \t]+/, ""); key = tolower($$0); if (!seen[key]++) print }'
-
-# Catch-all so "make whois hourgrid" doesn't try to build target "hourgrid"
-%:
-	@:

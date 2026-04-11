@@ -1,52 +1,25 @@
-import bcrypt from "bcryptjs";
-import { prisma } from "../src/db";
+import bcrypt from 'bcryptjs'
+import { prisma } from '../src/db'
 
-const bcryptSalt = Number(process.env.BCRYPT_SALT) || 10;
+const bcryptSalt = Number(process.env.BCRYPT_SALT) || 10
 
 async function main() {
-    // Seed User
-    await prisma.user.createMany({
-        data: [
-            {
-                email: "lucas.simines@gmail.com",
-                name: "Lucas Simines",
-                password: await bcrypt.hash("000000", bcryptSalt)
-            }
-        ]
-    });
+  // Seed User
+  await prisma.user.createMany({
+    data: [
+      {
+        email: 'lucas.simines@gmail.com',
+        name: 'Lucas Simines',
+        password: await bcrypt.hash('000000', bcryptSalt)
+      }
+    ]
+  })
 
-    const user = await prisma.user.findFirst({
-        where: {
-            email: "lucas.simines@gmail.com"
-        }
-    });
-
-    // Seed Client
-    await prisma.client.createMany({
-        data: [
-            {
-                name: "Client 1",
-                userId: user?.id ?? ""
-            }
-        ]
-    });
-
-    const client = await prisma.client.findFirst({
-        where: {
-            userId: user?.id ?? ""
-        }
-    });
-
-    // Seed Task
-    await prisma.task.createMany({
-        data: [
-            {
-                title: "Task 1",
-                userId: user?.id ?? "",
-                clientId: client?.id ?? ""
-            }
-        ]
-    });
+  const user = await prisma.user.findFirst({
+    where: {
+      email: 'lucas.simines@gmail.com'
+    }
+  })
 }
 
-main();
+main()

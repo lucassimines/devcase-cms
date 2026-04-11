@@ -1,27 +1,26 @@
 {
-    "compilerOptions": {
-        "rootDir": ".",
-        "outDir": "dist",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
 
-        "target": "ES2022",
-        "lib": ["ES2022"],
+    "target": "ES2022",
+    "lib": ["ES2022"],
 
-        "module": "NodeNext",
-        "moduleResolution": "NodeNext",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
 
-        "strict": true,
-        "esModuleInterop": true,
-        "allowSyntheticDefaultImports": true,
-        "skipLibCheck": true,
-        "sourceMap": true,
+    "strict": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
 
-        "emitDecoratorMetadata": true,
-        "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
 
-        "baseUrl": ".",
-        "paths": {
-            "@src/*": ["src/*"]
-        }
-    },
-    "include": ["src/**/*"]
+    "paths": {
+      "@src/*": ["./src/*"]
+    }
+  },
+  "include": ["src/**/*"]
 }
