@@ -1,12 +1,11 @@
 <template>
   <div
     v-show="getActiveTab === slug"
-    class="flex flex-col gap-6"
+    class="flex flex-col gap-5"
     :data-form-section="`form-section-${slug}`"
   >
     <div class="flex flex-col gap-2">
       <h1 class="font-medium text-dimmed" v-text="resolvedTitle" />
-      <USeparator />
     </div>
 
     <UPageCard variant="subtle">
@@ -25,6 +24,10 @@ const { toSlug } = useHelpers()
 
 const { addTab, getActiveTab } = useFormTabs()
 
+const slug = computed(() => {
+  return toSlug(resolvedTitle.value)
+})
+
 const { t } = useI18n()
 
 const defaultTitle = t('general')
@@ -33,17 +36,14 @@ const resolvedTitle = computed(() => {
   return props.title || defaultTitle
 })
 
-const slug = computed(() => {
-  return toSlug(resolvedTitle.value)
-})
-
 onMounted(async () => {
   await nextTick()
 
   addTab({
     label: resolvedTitle.value,
     value: slug.value,
-    icon: props.icon
+    icon: props.icon,
+    to: `?tab=${slug.value}`
   })
 })
 </script>

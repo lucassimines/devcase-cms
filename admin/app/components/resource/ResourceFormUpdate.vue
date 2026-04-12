@@ -11,7 +11,7 @@
     </template>
 
     <template v-if="tabs?.length" #toolbar>
-      <UNavigationMenu :items="tabs" highlight class="-mx-1 flex-1" />
+      <FormTabNav :tabs="tabs" />
     </template>
 
     <UPageCard v-if="status === 'pending'" class="min-h-100 items-start" variant="subtle">

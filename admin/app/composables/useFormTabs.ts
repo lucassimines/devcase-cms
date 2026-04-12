@@ -1,7 +1,7 @@
-import type { NavigationMenuItem } from '@nuxt/ui'
+import type { FormTab } from '~/types/form'
 
 export function useFormTabs() {
-  const tabs = useState<NavigationMenuItem[]>('form-tabs', () => [])
+  const tabs = useState<FormTab[]>('form-tabs', () => [])
 
   const activeTab = useState<string>('form-tab-active', () => '')
 
@@ -14,7 +14,7 @@ export function useFormTabs() {
     }
   })
 
-  function addTab(tab: NavigationMenuItem) {
+  function addTab(tab: FormTab) {
     if (!tabs.value.some((t) => t.value === tab.value)) {
       tabs.value.push(tab)
     }
