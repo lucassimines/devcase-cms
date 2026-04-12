@@ -25,12 +25,12 @@
         </UFormField>
 
         <UFormField :label="t('image')" name="image">
-          <FieldImage v-model="state.image" size="xl" class="w-full" />
+          <FieldImage v-model="state.image" />
         </UFormField>
       </FormTab>
 
-      <FormTab :title="t('block', 2)">
-        <UFormField :label="t('url')" name="url" />
+      <FormTab :title="t('block.label', 2)">
+        <FieldBlock v-model="state.blocks" />
       </FormTab>
     </template>
   </ResourceFormUpdate>

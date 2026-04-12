@@ -16,11 +16,15 @@
   "logout": "Logout",
   "description": "Description",
   "url": "URL",
+  "item": "Item | Items",
+  "desktop": "Desktop",
+  "mobile": "Mobile",
   "button": {
     "save": "Save",
     "view": "View",
     "delete": "Delete",
-    "upload": "Upload"
+    "upload": "Upload",
+    "add": "Add | Add {name}"
   },
   "placeholder": {
     "search": "Search..."
@@ -30,7 +34,12 @@
     "image": "Select an image",
     "label": "Select"
   },
-  "block": "Block | Blocks",
+  "block": {
+    "label": "Block | Blocks",
+    "text": "Text",
+    "image": "Image",
+    "web": "Web"
+  },
   "entity": {
     "project": {
       "name": "Project | Projects",

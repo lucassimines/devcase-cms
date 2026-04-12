@@ -41,7 +41,7 @@
       <USeparator v-if="!draggedItems?.length" :ui="{ border: 'border-accented' }" />
 
       <UButton
-        :label="t('repeater.add', { name: labels.item })"
+        :label="t('button.add', { name: labels.item }, 2)"
         variant="soft"
         @click="addItem()"
       />
