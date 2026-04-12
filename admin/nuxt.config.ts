@@ -6,7 +6,8 @@ export default defineNuxtConfig({
     '@nuxtjs/i18n',
     '@vueuse/nuxt',
     '@pinia/nuxt',
-    '@nuxt/image'
+    '@nuxt/image',
+    '@nuxt/icon'
   ],
   ssr: false,
 
@@ -55,6 +56,12 @@ export default defineNuxtConfig({
         file: 'en-us.json'
       }
     ]
+  },
+
+  icon: {
+    // With `ssr: false`, the default provider is Iconify's API. Use Nitro's
+    // `/api/_nuxt_icon/*` so `@iconify-json/*` collections load locally.
+    provider: 'server'
   },
 
   image: {
