@@ -10,8 +10,8 @@
       <slot name="right" />
     </template>
 
-    <template v-if="tabs?.length" #body-header>
-      <FormTabMenu :tabs="tabs" class="gap-0 z-10" />
+    <template v-if="tabs?.length" #toolbar>
+      <UNavigationMenu :items="tabs" highlight class="-mx-1 flex-1" />
     </template>
 
     <UPageCard v-if="status === 'pending'" class="min-h-100 items-start" variant="subtle">

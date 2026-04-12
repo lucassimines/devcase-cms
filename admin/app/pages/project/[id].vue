@@ -24,6 +24,10 @@
           <UTextarea v-model="state.description" size="xl" class="w-full" />
         </UFormField>
       </FormTab>
+
+      <FormTab :title="t('block', 2)">
+        <UFormField :label="t('url')" name="url" />
+      </FormTab>
     </template>
   </ResourceFormUpdate>
 </template>

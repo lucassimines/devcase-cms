@@ -17,8 +17,6 @@
     </template>
 
     <template #body>
-      <slot name="body-header" />
-
       <div :class="{ 'flex gap-6 flex-col xl:flex-row': slots.sidebar }">
         <Container>
           <slot />
@@ -40,7 +38,7 @@
 const slots = defineSlots<{
   'header-left': () => VNode
   'header-right': () => VNode
-  'body-header': () => VNode
+  'header-sub': () => VNode
   toolbar: () => VNode
   default: () => VNode
   sidebar: () => VNode
