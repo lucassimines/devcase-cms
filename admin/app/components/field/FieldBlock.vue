@@ -7,14 +7,16 @@
       :label="$t('block.label')"
       #="{ accessorKey, model }"
     >
-      <USelect
-        v-model="model.type"
-        value-key="value"
-        :items="blockTypeOptions"
-        size="xl"
-        class="w-full"
-        @change="handleBlockTypeChange(model)"
-      />
+      <div class="relative">
+        <USelect
+          v-model="model.type"
+          value-key="value"
+          :items="blockTypeOptions"
+          size="xl"
+          class="w-full"
+          @change="handleBlockTypeChange(model)"
+        />
+      </div>
 
       <FieldBlockText
         v-if="model.type === blockType.TEXT"
