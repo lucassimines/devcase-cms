@@ -57,11 +57,7 @@
         }"
       >
         <template #empty>
-          <div v-if="status === 'pending'" class="flex flex-col gap-4">
-            <USkeleton v-for="i in 6" :key="i" class="w-full h-8" :ui="{ base: 'bg-elevated' }" />
-          </div>
-
-          <div v-else v-text="t('table.noData')" />
+          <div v-text="t('table.noData')" />
         </template>
 
         <template v-for="name in Object.keys($slots)" :key="name" #[name]="slotProps">
