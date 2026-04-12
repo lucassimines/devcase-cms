@@ -1,6 +1,6 @@
 <template>
   <UModal
-    :title="t('images')"
+    :title="t('image')"
     :ui="{ content: 'sm:max-w-4xl', body: 'py-0 sm:py-0' }"
     @after:enter="fetchFiles"
   >
@@ -55,7 +55,7 @@
             <UButton
               variant="subtle"
               color="neutral"
-              :label="t('upload')"
+              :label="t('button.upload')"
               icon="lucide:upload"
               :loading="isUploading"
               @click="triggerFileInput"

@@ -23,6 +23,10 @@
         <UFormField :label="t('description')" name="description">
           <UTextarea v-model="state.description" size="xl" class="w-full" />
         </UFormField>
+
+        <UFormField :label="t('image')" name="image">
+          <FieldImage v-model="state.image" size="xl" class="w-full" />
+        </UFormField>
       </FormTab>
 
       <FormTab :title="t('block', 2)">
@@ -46,7 +50,7 @@ const schema: z.ZodType<ModelInput<Project>> = z.object({
   published: z.boolean().default(false),
   url: z.url().default(''),
   description: z.string().default(''),
-  image: z.url().default(''),
+  image: z.string().default(''),
   slug: z.string().default(''),
   blocks: z.array(z.any()).default([])
 })

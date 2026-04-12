@@ -11,6 +11,7 @@
   "actions": "Actions",
   "light": "Light",
   "dark": "Dark",
+  "image": "Image | Images",
   "appearance": "Appearance",
   "logout": "Logout",
   "description": "Description",
@@ -18,7 +19,8 @@
   "button": {
     "save": "Save",
     "view": "View",
-    "delete": "Delete"
+    "delete": "Delete",
+    "upload": "Upload"
   },
   "placeholder": {
     "search": "Search..."

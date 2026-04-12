@@ -1,5 +1,5 @@
 <template>
-  <div class="relative flex flex-col gap-4 size-56">
+  <div class="relative flex flex-col gap-4 aspect-video">
     <UButton
       icon="lucide:x"
       class="absolute -top-3 -right-3 rounded-full z-2 size-6 flex items-center justify-center"
@@ -12,7 +12,7 @@
 
     <MediaLibrary v-model="model">
       <UButton
-        class="size-full relative overflow-hidden border border-accented"
+        class="size-full relative overflow-hidden border border-accented p-0"
         color="neutral"
         variant="ghost"
         square
@@ -29,9 +29,11 @@
         </div>
 
         <div v-else class="size-full flex flex-col items-center justify-center gap-2">
-          <IconRounded icon="lucide:image" size="lg" color="neutral" variant="subtle" square />
+          <div class="size-10 bg-white/5 text-muted rounded-full flex items-center justify-center">
+            <Icon name="lucide:image" class="text-xl" />
+          </div>
 
-          <p class="text-sm" v-text="t('select.image')" />
+          <span class="text-sm" v-text="t('select.image')" />
         </div>
       </UButton>
     </MediaLibrary>
