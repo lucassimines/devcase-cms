@@ -61,7 +61,13 @@ export default defineNuxtConfig({
   icon: {
     // With `ssr: false`, the default provider is Iconify's API. Use Nitro's
     // `/api/_nuxt_icon/*` so `@iconify-json/*` collections load locally.
-    provider: 'server'
+    provider: 'server',
+    // Pre-register icons in the client bundle so route changes do not wait on
+    // per-icon HTTP requests. Literal names in Vue/TS are picked up by scan;
+    // dynamic names still use the server endpoint (add them to `icons` if needed).
+    clientBundle: {
+      scan: true
+    }
   },
 
   image: {
