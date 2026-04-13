@@ -104,14 +104,21 @@ const draggedItems = computed({
   }
 })
 
+function cloneDefaultItem(): T {
+  // Important: defaultItem can contain nested objects; shallow spread would share references.
+  // Prefer structuredClone (native deep clone) with a JSON fallback.
+  if (typeof structuredClone === 'function') return structuredClone(props.defaultItem)
+  return JSON.parse(JSON.stringify(props.defaultItem)) as T
+}
+
 function addItem() {
   // If the repeater is empty, initialize "draggedItems" with the first item from the list
   if (!draggedItems.value.length) {
-    draggedItems.value = [{ ...props.defaultItem }]
+    draggedItems.value = [cloneDefaultItem()]
     return
   }
 
-  draggedItems.value?.push({ ...props.defaultItem })
+  draggedItems.value?.push(cloneDefaultItem())
 }
 
 function removeItem(index: number) {
