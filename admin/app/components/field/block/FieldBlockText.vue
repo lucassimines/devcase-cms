@@ -1,5 +1,5 @@
 <template>
-  <UFormField :label="$t('block.text')" :name="`${accessorKey}.text`">
+  <UFormField :label="$t('text')" :name="`${accessorKey}.text`">
     <UTextarea v-model="model.text" size="xl" class="w-full" />
   </UFormField>
 </template>

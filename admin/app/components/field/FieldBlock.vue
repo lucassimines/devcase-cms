@@ -1,67 +1,27 @@
 <template>
-  <div>
-    <FieldRepeater
-      v-model="modelBlocks"
-      name="blocks"
-      :default-item="createBlockInput()"
-      :label="$t('block.label')"
-      #="{ accessorKey, model }"
-    >
-      <div class="relative">
-        <USelect
-          v-model="model.type"
-          value-key="value"
-          :items="blockTypeOptions"
-          size="xl"
-          class="w-full"
-          @change="handleBlockTypeChange(model)"
-        />
-      </div>
-
-      <FieldBlockText
-        v-if="model.type === blockType.TEXT"
-        v-model="model.content"
-        :accessor-key="accessorKey"
-      />
-
-      <FieldBlockWeb
-        v-else-if="model.type === blockType.WEB"
-        v-model="model.content"
-        :accessor-key="accessorKey"
-      />
-    </FieldRepeater>
-  </div>
+  <Component :is="resolvedComponent" v-model="model" :accessor-key="accessorKey" />
 </template>
 
 <script setup lang="ts">
-import { blockType, type Block } from '~/types/block'
+import FieldBlockImage from '~/components/field/block/FieldBlockImage.vue'
+import FieldBlockText from '~/components/field/block/FieldBlockText.vue'
+import FieldBlockWeb from '~/components/field/block/FieldBlockWeb.vue'
+import { blockType, type Block, type BlockType } from '~/types/block'
 
-const { createTextBlockInput, createWebBlockInput } = useFormBlocks()
+const props = defineProps<{
+  accessorKey: string
+  type: BlockType
+}>()
 
-function createBlockInput(): Block {
-  return {
-    type: blockType.TEXT,
-    content: createTextBlockInput()
-  }
+const model = defineModel<Block['content']>({ required: true })
+
+const components = {
+  [blockType.TEXT]: FieldBlockText,
+  [blockType.WEB]: FieldBlockWeb,
+  [blockType.IMAGE]: FieldBlockImage
 }
 
-const modelBlocks = defineModel<Block[]>({ required: true, default: [] })
-
-const blockTypeOptions = computed(() => {
-  return Object.entries(blockType).map(([_key, value]) => ({
-    label: $t(`block.${value}`),
-    value: value
-  }))
+const resolvedComponent = computed(() => {
+  return components[props.type] || FieldBlockText
 })
-
-function handleBlockTypeChange(model: Block) {
-  switch (model.type) {
-    case blockType.WEB:
-      model.content = createWebBlockInput()
-      break
-    default:
-      model.content = createTextBlockInput()
-      break
-  }
-}
 </script>

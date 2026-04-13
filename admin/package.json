@@ -34,6 +34,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@intlify/eslint-plugin-vue-i18n": "^4.3.0",
     "@iconify-json/lucide": "^1.2.102",
     "@nuxt/eslint": "^1.13.0",
     "@types/node": "^25.2.0",

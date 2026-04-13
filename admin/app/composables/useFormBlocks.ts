@@ -1,4 +1,4 @@
-import type { TextBlock, WebBlock } from '~/types/block'
+import type { ImageBlock, TextBlock, WebBlock } from '~/types/block'
 
 export function useFormBlocks() {
   function createTextBlockInput(): TextBlock {
@@ -16,8 +16,15 @@ export function useFormBlocks() {
     }
   }
 
+  function createImageBlockInput(): ImageBlock {
+    return {
+      image: ''
+    }
+  }
+
   return {
     createTextBlockInput,
-    createWebBlockInput
+    createWebBlockInput,
+    createImageBlockInput
   }
 }

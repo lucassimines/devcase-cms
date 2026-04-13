@@ -1,7 +1,7 @@
 <template>
   <NuxtLayout name="panel">
     <UForm :schema="schema" :state="profile" class="space-y-4" @submit="onSubmit">
-      <UPageCard :title="t('profile')" variant="naked" orientation="horizontal" />
+      <UPageCard :title="$t('profile')" variant="naked" orientation="horizontal" />
 
       <UPageCard variant="subtle">
         <UFormField name="name" :label="t('name')" required>
@@ -32,7 +32,7 @@
                 variant="link"
                 size="sm"
                 :icon="showPassword ? 'lucide:eye-off' : 'lucide:eye'"
-                :aria-label="showPassword ? t('hide.password') : t('show.password')"
+                :aria-label="showPassword ? 'Hide password' : 'Show password'"
                 :aria-pressed="showPassword"
                 aria-controls="password"
                 @click="showPassword = !showPassword"
@@ -43,7 +43,7 @@
       </UPageCard>
 
       <div class="flex justify-end">
-        <UButton type="submit" :label="t('save.changes')" variant="soft" class="w-fit lg:ms-auto" />
+        <UButton type="submit" :label="t('button.save')" variant="soft" class="w-fit lg:ms-auto" />
       </div>
     </UForm>
   </NuxtLayout>

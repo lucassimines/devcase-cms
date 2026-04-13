@@ -3,12 +3,12 @@
     <UPageCard class="w-full max-w-md">
       <UAuthForm
         :schema="schema"
-        :title="t('login')"
-        :description="t('auth.login.description')"
+        :title="$t('auth.login.title')"
+        :description="$t('auth.login.description')"
         icon="lucide:user"
         :fields="fields"
         :submit="{
-          label: t('login.submit'),
+          label: $t('button.login'),
           variant: 'subtle',
           size: 'xl'
         }"
@@ -26,22 +26,20 @@ import type { AuthUser } from '~/types/auth'
 
 const authStore = useAuthStore()
 
-const { t } = useI18n()
-
 const fields: AuthFormField[] = [
   {
     name: 'email',
     type: 'email',
-    label: t('email'),
-    placeholder: t('placeholder.email'),
+    label: $t('email'),
+    placeholder: $t('placeholder.email'),
     required: true,
     size: 'xl'
   },
   {
     name: 'password',
-    label: t('password'),
+    label: $t('password'),
     type: 'password',
-    placeholder: t('placeholder.password'),
+    placeholder: $t('placeholder.password'),
     required: true,
     size: 'xl'
   }
@@ -90,7 +88,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     notify.error({
       description:
         statusCode === 401
-          ? t('notification.error.401')
+          ? $t('notification.error.401')
           : (err as { data?: { message?: string } })?.data?.message
     })
   }

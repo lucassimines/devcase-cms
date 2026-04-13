@@ -8,6 +8,9 @@
   "slug": "Slug",
   "profile": "Profile",
   "theme": "Theme",
+  "email": "Email",
+  "password": "Password",
+  "currency": "Currency",
   "actions": "Actions",
   "light": "Light",
   "dark": "Dark",
@@ -19,27 +22,42 @@
   "item": "Item | Items",
   "desktop": "Desktop",
   "mobile": "Mobile",
+  "text": "Text",
+  "web": "Web",
+  "auth": {
+    "login": {
+      "title": "Login",
+      "description": "Enter your email and password to login"
+    },
+    "signup": {
+      "title": "Sign up",
+      "description": "Create a new account"
+    }
+  },
   "button": {
     "save": "Save",
     "view": "View",
     "delete": "Delete",
     "upload": "Upload",
+    "create": "Create",
+    "cancel": "Cancel",
+    "signup": "Sign up",
+    "login": "Login",
     "add": "Add | Add {name}"
   },
   "placeholder": {
-    "search": "Search..."
+    "search": "Search...",
+    "name": "Digite seu nome",
+    "email": "Digite seu email",
+    "password": "Digite sua senha",
+    "confirmPassword": "Confirme sua senha"
   },
   "select": {
     "all": "Select all",
     "image": "Select an image",
     "label": "Select"
   },
-  "block": {
-    "label": "Block | Blocks",
-    "text": "Text",
-    "image": "Image",
-    "web": "Web"
-  },
+  "block": "Block | Blocks",
   "entity": {
     "project": {
       "name": "Project | Projects",

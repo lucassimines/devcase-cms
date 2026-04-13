@@ -7,7 +7,7 @@
         class="w-full max-w-72"
         icon="lucide:search"
         :loading="status === 'pending'"
-        :placeholder="t('placeholder.search')"
+        :placeholder="$t('placeholder.search')"
         :ui="{ trailing: 'pe-1' }"
       >
         <template v-if="searchTerm?.length" #trailing>
@@ -24,7 +24,7 @@
 
       <UButton
         v-if="selectedCount"
-        :label="t('delete')"
+        :label="$t('button.delete')"
         color="error"
         variant="subtle"
         icon="lucide:trash"
@@ -57,7 +57,7 @@
         }"
       >
         <template #empty>
-          <div v-text="t('table.noData')" />
+          <div v-text="$t('table.noData')" />
         </template>
 
         <template v-for="name in Object.keys($slots)" :key="name" #[name]="slotProps">
@@ -114,8 +114,6 @@ defineSlots<
     'actions-cell': (props: { row: TableRow<T>; refresh: () => Promise<void> }) => VNode
   }
 >()
-
-const { t } = useI18n()
 
 const route = useRoute()
 
@@ -212,8 +210,8 @@ async function deleteSelectedRows() {
     notify.success({
       description:
         res.count > 1
-          ? t('notification.delete.success', { count: res.count }, 2)
-          : t('notification.delete.success', 1)
+          ? $t('notification.delete.success', { count: res.count }, 2)
+          : $t('notification.delete.success', 1)
     })
 
     // Reset row selection
@@ -244,7 +242,7 @@ const baseColumns: TableColumn<T>[] = [
           : table.getIsAllPageRowsSelected(),
         'onUpdate:modelValue': (value: boolean | 'indeterminate') =>
           table.toggleAllPageRowsSelected(!!value),
-        ariaLabel: t('select.all')
+        ariaLabel: $t('select.all')
       }),
     cell: ({ row }) => {
       return h(UCheckbox, {

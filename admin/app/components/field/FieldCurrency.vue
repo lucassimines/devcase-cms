@@ -9,13 +9,11 @@
     size="xl"
   >
     <template #leading>
-      <p class="text-sm text-muted" v-text="t('currency')" />
+      <p class="text-sm text-muted" v-text="$t('currency')" />
     </template>
   </UInput>
 </template>
 
 <script setup lang="ts">
 const model = defineModel<number | string>({ required: true })
-
-const { t } = useI18n()
 </script>

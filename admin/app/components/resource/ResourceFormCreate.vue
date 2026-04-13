@@ -14,14 +14,14 @@
 
         <div class="flex justify-end gap-2">
           <UButton
-            :label="t('cancel')"
+            :label="$t('button.cancel')"
             color="neutral"
             variant="subtle"
             size="lg"
             @click="open = false"
           />
           <UButton
-            :label="t('create')"
+            :label="$t('button.create')"
             icon="lucide:plus"
             color="primary"
             variant="subtle"
@@ -47,8 +47,6 @@ const props = defineProps<{
 }>()
 
 const { toSlug } = useHelpers()
-
-const { t } = useI18n()
 
 const schema = z
   .object({

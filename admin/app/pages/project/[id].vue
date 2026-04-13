@@ -29,8 +29,8 @@
         </UFormField>
       </FormTab>
 
-      <FormTab :title="t('block.label', 2)">
-        <FieldBlock v-model="state.blocks" />
+      <FormTab :title="t('block', 2)">
+        <FieldBlockRepeater v-model="state.blocks" />
       </FormTab>
     </template>
   </ResourceFormUpdate>

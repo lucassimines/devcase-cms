@@ -3,12 +3,12 @@
     <UPageCard class="w-full max-w-md">
       <UAuthForm
         :schema="schema"
-        :title="t('signup')"
-        :description="t('auth.signup.description')"
+        :title="$t('auth.signup.title')"
+        :description="$t('auth.signup.description')"
         icon="lucide:user-plus"
         :fields="fields"
         :submit="{
-          label: t('signup.submit'),
+          label: $t('button.signup'),
           variant: 'subtle',
           size: 'xl'
         }"
@@ -24,30 +24,28 @@ import type { AuthFormField, FormSubmitEvent } from '@nuxt/ui'
 import * as z from 'zod'
 import type { AuthUser } from '~/types/auth'
 
-const { t } = useI18n()
-
 const fields: AuthFormField[] = [
   {
     name: 'name',
-    label: t('name'),
+    label: $t('name'),
     type: 'text',
-    placeholder: t('placeholder.name'),
+    placeholder: $t('placeholder.name'),
     required: true,
     size: 'xl'
   },
   {
     name: 'email',
     type: 'email',
-    label: t('email'),
-    placeholder: t('placeholder.email'),
+    label: $t('email'),
+    placeholder: $t('placeholder.email'),
     required: true,
     size: 'xl'
   },
   {
     name: 'password',
-    label: t('password'),
+    label: $t('password'),
     type: 'password',
-    placeholder: t('placeholder.password'),
+    placeholder: $t('placeholder.password'),
     required: true,
     size: 'xl'
   }
@@ -87,7 +85,7 @@ async function onSubmit(payload: FormSubmitEvent<Schema>) {
     notify.error({
       description:
         statusCode === 401
-          ? t('notification.error.401')
+          ? $t('notification.error.401')
           : (err as { data?: { message?: string } })?.data?.message
     })
   }
