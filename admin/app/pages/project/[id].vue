@@ -3,7 +3,7 @@
     <template #right>
       <UButton
         :icon="$entities.project.icon"
-        :label="t('entity.project.name', 2)"
+        :label="$t('entity.project.name', 2)"
         variant="soft"
         color="neutral"
         :to="{ name: 'project-id', params: { id: route.params.id } }"
@@ -12,24 +12,28 @@
 
     <template #default="{ state }">
       <FormTab>
-        <UFormField :label="t('name')" name="name">
+        <UFormField :label="$t('name')" name="name">
           <UInput v-model="state.name" size="xl" class="w-full" />
         </UFormField>
 
-        <UFormField :label="t('slug')" name="slug">
+        <UFormField :label="$t('slug')" name="slug">
           <UInput v-model="state.slug" size="xl" class="w-full" />
         </UFormField>
 
-        <UFormField :label="t('description')" name="description">
+        <UFormField :label="$t('url')" name="url">
+          <UInput v-model="state.url" type="url" size="xl" class="w-full" />
+        </UFormField>
+
+        <UFormField :label="$t('description')" name="description">
           <UTextarea v-model="state.description" size="xl" class="w-full" />
         </UFormField>
 
-        <UFormField :label="t('image')" name="image">
+        <UFormField :label="$t('image')" name="image">
           <FieldImage v-model="state.image" />
         </UFormField>
       </FormTab>
 
-      <FormTab :title="t('block', 2)">
+      <FormTab :title="$t('block', 2)">
         <FieldBlockRepeater v-model="state.blocks" />
       </FormTab>
     </template>
@@ -40,8 +44,6 @@
 import * as z from 'zod'
 import type { Project } from '~/types/project'
 import type { ModelInput } from '~/types/utils'
-
-const { t } = useI18n()
 
 const { $entities } = useNuxtApp()
 
