@@ -1,7 +1,7 @@
 <template>
   <ResourceTablePanel>
     <template #header-right>
-      <ResourceFormCreate endpoint="/project" :title="t('entity.project.create')" />
+      <ResourceFormCreate endpoint="/project" has-slug :title="$t('entity.project.create')" />
     </template>
 
     <ResourceTable :columns="columns" endpoint="/project" filter-by="name">
@@ -20,18 +20,16 @@
 import type { TableColumn } from '@nuxt/ui'
 import type { Project } from '~/types/project'
 
-const { t } = useI18n()
-
 const columns: TableColumn<Project>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    header: t('name')
+    header: $t('name')
   },
   {
     id: 'slug',
     accessorKey: 'slug',
-    header: t('slug')
+    header: $t('slug')
   },
   {
     id: 'actions'
