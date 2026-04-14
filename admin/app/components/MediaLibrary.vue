@@ -7,48 +7,27 @@
     <slot />
 
     <template #body="{ close }">
-      <div class="flex gap-4 sm:gap-6">
-        <UScrollArea
-          v-if="status === 'pending' || status === 'idle'"
-          ref="scrollArea"
-          :items="Array.from({ length: 10 })"
-          :virtualize="{
-            lanes,
-            estimateSize: 80,
-            gap: 16
-          }"
-          class="w-full h-96 max-h-[80vh] py-4 sm:py-6"
+      <div class="flex max-sm:flex-col gap-4 sm:gap-6 overflow-hidden">
+        <div
+          class="max-sm:order-2 grow grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 h-96 max-h-[80vh] overflow-y-auto pb-4 sm:py-6"
         >
-          <USkeleton class="aspect-square size-full" />
-        </UScrollArea>
+          <div v-for="file in mediaFiles" :key="file.id">
+            <UButton
+              :key="file.id"
+              v-model="state.files"
+              :ui="{ base: 'aspect-square p-2 size-full' }"
+              color="neutral"
+              variant="subtle"
+              @click="insertImage(file, close)"
+            >
+              <figure class="rounded-sm overflow-hidden flex items-center justify-center size-full">
+                <NuxtImg :src="$file(file.filename)" class="max-w-full h-full object-contain" />
+              </figure>
+            </UButton>
+          </div>
+        </div>
 
-        <UScrollArea
-          v-else
-          ref="scrollArea"
-          #="{ item: file }"
-          :items="mediaFiles"
-          :virtualize="{
-            lanes,
-            estimateSize: 80,
-            gap: 16
-          }"
-          class="w-full h-96 max-h-[80vh] py-4 sm:py-6"
-        >
-          <UButton
-            :key="file.id"
-            v-model="state.files"
-            :ui="{ base: 'aspect-square p-2 size-full' }"
-            color="neutral"
-            variant="subtle"
-            @click="insertImage(file, close)"
-          >
-            <figure class="rounded-sm overflow-hidden size-full">
-              <NuxtImg :src="$file(file.filename)" class="max-w-full h-full object-contain" />
-            </figure>
-          </UButton>
-        </UScrollArea>
-
-        <div class="py-4 sm:py-6">
+        <div class="pt-4 sm:py-6">
           <label>
             <input ref="fileInput" type="file" multiple hidden @input="uploadFiles" />
 
@@ -108,11 +87,6 @@ const state = reactive<Partial<Schema>>({
   files: []
 })
 
-const scrollArea = useTemplateRef('scrollArea')
-const { width } = useElementSize(() => scrollArea.value?.$el)
-
-const lanes = computed(() => Math.max(1, Math.min(5, Math.floor(width.value / 80))))
-
 const insertImage = (file: File, close: () => void) => {
   model.value = file.filename
   close()
@@ -120,14 +94,10 @@ const insertImage = (file: File, close: () => void) => {
 
 const paginationQuery = ref<PaginationQuery>({
   page: 1,
-  limit: 10
+  limit: 20
 })
 
-const {
-  data: files,
-  status,
-  execute: fetchFiles
-} = await useAdminApi<PaginatedTableList<File>>('/file', {
+const { data: files, execute: fetchFiles } = await useAdminApi<PaginatedTableList<File>>('/file', {
   immediate: false,
   query: paginationQuery
 })
