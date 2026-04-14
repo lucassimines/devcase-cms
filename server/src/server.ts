@@ -25,16 +25,16 @@ const basePath = process.env.API_BASE_PATH
 // Serve static files
 app.use(`${basePath}/static`, express.static('public'))
 
-const [{ default: authRouter }, { default: adminRouter }, { default: clientRouter }] =
+const [{ default: authRouter }, { default: adminRouter }, { default: webRouter }] =
   await Promise.all([
     import('./admin/routes/auth.route.js'),
     import('./admin/routes/index.js'),
-    import('./client/routes/index.js')
+    import('./web/routes/index.js')
   ])
 
 app.use(`${basePath}/auth`, authRouter)
 app.use(`${basePath}/admin`, adminRouter)
-app.use(`${basePath}`, clientRouter)
+app.use(`${basePath}`, webRouter)
 
 app.use(errorMiddleware)
 

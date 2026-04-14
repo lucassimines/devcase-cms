@@ -26,4 +26,10 @@ export class ProjectService {
       take: 3
     })
   }
+
+  static async findBySlug(slug: string) {
+    return prisma.project.findFirst({
+      where: { slug, ...ProjectQuery.published() }
+    })
+  }
 }

@@ -1,8 +1,9 @@
-import { ProjectController } from '@src/client/controllers/project.controller.js'
+import { ProjectController } from '@src/web/controllers/project.controller.js'
 import { Router } from 'express'
 
 const router = Router()
 
 router.get('/featured', ProjectController.featured)
+router.get('/:slug', ProjectController.getBySlug)
 
 export default router
