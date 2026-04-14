@@ -63,6 +63,11 @@
       "name": "Project | Projects",
       "create": "Create Project",
       "edit": "Edit Project"
+    },
+    "technology": {
+      "name": "Technology | Technologies",
+      "create": "Create Technology",
+      "edit": "Edit Technology"
     }
   },
   "table": {

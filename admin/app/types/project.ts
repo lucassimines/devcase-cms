@@ -1,7 +1,7 @@
 import type { Block } from '~/types/block'
 
 export interface Project {
-  id: number
+  id: string
   published: boolean
   name: string
   url: string

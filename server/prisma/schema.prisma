@@ -43,7 +43,22 @@ model Project {
   image       String?
   slug        String
   blocks      Json?
+
   // categories  Category[]
+
+  technologies Technology[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Technology {
+  id   String  @id @default(uuid())
+  name String
+  icon String?
+  slug String  @unique
+
+  projects Project[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
