@@ -13,7 +13,17 @@
     <template v-if="tabs?.length" #toolbar>
       <FormTabNav :tabs="tabs" />
 
-      <USwitch v-if="hasZodSchemaProp(schema, 'published')" v-model="state.published" />
+      <div class="flex items-center gap-6">
+        <USwitch v-if="hasZodSchemaProp(schema, 'published')" v-model="state.published" />
+
+        <UButton
+          :label="t('button.save')"
+          icon="lucide:check"
+          variant="subtle"
+          loading-auto
+          @click="formRef?.submit()"
+        />
+      </div>
     </template>
 
     <UPageCard v-if="status === 'pending'" class="min-h-100 items-start" variant="subtle">
@@ -28,6 +38,7 @@
       :schema="schema"
       :state="state"
       class="space-y-4"
+      :loading-auto="false"
       @submit="onSubmit"
       @error="onError"
     >
@@ -36,19 +47,6 @@
       <!-- Placeholder to submit the form on enter key press -->
       <button type="submit" class="hidden" />
     </UForm>
-
-    <template #footer>
-      <div class="flex justify-end px-4 sm:px-6 py-3 border-t border-t-default">
-        <UButton
-          :label="t('button.save')"
-          icon="lucide:circle-check"
-          variant="subtle"
-          size="lg"
-          loading-auto
-          @click="formRef?.submit()"
-        />
-      </div>
-    </template>
   </NuxtLayout>
 </template>
 
