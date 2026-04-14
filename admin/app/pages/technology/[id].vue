@@ -1,12 +1,12 @@
 <template>
-  <ResourceFormUpdate :schema="schema" :endpoint="`/project/${route.params.id}`">
+  <ResourceFormUpdate :schema="schema" :endpoint="`/technology/${route.params.id}`">
     <template #right>
       <UButton
-        :icon="$entities.project.icon"
-        :label="$t('entity.project.name', 2)"
+        :icon="$entities.technology.icon"
+        :label="$t('entity.technology.name', 2)"
         variant="soft"
         color="neutral"
-        :to="{ name: 'project-id', params: { id: route.params.id } }"
+        :to="{ name: 'technology-id', params: { id: route.params.id } }"
       />
     </template>
 
@@ -20,21 +20,9 @@
           <UInput v-model="state.slug" size="xl" class="w-full" />
         </UFormField>
 
-        <UFormField :label="$t('url')" name="url">
-          <UInput v-model="state.url" type="url" size="xl" class="w-full" />
+        <UFormField :label="$t('icon')" name="icon">
+          <UInput v-model="state.icon" size="xl" class="w-full" />
         </UFormField>
-
-        <UFormField :label="$t('description')" name="description">
-          <UTextarea v-model="state.description" size="xl" class="w-full" />
-        </UFormField>
-
-        <UFormField :label="$t('image')" name="image">
-          <FieldImage v-model="state.image" />
-        </UFormField>
-      </FormTab>
-
-      <FormTab :title="$t('block', 2)">
-        <FieldBlockRepeater v-model="state.blocks" />
       </FormTab>
     </template>
   </ResourceFormUpdate>
@@ -42,19 +30,15 @@
 
 <script setup lang="ts">
 import * as z from 'zod'
-import type { Project } from '~/types/project'
+import type { Technology } from '~/types/technology'
 import type { ModelInput } from '~/types/utils'
 
 const { $entities } = useNuxtApp()
 
-const schema: z.ZodType<ModelInput<Project>> = z.object({
+const schema: z.ZodType<ModelInput<Technology>> = z.object({
   name: z.string().min(2).default(''),
-  published: z.boolean().default(false),
-  url: z.url().default(''),
-  description: z.string().default(''),
-  image: z.string().default(''),
   slug: z.string().default(''),
-  blocks: z.array(z.any()).default([])
+  icon: z.string().default('')
 })
 
 const route = useRoute()
