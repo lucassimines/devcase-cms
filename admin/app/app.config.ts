@@ -1,6 +1,19 @@
 export default defineAppConfig({
   timeZone: 'America/Sao_Paulo',
   ui: {
+    checkboxGroup: {
+      slots: {
+        fieldset: ['flex-wrap'],
+        item: ['cursor-pointer p-2']
+      },
+      variants: {
+        size: {
+          md: {
+            fieldset: ['gap-3']
+          }
+        }
+      }
+    },
     colors: {
       primary: 'green',
       neutral: 'zinc'

@@ -36,26 +36,50 @@
       <FormTab :title="$t('block', 2)">
         <FieldBlockRepeater v-model="state.blocks" />
       </FormTab>
+
+      <FormTab :title="$t('entity.technology.name', 2)">
+        <UFormField :label="$t('entity.technology.name', 2)" name="technologies">
+          <UCheckboxGroup
+            v-model="state.technologies"
+            :items="technologyItems"
+            orientation="horizontal"
+            variant="card"
+          />
+        </UFormField>
+      </FormTab>
     </template>
   </ResourceFormUpdate>
 </template>
 
 <script setup lang="ts">
 import * as z from 'zod'
-import type { Project } from '~/types/project'
+import type { ProjectUpdate } from '~/types/project'
+import type { Technology } from '~/types/technology'
 import type { ModelInput } from '~/types/utils'
 
 const { $entities } = useNuxtApp()
 
-const schema: z.ZodType<ModelInput<Project>> = z.object({
+const schema: z.ZodType<ModelInput<ProjectUpdate>> = z.object({
   name: z.string().min(2).default(''),
   published: z.boolean().default(false),
   url: z.url().default(''),
   description: z.string().default(''),
   image: z.string().default(''),
   slug: z.string().default(''),
-  blocks: z.array(z.any()).default([])
+  blocks: z.array(z.any()).default([]),
+  technologies: z.array(z.string()).default([])
 })
 
 const route = useRoute()
+
+const { data: technologies } = useAdminApi<Technology[]>('/technology/all')
+
+const technologyItems = computed(() => {
+  return (
+    technologies.value?.map((technology) => ({
+      label: technology.name,
+      value: technology.id
+    })) ?? []
+  )
+})
 </script>

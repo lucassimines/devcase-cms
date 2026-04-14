@@ -4,13 +4,16 @@ import { paginate } from '@src/utils/paginate.utils.js'
 import { Request, Response } from 'express'
 
 export class TechnologyController {
+  static async all(_req: Request, res: Response) {
+    res.json(await TechnologyRepository.all())
+  }
+
   static async index(req: Request, res: Response) {
     res.json(await paginate(prisma.technology, req.query))
   }
 
   static async getById(req: Request<{ id: string }>, res: Response) {
     const { id } = req.params
-    console.log(id)
 
     res.json(await TechnologyRepository.findById(id))
   }
