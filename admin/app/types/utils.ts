@@ -10,4 +10,6 @@ export type FormModel<T> = {
 /**
  * Utility type for model input data (create and update operations) - excludes id, createdAt, and updatedAt fields
  */
-export type ModelInput<T> = Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>
+export type ModelInput<T> = Omit<T, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'> & {
+  published?: boolean
+}

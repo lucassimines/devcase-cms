@@ -12,6 +12,8 @@
 
     <template v-if="tabs?.length" #toolbar>
       <FormTabNav :tabs="tabs" />
+
+      <USwitch v-if="hasZodSchemaProp(schema, 'published')" v-model="state.published" />
     </template>
 
     <UPageCard v-if="status === 'pending'" class="min-h-100 items-start" variant="subtle">
