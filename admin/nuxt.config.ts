@@ -35,6 +35,18 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-07-11',
 
+  vite: {
+    optimizeDeps: {
+      include: [
+        '@nuxt/ui > prosemirror-state',
+        '@nuxt/ui > prosemirror-transform',
+        '@nuxt/ui > prosemirror-model',
+        '@nuxt/ui > prosemirror-view',
+        '@nuxt/ui > prosemirror-gapcursor'
+      ]
+    }
+  },
+
   eslint: {
     config: {
       stylistic: {

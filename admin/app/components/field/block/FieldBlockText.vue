@@ -1,6 +1,6 @@
 <template>
-  <UFormField :label="$t('text')" :name="`${accessorKey}.text`">
-    <UTextarea v-model="model.text" size="xl" class="w-full" />
+  <UFormField :name="`${accessorKey}.text`">
+    <FieldEditor v-model="model.text" />
   </UFormField>
 </template>
 

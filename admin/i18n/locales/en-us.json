@@ -25,6 +25,9 @@
   "mobile": "Mobile",
   "text": "Text",
   "web": "Web",
+  "editor": {
+    "placeholder": "Write your text here..."
+  },
   "auth": {
     "login": {
       "title": "Login",
