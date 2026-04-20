@@ -23,13 +23,22 @@ export class ProjectService {
         image: true,
         order: true
       },
-      take: 3
+      take: 4
     })
   }
 
   static async findBySlug(slug: string) {
     return prisma.project.findFirst({
-      where: { slug, ...ProjectQuery.published() }
+      where: { slug, ...ProjectQuery.published() },
+      include: {
+        technologies: {
+          select: {
+            id: true,
+            name: true,
+            url: true
+          }
+        }
+      }
     })
   }
 }

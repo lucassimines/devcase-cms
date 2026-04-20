@@ -62,7 +62,7 @@ const { $entities } = useNuxtApp()
 const schema: z.ZodType<ModelInput<ProjectUpdate>> = z.object({
   name: z.string().min(2).default(''),
   published: z.boolean().default(false),
-  url: z.url().default(''),
+  url: z.url().or(z.literal('')).optional(),
   description: z.string().default(''),
   image: z.string().default(''),
   slug: z.string().default(''),

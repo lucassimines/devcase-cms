@@ -20,6 +20,10 @@
           <UInput v-model="state.slug" size="xl" class="w-full" />
         </UFormField>
 
+        <UFormField :label="$t('url')" name="url">
+          <UInput v-model="state.url" type="url" size="xl" class="w-full" />
+        </UFormField>
+
         <UFormField :label="$t('icon')" name="icon">
           <UInput v-model="state.icon" size="xl" class="w-full" />
         </UFormField>
@@ -38,7 +42,8 @@ const { $entities } = useNuxtApp()
 const schema: z.ZodType<ModelInput<Technology>> = z.object({
   name: z.string().min(2).default(''),
   slug: z.string().default(''),
-  icon: z.string().default('')
+  icon: z.string().default(''),
+  url: z.url().or(z.literal('')).optional()
 })
 
 const route = useRoute()

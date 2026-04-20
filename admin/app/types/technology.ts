@@ -3,4 +3,5 @@ export interface Technology {
   name: string
   icon: string
   slug: string
+  url?: string
 }

@@ -5,7 +5,7 @@ export interface Project {
   id: string
   published: boolean
   name: string
-  url: string
+  url?: string
   description: string
   image: string
   slug: string
