@@ -1,6 +1,30 @@
 export default defineAppConfig({
   timeZone: 'America/Sao_Paulo',
   ui: {
+    input: {
+      variants: {
+        size: {
+          xl: {
+            root: 'w-full'
+          }
+        }
+      },
+      defaultVariants: {
+        size: 'xl'
+      }
+    },
+    textarea: {
+      variants: {
+        size: {
+          xl: {
+            root: 'w-full'
+          }
+        }
+      },
+      defaultVariants: {
+        size: 'xl'
+      }
+    },
     checkboxGroup: {
       slots: {
         fieldset: ['flex-wrap'],

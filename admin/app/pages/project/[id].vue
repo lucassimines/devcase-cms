@@ -13,19 +13,19 @@
     <template #default="{ state }">
       <FormTab>
         <UFormField :label="$t('name')" name="name">
-          <UInput v-model="state.name" size="xl" class="w-full" />
+          <UInput v-model="state.name" />
         </UFormField>
 
         <UFormField :label="$t('slug')" name="slug">
-          <UInput v-model="state.slug" size="xl" class="w-full" />
+          <UInput v-model="state.slug" />
         </UFormField>
 
         <UFormField :label="$t('url')" name="url">
-          <UInput v-model="state.url" type="url" size="xl" class="w-full" />
+          <UInput v-model="state.url" type="url" />
         </UFormField>
 
         <UFormField :label="$t('description')" name="description">
-          <UTextarea v-model="state.description" size="xl" class="w-full" />
+          <UTextarea v-model="state.description" />
         </UFormField>
 
         <UFormField :label="$t('image')" name="image">

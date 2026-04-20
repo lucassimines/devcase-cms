@@ -1,5 +1,5 @@
 <template>
-  <UInputDate ref="inputDate" v-model="dateValue" size="xl">
+  <UInputDate ref="inputDate" v-model="dateValue">
     <template #trailing>
       <UPopover :reference="inputDate?.inputsRef[3]?.$el">
         <UButton

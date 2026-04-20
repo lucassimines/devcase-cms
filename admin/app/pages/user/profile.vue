@@ -5,17 +5,11 @@
 
       <UPageCard variant="subtle">
         <UFormField name="name" :label="t('name')" required>
-          <UInput v-model="profile.name" autocomplete="off" size="xl" class="w-full" />
+          <UInput v-model="profile.name" autocomplete="off" />
         </UFormField>
 
         <UFormField name="email" :label="t('email')" required>
-          <UInput
-            v-model="profile.email"
-            type="email"
-            autocomplete="off"
-            size="xl"
-            class="w-full"
-          />
+          <UInput v-model="profile.email" type="email" autocomplete="off" />
         </UFormField>
 
         <UFormField name="password" :label="t('password')">
@@ -23,8 +17,6 @@
             v-model="profile.password"
             :type="showPassword ? 'text' : 'password'"
             :ui="{ trailing: 'pe-1' }"
-            size="xl"
-            class="w-full"
           >
             <template #trailing>
               <UButton

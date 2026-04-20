@@ -12,8 +12,6 @@
           v-model="model.type"
           value-key="value"
           :items="blockTypeOptions"
-          size="xl"
-          class="w-full"
           @change="handleBlockTypeChange(model)"
         />
       </div>

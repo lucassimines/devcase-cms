@@ -5,11 +5,11 @@
     <template #body>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField label="Name" name="name">
-          <UInput v-model="state.name" class="w-full" size="xl" />
+          <UInput v-model="state.name" />
         </UFormField>
 
         <UFormField v-if="hasSlug" label="Slug" name="slug">
-          <UInput v-model="state.slug" class="w-full" size="xl" />
+          <UInput v-model="state.slug" />
         </UFormField>
 
         <div class="flex justify-end gap-2">

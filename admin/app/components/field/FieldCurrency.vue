@@ -6,7 +6,6 @@
     placeholder="0.00"
     :step="0.01"
     :min="0"
-    size="xl"
   >
     <template #leading>
       <p class="text-sm text-muted" v-text="$t('currency')" />
