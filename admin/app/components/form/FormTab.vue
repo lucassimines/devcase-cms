@@ -5,7 +5,7 @@
     :data-form-section="`form-section-${slug}`"
   >
     <div class="flex flex-col gap-2">
-      <h1 class="font-medium text-dimmed" v-text="resolvedTitle" />
+      <h1 class="font-medium text-toned" v-text="resolvedTitle" />
     </div>
 
     <UPageCard variant="subtle">

@@ -2,14 +2,15 @@ import { prisma } from '@src/db.js'
 import type { Prisma } from '@src/generated/prisma/client.js'
 import type { ProjectCreateInput, ProjectUpdateInput } from '@src/generated/prisma/models.js'
 
-type ProjectWithTechnologies = Prisma.ProjectGetPayload<{
-  include: { technologies: true }
+type ProjectWithIncludes = Prisma.ProjectGetPayload<{
+  include: { technologies: true; solutions: true }
 }>
 
-function normalizeProjectToForm(project: ProjectWithTechnologies) {
+function normalizeProjectToForm(project: ProjectWithIncludes) {
   return {
     ...project,
-    technologies: project.technologies.map((t) => t.id)
+    technologies: project.technologies.map((t) => t.id),
+    solutions: project.solutions.map((s) => s.id)
   }
 }
 
@@ -18,7 +19,8 @@ export class ProjectRepository {
     const project = await prisma.project.findFirst({
       where: { id },
       include: {
-        technologies: true
+        technologies: true,
+        solutions: true
       }
     })
 
@@ -33,8 +35,11 @@ export class ProjectRepository {
     })
   }
 
-  static async update(id: string, data: ProjectUpdateInput & { technologies: string[] }) {
-    const { technologies, ...rest } = data
+  static async update(
+    id: string,
+    data: ProjectUpdateInput & { technologies: string[]; solutions: string[] }
+  ) {
+    const { technologies, solutions, ...rest } = data
 
     const project = await prisma.project.update({
       where: { id },
@@ -42,10 +47,14 @@ export class ProjectRepository {
         ...rest,
         technologies: {
           set: technologies?.map((id) => ({ id })) ?? []
+        },
+        solutions: {
+          set: solutions?.map((id) => ({ id })) ?? []
         }
       },
       include: {
-        technologies: true
+        technologies: true,
+        solutions: true
       }
     })
 

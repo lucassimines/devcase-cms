@@ -38,10 +38,21 @@
       </FormTab>
 
       <FormTab :title="$t('entity.technology.name', 2)">
-        <UFormField :label="$t('entity.technology.name', 2)" name="technologies">
+        <UFormField name="technologies">
           <UCheckboxGroup
             v-model="state.technologies"
             :items="technologyItems"
+            orientation="horizontal"
+            variant="card"
+          />
+        </UFormField>
+      </FormTab>
+
+      <FormTab :title="$t('entity.solution.name', 2)">
+        <UFormField name="solutions">
+          <UCheckboxGroup
+            v-model="state.solutions"
+            :items="solutionItems"
             orientation="horizontal"
             variant="card"
           />
@@ -54,6 +65,7 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import type { ProjectUpdate } from '~/types/project'
+import type { Solution } from '~/types/solution'
 import type { Technology } from '~/types/technology'
 import type { ModelInput } from '~/types/utils'
 
@@ -67,7 +79,8 @@ const schema: z.ZodType<ModelInput<ProjectUpdate>> = z.object({
   image: z.string().default(''),
   slug: z.string().default(''),
   blocks: z.array(z.any()).default([]),
-  technologies: z.array(z.string()).default([])
+  technologies: z.array(z.string()).default([]),
+  solutions: z.array(z.string()).default([])
 })
 
 const route = useRoute()
@@ -79,6 +92,17 @@ const technologyItems = computed(() => {
     technologies.value?.map((technology) => ({
       label: technology.name,
       value: technology.id
+    })) ?? []
+  )
+})
+
+const { data: solutions } = useAdminApi<Solution[]>('/solution/all')
+
+const solutionItems = computed(() => {
+  return (
+    solutions.value?.map((solution) => ({
+      label: solution.name,
+      value: solution.id
     })) ?? []
   )
 })

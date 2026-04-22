@@ -1,4 +1,5 @@
 import type { Block } from '~/types/block'
+import type { Solution } from '~/types/solution'
 import type { Technology } from '~/types/technology'
 
 export interface Project {
@@ -11,8 +12,10 @@ export interface Project {
   slug: string
   blocks: Block[]
   technologies: Technology[]
+  solutions: Solution[]
 }
 
-export interface ProjectUpdate extends Omit<Project, 'technologies'> {
+export interface ProjectUpdate extends Omit<Project, 'technologies' | 'solutions'> {
   technologies: string[]
+  solutions: string[]
 }
