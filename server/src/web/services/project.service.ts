@@ -37,6 +37,12 @@ export class ProjectService {
             name: true,
             url: true
           }
+        },
+        solutions: {
+          select: {
+            id: true,
+            name: true
+          }
         }
       }
     })
