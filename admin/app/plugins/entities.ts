@@ -18,6 +18,12 @@ export default defineNuxtPlugin({
         path: '/technology',
         icon: 'lucide:code',
         label: i18n.t('entity.technology.name', 2)
+      },
+      solution: {
+        model: 'solution',
+        path: '/solution',
+        icon: 'lucide:puzzle',
+        label: i18n.t('entity.solution.name', 2)
       }
     } satisfies Entities
 

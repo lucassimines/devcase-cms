@@ -72,6 +72,11 @@
       "name": "Technology | Technologies",
       "create": "Create Technology",
       "edit": "Edit Technology"
+    },
+    "solution": {
+      "name": "Solution | Solutions",
+      "create": "Create Solution",
+      "edit": "Edit Solution"
     }
   },
   "table": {
