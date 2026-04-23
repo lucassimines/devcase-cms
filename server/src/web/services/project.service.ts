@@ -1,5 +1,6 @@
 import { prisma } from '@src/db.js'
 import type { Prisma } from '@src/generated/prisma/client.js'
+import { paginate } from '@src/utils/paginate.utils.js'
 
 const ProjectQuery = {
   published: (): Prisma.ProjectWhereInput => ({
@@ -20,10 +21,16 @@ export class ProjectService {
         id: true,
         slug: true,
         name: true,
-        image: true,
-        order: true
+        image: true
       },
       take: 4
+    })
+  }
+
+  static paginatedList() {
+    return paginate(prisma.project, {
+      where: ProjectQuery.published(),
+      orderBy: ProjectQuery.orderByPosition()
     })
   }
 

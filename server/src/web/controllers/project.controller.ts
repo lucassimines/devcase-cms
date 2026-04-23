@@ -6,6 +6,10 @@ export class ProjectController {
     res.json(await ProjectService.featured())
   }
 
+  static async paginatedList(_req: Request, res: Response) {
+    res.json(await ProjectService.paginatedList())
+  }
+
   static async getBySlug(req: Request<{ slug: string }>, res: Response) {
     const { slug } = req.params
 
