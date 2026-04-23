@@ -1,7 +1,7 @@
 import { Router } from 'express'
 
 import health from './health.route.js'
-import project from './project.js'
+import project from './project.route.js'
 
 const router = Router()
 

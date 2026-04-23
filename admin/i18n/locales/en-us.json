@@ -4,6 +4,7 @@
     "projects": "Projects"
   },
   "general": "General",
+  "code": "Code",
   "name": "Name",
   "slug": "Slug",
   "profile": "Profile",
@@ -63,6 +64,11 @@
   },
   "block": "Block | Blocks",
   "entity": {
+    "page": {
+      "name": "Page | Pages",
+      "create": "Create Page",
+      "edit": "Edit Page"
+    },
     "project": {
       "name": "Project | Projects",
       "create": "Create Project",

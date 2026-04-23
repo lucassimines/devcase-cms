@@ -7,6 +7,12 @@ export default defineNuxtPlugin({
     const i18n = nuxtApp.$i18n as Composer
 
     const entities = {
+      page: {
+        model: 'page',
+        path: '/page',
+        icon: 'lucide:file-text',
+        label: i18n.t('entity.page.name', 2)
+      },
       project: {
         model: 'project',
         path: '/project',

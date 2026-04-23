@@ -7,6 +7,19 @@ datasource db {
   provider = "postgresql"
 }
 
+model Page {
+  id        String  @id @default(uuid())
+  name      String
+  code      String  @unique
+  slug      String  @unique
+  order     Int     @default(0)
+  published Boolean @default(false)
+  blocks    Json?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
   id       String @id @default(uuid())
   email    String @unique

@@ -4,6 +4,7 @@ import { Router } from 'express'
 
 import dashboardRouter from './dashboard.route.js'
 import fileRouter from './file.route.js'
+import pageRouter from './page.route.js'
 import projectRouter from './project.route.js'
 import solutionRouter from './solution.route.js'
 import technologyRouter from './technology.route.js'
@@ -20,6 +21,7 @@ const routes = [
   ['dashboard', dashboardRouter],
   ['file', fileRouter],
   ['user', userRouter],
+  ['page', pageRouter],
   ['project', projectRouter],
   ['solution', solutionRouter],
   ['technology', technologyRouter]
