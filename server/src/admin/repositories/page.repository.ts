@@ -13,7 +13,7 @@ export class PageRepository {
     return prisma.page.create({
       data: {
         ...data,
-        code: data.code?.toLowerCase() || toSlug(data.name)
+        code: toSlug(data.name)
       }
     })
   }
