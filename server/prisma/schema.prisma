@@ -53,6 +53,7 @@ model Project {
   published   Boolean @default(false)
   url         String?
   description String?
+  background  String?
   image       String?
   slug        String
   blocks      Json?

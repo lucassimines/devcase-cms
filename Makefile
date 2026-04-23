@@ -44,6 +44,11 @@ prisma-seed:
 prisma-generate:
 	@cd $(SERVER_DIR) && npx prisma generate
 
+# Run Prisma New Migration
+prisma-new-migration:
+	@read -p "Migration name: " migration_name; \
+	cd $(SERVER_DIR) && npx prisma migrate dev --name "$$migration_name"
+
 # Run Prisma Migrate
 prisma-migrate:
 	@cd $(SERVER_DIR) && npx prisma migrate dev

@@ -28,6 +28,10 @@
           <UTextarea v-model="state.description" />
         </UFormField>
 
+        <UFormField :label="$t('background')" name="background">
+          <FieldImage v-model="state.background" />
+        </UFormField>
+
         <UFormField :label="$t('image')" name="image">
           <FieldImage v-model="state.image" />
         </UFormField>
@@ -76,6 +80,7 @@ const schema: z.ZodType<ModelInput<ProjectUpdate>> = z.object({
   published: z.boolean().default(false),
   url: z.url().or(z.literal('')).optional(),
   description: z.string().default(''),
+  background: z.string().default(''),
   image: z.string().default(''),
   slug: z.string().default(''),
   blocks: z.array(z.any()).default([]),

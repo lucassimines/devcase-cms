@@ -21,6 +21,7 @@ export class ProjectService {
         id: true,
         slug: true,
         name: true,
+        background: true,
         image: true
       },
       take: 4
