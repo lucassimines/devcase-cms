@@ -47,6 +47,9 @@ export class ProjectService {
           }
         },
         solutions: {
+          orderBy: {
+            order: 'asc'
+          },
           select: {
             id: true,
             name: true
