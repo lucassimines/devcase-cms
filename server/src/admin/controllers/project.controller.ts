@@ -1,11 +1,17 @@
 import { ProjectRepository } from '@src/admin/repositories/project.repository.js'
 import { prisma } from '@src/db.js'
+import type { Project } from '@src/generated/prisma/client.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { Request, Response } from 'express'
 
 export class ProjectController {
   static async index(req: Request, res: Response) {
-    res.json(await paginate(prisma.project, req.query))
+    const query = {
+      ...req.query,
+      orderBy: { order: 'asc' }
+    }
+
+    res.json(await paginate(prisma.project, query))
   }
 
   static async getById(req: Request<{ id: string }>, res: Response) {
@@ -32,5 +38,20 @@ export class ProjectController {
     const { id } = req.params
 
     res.json(await ProjectRepository.delete(id))
+  }
+
+  static async reorder(req: Request, res: Response) {
+    const projects = req.body as Project[]
+
+    await prisma.$transaction(
+      projects.map((project) =>
+        prisma.project.update({
+          where: { id: project.id },
+          data: { order: project.order }
+        })
+      )
+    )
+
+    return res.status(200).json({ success: true })
   }
 }

@@ -92,7 +92,8 @@
   "notification": {
     "success": {
       "title": "Success",
-      "default": "The request was processed successfully."
+      "default": "The request was processed successfully.",
+      "reorder": "The items were reordered successfully."
     },
     "delete": {
       "success": "The item was deleted successfully. | { count } items were deleted successfully."

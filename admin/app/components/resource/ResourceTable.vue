@@ -43,14 +43,14 @@
         v-model:row-selection="rowSelection"
         :get-row-id="getRowId"
         :pagination="pagination"
-        :data="paginatedList?.data ?? []"
+        :data="draggedItems ?? []"
         :columns="normalizedColumns"
         :loading="status === 'pending'"
         sticky
         :ui="{
           base: 'table-fixed border-separate border-spacing-0',
           thead: '[&>tr]:bg-elevated/50 [&>tr]:after:content-none',
-          tbody: '[&>tr]:last:[&>td]:border-b-0',
+          tbody: 'table-tbody [&>tr]:last:[&>td]:border-b-0',
           th: 'border-y border-default first:border-l last:border-r',
           td: 'border-b border-default',
           separator: 'h-0'
@@ -99,8 +99,9 @@
 
 <script setup lang="ts" generic="T extends { id?: string | number; name?: string; slug?: string }">
 import type { TableColumn, TableRow, TableSlots } from '@nuxt/ui'
+import { useSortable } from '@vueuse/integrations/useSortable'
 import type { PaginationQuery } from '~/types/pagination'
-import type { PaginatedTableList } from '~/types/table-list'
+import type { PaginatedTableList, TableListItem } from '~/types/table-list'
 
 const props = defineProps<{
   columns: TableColumn<T>[]
@@ -279,5 +280,53 @@ const normalizedColumns = computed(() => {
   }
 
   return [...baseColumns, ...props.columns]
+})
+
+// Set items order based on repeater index
+function setItemsOrder(rows: TableListItem<T>[]) {
+  rows.forEach((item, index) => {
+    if ('order' in item) {
+      item.order = index
+    }
+  })
+}
+
+const items = ref<TableListItem<T>[]>([])
+
+function saveItemsOrder(rows: TableListItem<T>[]) {
+  return $adminApi(`/${entityModel.value}/reorder`, {
+    method: 'PUT',
+    body: rows
+  })
+}
+
+const draggedItems = computed<TableListItem<T>[]>({
+  get(): TableListItem<T>[] {
+    return items.value.length
+      ? (items.value as TableListItem<T>[])
+      : (paginatedList.value?.data ?? [])
+  },
+  async set(newItems) {
+    // If the default item has an order, set the items order
+    const firstItem = newItems[0]
+
+    if (firstItem && 'order' in firstItem) {
+      setItemsOrder(newItems)
+
+      // Save items order to database
+      await saveItemsOrder(newItems)
+
+      notify.success({ description: $t('notification.success.reorder') })
+    }
+
+    items.value = newItems ?? []
+  }
+})
+
+const { option } = useSortable('.table-tbody', draggedItems)
+option('animation', 150)
+
+watch(normalizedColumns, (newColumns) => {
+  console.log(newColumns)
 })
 </script>

@@ -5,6 +5,7 @@ const router = Router()
 
 router.get('/', ProjectController.index)
 router.post('/', ProjectController.create)
+router.put('/reorder', ProjectController.reorder)
 router.get('/:id', ProjectController.getById)
 router.put('/:id', ProjectController.update)
 router.delete('/', ProjectController.deleteMany)
