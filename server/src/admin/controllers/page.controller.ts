@@ -1,9 +1,14 @@
 import { PageRepository } from '@src/admin/repositories/page.repository.js'
 import { prisma } from '@src/db.js'
 import { paginate } from '@src/utils/paginate.utils.js'
+import { reorder } from '@src/utils/reorder.utils.js'
 import { Request, Response } from 'express'
 
 export class PageController {
+  static async reorder(req: Request, res: Response) {
+    return res.json(await reorder(prisma.page, req.body))
+  }
+
   static async index(req: Request, res: Response) {
     res.json(await paginate(prisma.page, req.query))
   }

@@ -3,6 +3,7 @@ import { Router } from 'express'
 
 const router = Router()
 
+router.put('/reorder', PageController.reorder)
 router.get('/', PageController.index)
 router.post('/', PageController.create)
 router.get('/:id', PageController.getById)

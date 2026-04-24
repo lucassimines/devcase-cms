@@ -1,19 +1,17 @@
-import type { PrismaDelegate } from "@src/types/prisma.js";
+import type { PrismaDelegate } from '@src/types/prisma.js'
 
 type Item = {
-    id: string;
-    order: number;
-};
+  id: string
+  order: number
+}
 
 export async function reorder<T extends PrismaDelegate>(model: T, items: Item[]) {
-    const updatePromises = items.map(async (item) => {
-        const data: Record<string, any> = { order: item.order };
+  const updatePromises = items.map((item) =>
+    model.update({
+      where: { id: item.id },
+      data: { order: item.order }
+    })
+  )
 
-        await model.update({
-            where: { id: item.id },
-            data
-        });
-    });
-
-    return await Promise.all(updatePromises);
+  return await Promise.all(updatePromises)
 }

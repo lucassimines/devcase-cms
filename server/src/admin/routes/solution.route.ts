@@ -3,6 +3,7 @@ import { Router } from 'express'
 
 const router = Router()
 
+router.put('/reorder', SolutionController.reorder)
 router.get('/', SolutionController.index)
 router.post('/', SolutionController.create)
 router.get('/all', SolutionController.all)

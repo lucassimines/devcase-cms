@@ -227,6 +227,7 @@ const columnVisibility = ref()
 const UCheckbox = resolveComponent('UCheckbox')
 const ULink = resolveComponent('ULink')
 const UButton = resolveComponent('UButton')
+const Icon = resolveComponent('Icon')
 
 const baseColumns: TableColumn<T>[] = [
   {
@@ -266,7 +267,27 @@ function makeLinkRow(row: TableRow<T>, key: keyof T) {
   )
 }
 
-const normalizedColumns = computed(() => {
+const orderColumn = computed<TableColumn<T> | undefined>(() => {
+  if (!itemIsReorderable.value) return
+
+  return {
+    id: 'order',
+    meta: {
+      class: {
+        th: 'w-0',
+        td: 'w-0'
+      }
+    },
+    cell: () => {
+      return h(Icon, {
+        name: 'lucide:arrow-up-down',
+        class: 'cursor-grab active:cursor-grabbing text-base hover:text-primary'
+      })
+    }
+  }
+})
+
+const normalizedColumns = computed<TableColumn<T>[]>(() => {
   // Merge "name" column from props.columns if it exists
   const nameColumn = props.columns.find((column) => column.id === 'name')
   const slugColumn = props.columns.find((column) => column.id === 'slug')
@@ -279,7 +300,9 @@ const normalizedColumns = computed(() => {
     nameColumn.cell = ({ row }) => makeLinkRow(row, 'name')
   }
 
-  return [...baseColumns, ...props.columns]
+  return [orderColumn.value, ...baseColumns, ...props.columns].filter(
+    (c): c is TableColumn<T> => c != null
+  )
 })
 
 // Set items order based on repeater index
@@ -293,12 +316,24 @@ function setItemsOrder(rows: TableListItem<T>[]) {
 
 const items = ref<TableListItem<T>[]>([])
 
-function saveItemsOrder(rows: TableListItem<T>[]) {
-  return $adminApi(`/${entityModel.value}/reorder`, {
-    method: 'PUT',
-    body: rows
-  })
+async function saveItemsOrder(rows: TableListItem<T>[]) {
+  try {
+    await $adminApi(`/${entityModel.value}/reorder`, {
+      method: 'PUT',
+      body: rows
+    })
+
+    notify.success({ description: $t('notification.success.reorder') })
+  } catch {
+    notify.error()
+  }
 }
+
+const itemIsReorderable = computed(() => {
+  if (!paginatedList.value?.data?.[0]) return
+
+  return 'order' in paginatedList.value.data[0]
+})
 
 const draggedItems = computed<TableListItem<T>[]>({
   get(): TableListItem<T>[] {
@@ -306,17 +341,12 @@ const draggedItems = computed<TableListItem<T>[]>({
       ? (items.value as TableListItem<T>[])
       : (paginatedList.value?.data ?? [])
   },
-  async set(newItems) {
-    // If the default item has an order, set the items order
-    const firstItem = newItems[0]
-
-    if (firstItem && 'order' in firstItem) {
+  set(newItems) {
+    if (itemIsReorderable.value) {
       setItemsOrder(newItems)
 
       // Save items order to database
-      await saveItemsOrder(newItems)
-
-      notify.success({ description: $t('notification.success.reorder') })
+      saveItemsOrder(newItems)
     }
 
     items.value = newItems ?? []
@@ -325,8 +355,4 @@ const draggedItems = computed<TableListItem<T>[]>({
 
 const { option } = useSortable('.table-tbody', draggedItems)
 option('animation', 150)
-
-watch(normalizedColumns, (newColumns) => {
-  console.log(newColumns)
-})
 </script>

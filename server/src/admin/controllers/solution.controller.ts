@@ -1,9 +1,14 @@
 import { SolutionRepository } from '@src/admin/repositories/solution.repository.js'
 import { prisma } from '@src/db.js'
 import { paginate } from '@src/utils/paginate.utils.js'
+import { reorder } from '@src/utils/reorder.utils.js'
 import { Request, Response } from 'express'
 
 export class SolutionController {
+  static async reorder(req: Request, res: Response) {
+    return res.json(await reorder(prisma.solution, req.body))
+  }
+
   static async all(_req: Request, res: Response) {
     res.json(await SolutionRepository.all())
   }
