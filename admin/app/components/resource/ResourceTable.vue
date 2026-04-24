@@ -151,6 +151,29 @@ const apiQuery = ref({
   filterBy: props.filterBy
 })
 
+// Fetch paginated data from API
+const {
+  data: paginatedList,
+  status,
+  refresh
+} = await useAdminApi<PaginatedTableList<T>>(props.endpoint, {
+  query: apiQuery
+})
+
+const itemIsReorderable = computed(() => {
+  if (!paginatedList.value?.data?.[0]) return
+
+  return 'order' in paginatedList.value.data[0]
+})
+
+watch(itemIsReorderable, (newIsReorderable) => {
+  if (!newIsReorderable) return
+  apiQuery.value = {
+    ...apiQuery.value,
+    orderBy: { order: 'asc' }
+  }
+})
+
 watch(searchTermDebounced, (newTerm) => {
   // Skip to prevent double fetch when clearing search
   if (!newTerm) return
@@ -179,15 +202,6 @@ function goToPage(page: number) {
 
   apiQuery.value = { ...apiQuery.value, page, term: searchTermDebounced.value }
 }
-
-// Fetch paginated data from API
-const {
-  data: paginatedList,
-  status,
-  refresh
-} = await useAdminApi<PaginatedTableList<T>>(props.endpoint, {
-  query: apiQuery
-})
 
 const notify = useNotification()
 
@@ -328,12 +342,6 @@ async function saveItemsOrder(rows: TableListItem<T>[]) {
     notify.error()
   }
 }
-
-const itemIsReorderable = computed(() => {
-  if (!paginatedList.value?.data?.[0]) return
-
-  return 'order' in paginatedList.value.data[0]
-})
 
 const draggedItems = computed<TableListItem<T>[]>({
   get(): TableListItem<T>[] {

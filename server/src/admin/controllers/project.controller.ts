@@ -10,12 +10,7 @@ export class ProjectController {
   }
 
   static async index(req: Request, res: Response) {
-    const query = {
-      ...req.query,
-      orderBy: { order: 'asc' }
-    }
-
-    res.json(await paginate(prisma.project, query))
+    res.json(await paginate(prisma.project, req.query))
   }
 
   static async getById(req: Request<{ id: string }>, res: Response) {
