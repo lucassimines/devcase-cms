@@ -13,6 +13,18 @@ export default defineAppConfig({
         size: 'xl'
       }
     },
+    select: {
+      variants: {
+        size: {
+          xl: {
+            base: 'w-full'
+          }
+        }
+      },
+      defaultVariants: {
+        size: 'xl'
+      }
+    },
     textarea: {
       variants: {
         size: {

@@ -25,7 +25,7 @@
         </UFormField>
 
         <UFormField :label="$t('description')" name="description">
-          <UTextarea v-model="state.description" />
+          <UTextarea v-model="state.description" :rows="8" />
         </UFormField>
 
         <UFormField :label="$t('background')" name="background">
