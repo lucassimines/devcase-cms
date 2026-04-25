@@ -5,7 +5,9 @@ export class BootstrapService {
     const pages = await PageService.menuPages()
 
     return {
-      menu: pages
+      menu: {
+        links: pages
+      }
     }
   }
 }
