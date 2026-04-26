@@ -18,9 +18,8 @@ export type PageContent<T = null> = Pick<Page<T>, 'content'>
 export const PAGE_ABOUT_DEFAULT = {
   profile: {
     title: '',
-    title2: {
-      test: ''
-    },
+    title2: '',
+    title3: '',
     image: ''
   }
 }

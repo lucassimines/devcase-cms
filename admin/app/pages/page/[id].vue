@@ -29,13 +29,14 @@
         <FieldBlockRepeater v-model="state.blocks" />
       </FormTab>
 
-      <PageContentRenderer v-model="state.content" :code="state.code" />
+      <component :is="componentContentMap[state.code]" v-model="state.content" :code="state.code" />
     </template>
   </ResourceFormUpdate>
 </template>
 
 <script setup lang="ts">
 import * as z from 'zod'
+import PageAbout from '~/components/page/PageAbout.vue'
 import type { PageUpdate } from '~/types/page'
 import type { ModelInput } from '~/types/utils'
 
@@ -43,15 +44,16 @@ const { $entities } = useNuxtApp()
 
 const route = useRoute()
 
+const componentContentMap: Record<string, Component> = {
+  about: PageAbout
+}
+
 function getContentSchema(code: string) {
   switch (code) {
     case 'about':
       return z.object({
         profile: z.object({
           title: z.string().min(2).default(''),
-          title2: z.object({
-            test: z.string().default('')
-          }),
           image: z.string().default('')
         })
       })
@@ -60,6 +62,7 @@ function getContentSchema(code: string) {
       return z.object({})
   }
 }
+
 const schema = z
   .object({
     name: z.string().min(2).default(''),
