@@ -14,6 +14,7 @@ model Page {
   slug      String  @unique
   order     Int     @default(0)
   published Boolean @default(false)
+  content   Json?
   blocks    Json?
 
   createdAt DateTime @default(now())

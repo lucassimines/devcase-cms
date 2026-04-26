@@ -28,6 +28,8 @@
       <FormTab :title="$t('block', 2)">
         <FieldBlockRepeater v-model="state.blocks" />
       </FormTab>
+
+      <PageContentRenderer v-model="state.content" :code="state.code" />
     </template>
   </ResourceFormUpdate>
 </template>
@@ -39,13 +41,37 @@ import type { ModelInput } from '~/types/utils'
 
 const { $entities } = useNuxtApp()
 
-const schema: z.ZodType<ModelInput<PageUpdate>> = z.object({
-  name: z.string().min(2).default(''),
-  code: z.string().min(2).default(''),
-  published: z.boolean().default(false),
-  slug: z.string().default(''),
-  blocks: z.array(z.any()).default([])
-})
-
 const route = useRoute()
+
+function getContentSchema(code: string) {
+  switch (code) {
+    case 'about':
+      return z.object({
+        profile: z.object({
+          title: z.string().min(2).default(''),
+          image: z.string().default('')
+        })
+      })
+
+    default:
+      return z.object({})
+  }
+}
+const schema = z
+  .object({
+    name: z.string().min(2).default(''),
+    code: z.string().min(2).default(''),
+    published: z.boolean().default(false),
+    slug: z.string().default(''),
+    blocks: z.array(z.any()).default([]),
+    content: z.unknown().default({})
+  })
+  .superRefine((val, ctx) => {
+    const result = getContentSchema(val.code).safeParse(val.content)
+    if (!result.success) {
+      for (const issue of result.error.issues) {
+        ctx.addIssue({ ...issue, path: ['content', ...issue.path] })
+      }
+    }
+  }) as z.ZodType<ModelInput<PageUpdate>>
 </script>

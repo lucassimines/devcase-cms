@@ -4,10 +4,12 @@
     "projects": "Projects"
   },
   "general": "General",
+  "title": "Title",
   "code": "Code",
   "name": "Name",
   "slug": "Slug",
   "profile": "Profile",
+  "content": "Content",
   "icon": "Icon",
   "theme": "Theme",
   "email": "Email",
