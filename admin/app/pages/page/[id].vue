@@ -49,6 +49,9 @@ function getContentSchema(code: string) {
       return z.object({
         profile: z.object({
           title: z.string().min(2).default(''),
+          title2: z.object({
+            test: z.string().default('')
+          }),
           image: z.string().default('')
         })
       })

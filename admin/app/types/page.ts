@@ -18,6 +18,9 @@ export type PageContent<T = null> = Pick<Page<T>, 'content'>
 export type PageAbout = {
   profile: {
     title: string
+    title2: {
+      test: string
+    }
     image: string
   }
 }
