@@ -15,12 +15,14 @@ export type PageUpdate = Omit<Page, 'order'>
 
 export type PageContent<T = null> = Pick<Page<T>, 'content'>
 
-export type PageAbout = {
+export const PAGE_ABOUT_DEFAULT = {
   profile: {
-    title: string
+    title: '',
     title2: {
-      test: string
-    }
-    image: string
+      test: ''
+    },
+    image: ''
   }
 }
+
+export type PageAbout = typeof PAGE_ABOUT_DEFAULT

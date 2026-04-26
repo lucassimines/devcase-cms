@@ -16,25 +16,13 @@
 </template>
 
 <script setup lang="ts">
-import type { PageAbout } from '~/types/page'
-
-const defaultContent: PageAbout = {
-  profile: {
-    title: '',
-    image: '',
-    title2: {
-      test: ''
-    }
-  }
-}
+import { PAGE_ABOUT_DEFAULT, type PageAbout } from '~/types/page'
 
 const model = defineModel<PageAbout | null | undefined>()
 
 if (!model.value) {
-  model.value = structuredClone(defaultContent)
+  model.value = structuredClone(PAGE_ABOUT_DEFAULT)
 } else {
-  mergeDeep(model.value as Record<string, unknown>, defaultContent as Record<string, unknown>, {
-    onlyIfNil: true
-  })
+  mergeDeep(model.value, PAGE_ABOUT_DEFAULT, { onlyIfNil: true })
 }
 </script>
