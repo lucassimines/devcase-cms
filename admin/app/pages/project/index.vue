@@ -4,7 +4,7 @@
       <ResourceFormCreate endpoint="/project" has-slug :title="$t('entity.project.create')" />
     </template>
 
-    <ResourceTable :columns="columns" endpoint="/project" filter-by="name">
+    <ResourceTable :columns="columns" endpoint="/project" filter-by="name" reorderable>
       <template #actions-cell="{ row, refresh }">
         <ResourceTableActions
           :to="{ name: 'project-id', params: { id: row.original.id } }"

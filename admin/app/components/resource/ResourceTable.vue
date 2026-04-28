@@ -107,6 +107,7 @@ const props = defineProps<{
   columns: TableColumn<T>[]
   endpoint: string
   filterBy: keyof T | keyof T[]
+  reorderable?: boolean
 }>()
 
 defineSlots<
@@ -148,7 +149,8 @@ const pagination = ref({
 const apiQuery = ref({
   ...paginationQuery.value,
   term: searchTermDebounced.value,
-  filterBy: props.filterBy
+  filterBy: props.filterBy,
+  orderBy: props.reorderable ? { order: 'asc' } : undefined
 })
 
 // Fetch paginated data from API
@@ -158,20 +160,6 @@ const {
   refresh
 } = await useAdminApi<PaginatedTableList<T>>(props.endpoint, {
   query: apiQuery
-})
-
-const itemIsReorderable = computed(() => {
-  if (!paginatedList.value?.data?.[0]) return
-
-  return 'order' in paginatedList.value.data[0]
-})
-
-watch(itemIsReorderable, (newIsReorderable) => {
-  if (!newIsReorderable) return
-  apiQuery.value = {
-    ...apiQuery.value,
-    orderBy: { order: 'asc' }
-  }
 })
 
 watch(searchTermDebounced, (newTerm) => {
@@ -282,7 +270,7 @@ function makeLinkRow(row: TableRow<T>, key: keyof T) {
 }
 
 const orderColumn = computed<TableColumn<T> | undefined>(() => {
-  if (!itemIsReorderable.value) return
+  if (!props.reorderable) return
 
   return {
     id: 'order',
@@ -350,7 +338,7 @@ const draggedItems = computed<TableListItem<T>[]>({
       : (paginatedList.value?.data ?? [])
   },
   set(newItems) {
-    if (itemIsReorderable.value) {
+    if (props.reorderable) {
       setItemsOrder(newItems)
 
       // Save items order to database
