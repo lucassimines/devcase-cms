@@ -41,5 +41,3 @@ app.use(errorMiddleware)
 app.listen(port, () => {
   logger.info('Listening on port %d with base path %s', port, basePath)
 })
-
-console.log('test')
