@@ -2,7 +2,7 @@
   <UModal
     :title="$t('image')"
     :ui="{ content: 'sm:max-w-5xl', body: 'py-0 sm:py-0' }"
-    @after:enter="fetchFiles"
+    @after:enter="onModalOpen"
   >
     <slot />
 
@@ -12,7 +12,7 @@
           class="grid max-h-[80vh] min-h-100 grow grid-cols-2 items-start gap-4 overflow-y-auto pb-4 max-sm:order-2 sm:grid-cols-3 sm:py-6 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
         >
           <template v-if="status === 'pending'">
-            <USkeleton v-for="i in 18" :key="i" class="aspect-square" />
+            <USkeleton v-for="i in 60" :key="i" class="aspect-square" />
           </template>
 
           <template v-else>
@@ -21,6 +21,7 @@
               :key="file.id"
               :file="file"
               @insert:file="insertFile(file, close)"
+              @delete:file="removeFile"
             />
           </template>
         </div>
@@ -93,10 +94,25 @@ const {
 })
 
 const mediaFiles = ref<File[]>([])
+const isDirty = ref(true)
+const hasFetchedOnce = ref(false)
+
+async function onModalOpen() {
+  if (hasFetchedOnce.value && !isDirty.value) return
+
+  await fetchFiles()
+  hasFetchedOnce.value = true
+  isDirty.value = false
+}
 
 watch(files, (newFiles) => {
   mediaFiles.value = newFiles?.data ?? []
 })
+
+function removeFile(filename: string) {
+  mediaFiles.value = mediaFiles.value.filter((file) => file.filename !== filename)
+  isDirty.value = true
+}
 
 const notify = useNotification()
 
@@ -121,6 +137,7 @@ async function uploadFiles(event: Event) {
 
     if (res?.length) {
       mediaFiles.value = [...res, ...mediaFiles.value]
+      isDirty.value = true
 
       notify.success({ description: $t('notification.file.upload.success') })
 

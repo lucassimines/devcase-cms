@@ -13,7 +13,14 @@
     </UButton>
 
     <footer class="bg-muted flex w-full items-center rounded-b-md p-1">
-      <UButton icon="lucide:trash" color="error" variant="soft" size="xs" @click="deleteFile()" />
+      <UButton
+        icon="lucide:trash"
+        color="error"
+        variant="soft"
+        size="xs"
+        :loading="status === 'pending'"
+        @click="deleteCurrentFile"
+      />
     </footer>
   </div>
 </template>
@@ -27,13 +34,19 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   (e: 'insert:file'): void
+  (e: 'delete:file', filename: string): void
 }>()
 
-const { execute: deleteFile } = await useAdminApi<File>(`/file`, {
+const { status, execute: deleteFile } = await useAdminApi<File>(`/file`, {
   method: 'DELETE',
   immediate: false,
   body: {
     filename: props.file.filename
   }
 })
+
+async function deleteCurrentFile() {
+  await deleteFile()
+  emit('delete:file', props.file.filename)
+}
 </script>
