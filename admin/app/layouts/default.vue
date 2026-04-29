@@ -35,6 +35,4 @@
 const open = ref(false)
 
 const { navigation } = useNavigation()
-
-console.log('test')
 </script>
