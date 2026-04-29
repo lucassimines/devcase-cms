@@ -1,7 +1,7 @@
 <template>
   <UModal
     :title="$t('image')"
-    :ui="{ content: 'sm:max-w-4xl', body: 'py-0 sm:py-0' }"
+    :ui="{ content: 'sm:max-w-5xl', body: 'py-0 sm:py-0' }"
     @after:enter="fetchFiles"
   >
     <slot />
@@ -9,14 +9,20 @@
     <template #body="{ close }">
       <div class="flex gap-4 overflow-hidden max-sm:flex-col sm:gap-6">
         <div
-          class="grid max-h-[80vh] grow grid-cols-2 items-start gap-4 overflow-y-auto pb-4 max-sm:order-2 sm:grid-cols-3 sm:py-6 lg:grid-cols-4 xl:grid-cols-5"
+          class="grid max-h-[80vh] min-h-100 grow grid-cols-2 items-start gap-4 overflow-y-auto pb-4 max-sm:order-2 sm:grid-cols-3 sm:py-6 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
         >
-          <MediaLibraryCard
-            v-for="file in mediaFiles"
-            :key="file.id"
-            :file="file"
-            @insert:file="insertFile(file, close)"
-          />
+          <template v-if="status === 'pending'">
+            <USkeleton v-for="i in 18" :key="i" class="aspect-square" />
+          </template>
+
+          <template v-else>
+            <MediaLibraryCard
+              v-for="file in mediaFiles"
+              :key="file.id"
+              :file="file"
+              @insert:file="insertFile(file, close)"
+            />
+          </template>
         </div>
 
         <div class="pt-4 sm:py-6">
@@ -36,7 +42,7 @@
       </div>
     </template>
 
-    <template #footer>
+    <template v-if="(files?.meta?.last_page || 1) > 1" #footer>
       <div class="flex w-full justify-center">
         <UPagination
           v-model:page="paginationQuery.page"
@@ -74,10 +80,14 @@ function triggerFileInput() {
 
 const paginationQuery = ref<PaginationQuery>({
   page: 1,
-  limit: 20
+  limit: 60
 })
 
-const { data: files, execute: fetchFiles } = await useAdminApi<PaginatedTableList<File>>('/file', {
+const {
+  data: files,
+  status,
+  execute: fetchFiles
+} = await useAdminApi<PaginatedTableList<File>>('/file', {
   immediate: false,
   query: paginationQuery
 })
