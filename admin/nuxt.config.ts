@@ -45,7 +45,11 @@ export default defineNuxtConfig({
         '@nuxt/ui > prosemirror-transform',
         '@nuxt/ui > prosemirror-model',
         '@nuxt/ui > prosemirror-view',
-        '@nuxt/ui > prosemirror-gapcursor'
+        '@nuxt/ui > prosemirror-gapcursor',
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        'zod',
+        'vuedraggable'
       ]
     }
   },
