@@ -1,5 +1,6 @@
 import { prisma } from '@src/db.js'
 import type { Prisma } from '@src/generated/prisma/client.js'
+import { storageDirectory } from '@src/utils/storage-path.utils.js'
 import fs from 'fs'
 import path from 'path'
 
@@ -8,7 +9,7 @@ export class FileRepository {
    * Get file storage url
    */
   static getFileUrl(filename: string) {
-    return `${process.env.FILESYSTEM_STORAGE_PATH}/${filename}`
+    return path.join(storageDirectory, filename)
   }
 
   /**

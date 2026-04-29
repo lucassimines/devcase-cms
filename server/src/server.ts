@@ -1,4 +1,5 @@
 import errorMiddleware from '@src/middlewares/error.middleware.js'
+import { staticDirectory } from '@src/utils/storage-path.utils.js'
 import logger from '@src/utils/logger.utils.js'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -23,7 +24,7 @@ app.use(express.urlencoded({ extended: true }))
 const basePath = process.env.API_BASE_PATH
 
 // Serve static files
-app.use(`${basePath}/static`, express.static('public'))
+app.use(`${basePath}/static`, express.static(staticDirectory))
 
 const [{ default: authRouter }, { default: adminRouter }, { default: webRouter }] =
   await Promise.all([
@@ -39,5 +40,5 @@ app.use(`${basePath}`, webRouter)
 app.use(errorMiddleware)
 
 app.listen(port, () => {
-  logger.info('Listening on port %d with base path %s', port, basePath)
+  logger.info('Listening on port %d with base path %s serving static from %s', port, basePath, staticDirectory)
 })
