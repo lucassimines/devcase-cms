@@ -23,12 +23,23 @@ export function useMediaLibraryCache() {
   function prependFiles(files: File[]) {
     if (!files.length) return
     mediaFiles.value = [...files, ...mediaFiles.value]
-    isDirty.value = true
+
+    if (mediaMeta.value) {
+      const total = mediaMeta.value.total + files.length
+      const last_page = Math.max(1, Math.ceil(total / mediaMeta.value.limit))
+      mediaMeta.value = { ...mediaMeta.value, total, last_page }
+    }
   }
 
   function removeFile(filename: string) {
+    const previousLength = mediaFiles.value.length
     mediaFiles.value = mediaFiles.value.filter((file) => file.filename !== filename)
-    isDirty.value = true
+
+    if (mediaMeta.value && mediaFiles.value.length < previousLength) {
+      const total = Math.max(0, mediaMeta.value.total - 1)
+      const last_page = Math.max(1, Math.ceil(total / mediaMeta.value.limit))
+      mediaMeta.value = { ...mediaMeta.value, total, last_page }
+    }
   }
 
   return {
