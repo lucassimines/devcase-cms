@@ -92,18 +92,11 @@ const {
   query: paginationQuery
 })
 
-const {
-  mediaFiles,
-  mediaMeta,
-  isDirty,
-  hasFetchedOnce,
-  setFromResponse,
-  prependFiles,
-  removeFile
-} = useMediaLibraryCache()
+const { mediaFiles, mediaMeta, hasFetchedOnce, setFromResponse, prependFiles, removeFile } =
+  useMediaLibraryCache()
 
 async function onModalOpen() {
-  if (hasFetchedOnce.value && !isDirty.value) return
+  if (hasFetchedOnce.value) return
 
   await fetchFiles()
 }

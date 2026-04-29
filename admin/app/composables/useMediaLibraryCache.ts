@@ -11,13 +11,10 @@ export function useMediaLibraryCache() {
 
   const hasFetchedOnce = useState<boolean>('media-library:has-fetched-once', () => false)
 
-  const isDirty = useState<boolean>('media-library:is-dirty', () => true)
-
   function setFromResponse(response: PaginatedTableList<File> | null | undefined) {
     mediaFiles.value = response?.data ?? []
     mediaMeta.value = response?.meta ?? null
     hasFetchedOnce.value = true
-    isDirty.value = false
   }
 
   function prependFiles(files: File[]) {
@@ -46,7 +43,6 @@ export function useMediaLibraryCache() {
     mediaFiles,
     mediaMeta,
     hasFetchedOnce,
-    isDirty,
     setFromResponse,
     prependFiles,
     removeFile
