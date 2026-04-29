@@ -1,12 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-const imageDomainFromPublicUrl = (() => {
-  try {
-    return new URL(process.env.NUXT_PUBLIC_IMAGES_URL || '').host
-  } catch {
-    return ''
-  }
-})()
-
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
@@ -99,7 +91,7 @@ export default defineNuxtConfig({
 
   image: {
     provider: 'ipx',
-    domains: [process.env.NUXT_IMAGES_DOMAIN || '', imageDomainFromPublicUrl].filter(Boolean),
+    domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
     presets: {
       avatar: {
         modifiers: {
