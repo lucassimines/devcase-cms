@@ -43,12 +43,12 @@
       </div>
     </template>
 
-    <template v-if="(files?.meta?.last_page || 1) > 1" #footer>
+    <template v-if="(mediaMeta?.last_page || 1) > 1" #footer>
       <div class="flex w-full justify-center">
         <UPagination
           v-model:page="paginationQuery.page"
           :items-per-page="paginationQuery.limit"
-          :total="files?.meta.total"
+          :total="mediaMeta?.total"
         />
       </div>
     </template>
@@ -63,7 +63,6 @@ import type { PaginatedTableList } from '~/types/table-list'
 const model = defineModel<string | null | undefined>({ required: true })
 
 function insertFile(file: File, close: () => void) {
-  console.log(file)
   model.value = file.filename
   close()
 }
@@ -93,25 +92,25 @@ const {
   query: paginationQuery
 })
 
-const mediaFiles = ref<File[]>([])
-const isDirty = ref(true)
-const hasFetchedOnce = ref(false)
+const {
+  mediaFiles,
+  mediaMeta,
+  isDirty,
+  hasFetchedOnce,
+  setFromResponse,
+  prependFiles,
+  removeFile
+} = useMediaLibraryCache()
 
 async function onModalOpen() {
   if (hasFetchedOnce.value && !isDirty.value) return
 
   await fetchFiles()
-  hasFetchedOnce.value = true
-  isDirty.value = false
 }
 
 watch(files, (newFiles) => {
-  mediaFiles.value = newFiles?.data ?? []
+  setFromResponse(newFiles)
 })
-
-function removeFile(filename: string) {
-  mediaFiles.value = mediaFiles.value.filter((file) => file.filename !== filename)
-}
 
 const notify = useNotification()
 
@@ -135,8 +134,7 @@ async function uploadFiles(event: Event) {
     isUploading.value = false
 
     if (res?.length) {
-      mediaFiles.value = [...res, ...mediaFiles.value]
-      isDirty.value = true
+      prependFiles(res)
 
       notify.success({ description: $t('notification.file.upload.success') })
 
