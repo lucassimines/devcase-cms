@@ -111,7 +111,6 @@ watch(files, (newFiles) => {
 
 function removeFile(filename: string) {
   mediaFiles.value = mediaFiles.value.filter((file) => file.filename !== filename)
-  isDirty.value = true
 }
 
 const notify = useNotification()

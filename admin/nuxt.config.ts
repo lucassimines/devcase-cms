@@ -97,6 +97,15 @@ export default defineNuxtConfig({
           format: 'webp',
           width: 300
         }
+      },
+      mediaLibraryThumb: {
+        modifiers: {
+          format: 'webp',
+          quality: 75,
+          width: 240,
+          height: 240,
+          fit: 'contain'
+        }
       }
     }
   }
