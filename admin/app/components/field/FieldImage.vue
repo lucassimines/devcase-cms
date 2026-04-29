@@ -1,8 +1,8 @@
 <template>
-  <div class="relative flex flex-col gap-4 aspect-video">
+  <div class="relative flex aspect-video flex-col gap-4">
     <UButton
       icon="lucide:x"
-      class="absolute -top-3 -right-3 rounded-full z-2 size-6 flex items-center justify-center"
+      class="absolute -top-3 -right-3 z-2 flex size-6 items-center justify-center rounded-full"
       color="neutral"
       variant="outline"
       :ui="{ leadingIcon: 'size-3.5' }"
@@ -12,24 +12,24 @@
 
     <MediaLibrary v-model="model">
       <UButton
-        class="size-full relative overflow-hidden border border-accented p-0"
+        class="border-accented relative size-full overflow-hidden border p-0"
         color="neutral"
         variant="ghost"
         square
       >
-        <div v-if="model" class="size-full flex items-center justify-center relative">
-          <figure class="rounded-sm overflow-hidden">
-            <NuxtImg :src="$file(model ?? '')" class="max-w-full h-full object-contain" />
+        <div v-if="model" class="relative flex size-full items-center justify-center">
+          <figure class="overflow-hidden rounded-sm">
+            <NuxtImg :src="$file(model ?? '')" class="h-full max-w-full object-contain" />
           </figure>
 
           <div
-            class="absolute bottom-0 rounded-sm left-0 w-full p-1.5 bg-muted/90 text-xxs text-accented truncate"
+            class="bg-muted/90 text-xxs text-accented absolute bottom-0 left-0 w-full truncate rounded-sm p-1.5"
             v-text="model"
           />
         </div>
 
-        <div v-else class="size-full flex flex-col items-center justify-center gap-2">
-          <div class="size-10 bg-white/5 text-muted rounded-full flex items-center justify-center">
+        <div v-else class="flex size-full flex-col items-center justify-center gap-2">
+          <div class="text-muted flex size-10 items-center justify-center rounded-full bg-white/5">
             <Icon name="lucide:image" class="text-xl" />
           </div>
 
