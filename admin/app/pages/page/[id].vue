@@ -56,7 +56,6 @@ function getContentSchema(code: string) {
       return z.object({
         intro: z.object({
           title: z.string().default(''),
-          subtitle: z.string().default(''),
           description: z.string().default('')
         })
       })
@@ -89,6 +88,14 @@ const schema = z
       for (const issue of result.error.issues) {
         ctx.addIssue({ ...issue, path: ['content', ...issue.path] })
       }
+    }
+  })
+  .transform((val) => {
+    const result = getContentSchema(val.code).safeParse(val.content)
+
+    return {
+      ...val,
+      content: result.success ? result.data : val.content
     }
   }) as z.ZodType<ModelInput<PageUpdate>>
 </script>

@@ -13,7 +13,7 @@
     <template v-if="tabs?.length" #toolbar>
       <FormTabNav :tabs="tabs" />
 
-      <div class="flex justify-end items-center gap-6 grow">
+      <div class="flex grow items-center justify-end gap-6">
         <USwitch v-if="hasZodSchemaProp(schema, 'published')" v-model="state.published" />
 
         <UButton

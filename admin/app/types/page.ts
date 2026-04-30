@@ -27,7 +27,6 @@ export type PageAbout = typeof PAGE_ABOUT_DEFAULT
 export const PAGE_HOME_DEFAULT = {
   intro: {
     title: '',
-    subtitle: '',
     description: ''
   }
 }

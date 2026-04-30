@@ -4,10 +4,6 @@
       <UInput v-model="model.intro.title" />
     </UFormField>
 
-    <UFormField :label="$t('subtitle')" name="content.intro.subtitle">
-      <UInput v-model="model.intro.subtitle" />
-    </UFormField>
-
     <UFormField :label="$t('description')" name="content.intro.description">
       <UTextarea v-model="model.intro.description" :rows="8" />
     </UFormField>
