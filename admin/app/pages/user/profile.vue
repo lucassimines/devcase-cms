@@ -16,7 +16,7 @@
           <FieldPassword v-model="profile.password" />
         </UFormField>
 
-        <UFormField name="confirm" :label="t('confirmPassword')">
+        <UFormField name="passwordConfirm" :label="t('confirmPassword')">
           <FieldPassword v-model="passwordConfirm" />
         </UFormField>
       </UPageCard>
@@ -36,9 +36,11 @@ import type { ModelInput } from '~/types/utils'
 
 const { t } = useI18n()
 
+type ProfileInput = ModelInput<AuthUser> & { passwordConfirm?: string }
+
 const passwordConfirm = ref<string | undefined>(undefined)
 
-const schema: z.ZodType<ModelInput<AuthUser>> = z
+const schema: z.ZodType<ProfileInput> = z
   .object({
     name: z.string().min(2),
     email: z.email(),
@@ -49,7 +51,7 @@ const schema: z.ZodType<ModelInput<AuthUser>> = z
       .optional(),
     passwordConfirm: z.string().min(6).optional()
   })
-  .refine((data) => data.password === data.passwordConfirm, {
+  .refine((data) => data.password === passwordConfirm.value, {
     error: "Passwords don't match",
     path: ['passwordConfirm'] // path of error
   })

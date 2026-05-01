@@ -12,9 +12,14 @@ export class UserRepository {
       data.password = await bcrypt.hash(data.password.toString(), bcryptSalt)
     }
 
-    prisma.user.update({
+    return prisma.user.update({
       where: { id: user.id },
-      data
+      data,
+      select: {
+        id: true,
+        name: true,
+        email: true
+      }
     })
   }
 }

@@ -3,8 +3,8 @@ import { Request, Response } from 'express'
 
 export class UserController {
   static async update(req: Request, res: Response) {
-    await UserRepository.update(req.user, req.body)
+    const user = await UserRepository.update(req.user, req.body)
 
-    res.json(200)
+    return res.json(user)
   }
 }
