@@ -13,24 +13,11 @@
         </UFormField>
 
         <UFormField name="password" :label="t('password')">
-          <UInput
-            v-model="profile.password"
-            :type="showPassword ? 'text' : 'password'"
-            :ui="{ trailing: 'pe-1' }"
-          >
-            <template #trailing>
-              <UButton
-                color="neutral"
-                variant="link"
-                size="sm"
-                :icon="showPassword ? 'lucide:eye-off' : 'lucide:eye'"
-                :aria-label="showPassword ? 'Hide password' : 'Show password'"
-                :aria-pressed="showPassword"
-                aria-controls="password"
-                @click="showPassword = !showPassword"
-              />
-            </template>
-          </UInput>
+          <FieldPassword v-model="profile.password" />
+        </UFormField>
+
+        <UFormField name="confirm" :label="t('confirmPassword')">
+          <FieldPassword v-model="passwordConfirm" />
         </UFormField>
       </UPageCard>
 
@@ -49,11 +36,23 @@ import type { ModelInput } from '~/types/utils'
 
 const { t } = useI18n()
 
-const schema: z.ZodType<ModelInput<AuthUser>> = z.object({
-  name: z.string().min(2),
-  email: z.email(),
-  password: z.string().min(6).optional()
-})
+const passwordConfirm = ref<string | undefined>(undefined)
+
+const schema: z.ZodType<ModelInput<AuthUser>> = z
+  .object({
+    name: z.string().min(2),
+    email: z.email(),
+    password: z
+      .string()
+      .min(6)
+      .regex(/^(?=.*[A-Za-z])(?=.*\d).+$/, { message: t('validation.password') })
+      .optional(),
+    passwordConfirm: z.string().min(6).optional()
+  })
+  .refine((data) => data.password === data.passwordConfirm, {
+    error: "Passwords don't match",
+    path: ['passwordConfirm'] // path of error
+  })
 
 const authStore = useAuthStore()
 const { authUser } = storeToRefs(authStore)
@@ -61,8 +60,6 @@ const { authUser } = storeToRefs(authStore)
 type Schema = z.output<typeof schema>
 
 const profile = reactive<Partial<Schema>>({ ...authUser.value }!)
-
-const showPassword = ref(false)
 
 const notify = useNotification()
 

@@ -93,6 +93,15 @@ export default defineNuxtConfig({
     provider: 'ipx',
     domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
     presets: {
+      fieldImage: {
+        modifiers: {
+          format: 'webp',
+          quality: 80,
+          width: 'auto',
+          height: '100%',
+          fit: 'contain'
+        }
+      },
       avatar: {
         modifiers: {
           format: 'webp',
@@ -102,7 +111,7 @@ export default defineNuxtConfig({
       mediaLibraryThumb: {
         modifiers: {
           format: 'webp',
-          quality: 75,
+          quality: 80,
           width: 240,
           height: 240,
           fit: 'contain'

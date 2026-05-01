@@ -12,14 +12,21 @@
 
     <MediaLibrary v-model="model">
       <UButton
-        class="border-accented relative size-full overflow-hidden border p-0"
+        class="border-accented group relative size-full overflow-hidden border p-0"
         color="neutral"
         variant="ghost"
         square
       >
-        <div v-if="model" class="relative flex size-full items-center justify-center">
-          <figure class="overflow-hidden rounded-sm">
-            <NuxtImg :src="$file(model ?? '')" class="h-full max-w-full object-contain" />
+        <div
+          v-if="model"
+          class="bg-default group-hover:bg-default/50 relative flex size-full items-center justify-center"
+        >
+          <figure class="size-full overflow-hidden">
+            <NuxtImg
+              :src="$file(model ?? '')"
+              preset="fieldImage"
+              class="size-full object-contain object-center"
+            />
           </figure>
 
           <div
@@ -28,7 +35,10 @@
           />
         </div>
 
-        <div v-else class="flex size-full flex-col items-center justify-center gap-2">
+        <div
+          v-else
+          class="bg-default group-hover:bg-default/50 flex size-full flex-col items-center justify-center gap-2"
+        >
           <div class="text-muted flex size-10 items-center justify-center rounded-full bg-white/5">
             <Icon name="lucide:image" class="text-xl" />
           </div>
