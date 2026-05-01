@@ -12,13 +12,15 @@
           <UInput v-model="profile.email" type="email" autocomplete="off" />
         </UFormField>
 
-        <UFormField name="password" :label="t('password')">
-          <FieldPassword v-model="profile.password" />
-        </UFormField>
+        <FormColumns>
+          <UFormField name="password" :label="t('password')">
+            <FieldPassword v-model="profile.password" />
+          </UFormField>
 
-        <UFormField name="passwordConfirm" :label="t('confirmPassword')">
-          <FieldPassword v-model="passwordConfirm" />
-        </UFormField>
+          <UFormField name="passwordConfirm" :label="t('confirmPassword')">
+            <FieldPassword v-model="passwordConfirm" />
+          </UFormField>
+        </FormColumns>
       </UPageCard>
 
       <div class="flex justify-end">
