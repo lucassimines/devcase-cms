@@ -1,4 +1,5 @@
 import { ProjectService } from '@src/web/services/project.service.js'
+import { NotFoundError } from '@src/errors/index.js'
 import { Request, Response } from 'express'
 
 export class ProjectController {
@@ -13,6 +14,12 @@ export class ProjectController {
   static async getBySlug(req: Request<{ slug: string }>, res: Response) {
     const { slug } = req.params
 
-    res.json(await ProjectService.findBySlug(slug))
+    const project = await ProjectService.findBySlug(slug)
+
+    if (!project) {
+      throw new NotFoundError('Project not found')
+    }
+
+    res.json(project)
   }
 }

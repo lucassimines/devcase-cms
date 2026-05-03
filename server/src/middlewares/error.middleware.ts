@@ -1,12 +1,12 @@
 import { HttpError } from "@src/errors/http.error.js";
 import type { NextFunction, Request, Response } from "express";
 
-function hasStatusCode(err: unknown): err is { statusCode: number; message?: string } {
+function hasHttpStatus(err: unknown): err is { status?: number; statusCode?: number; message?: string } {
     return (
         typeof err === "object" &&
         err !== null &&
-        "statusCode" in err &&
-        typeof (err as { statusCode: unknown }).statusCode === "number"
+        (("statusCode" in err && typeof (err as { statusCode: unknown }).statusCode === "number") ||
+            ("status" in err && typeof (err as { status: unknown }).status === "number"))
     );
 }
 
@@ -20,10 +20,11 @@ export default function errorMiddleware(
         return res.status(err.statusCode).json({ message: err.message });
     }
 
-    // http-errors package (used in errors.utils) and any error with statusCode
-    if (hasStatusCode(err)) {
+    // Supports http-errors and any error carrying status/statusCode
+    if (hasHttpStatus(err)) {
+        const statusCode = err.statusCode ?? err.status ?? 500;
         const message = err.message ?? (err instanceof Error ? err.message : "Error");
-        return res.status(err.statusCode).json({ message: String(message) });
+        return res.status(statusCode).json({ message: String(message) });
     }
 
     console.error(err);

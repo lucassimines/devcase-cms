@@ -1,4 +1,5 @@
 import errorMiddleware from '@src/middlewares/error.middleware.js'
+import { NotFoundError } from '@src/errors/index.js'
 import { staticDirectory } from '@src/utils/storage-path.utils.js'
 import logger from '@src/utils/logger.utils.js'
 import cors from 'cors'
@@ -36,6 +37,10 @@ const [{ default: authRouter }, { default: adminRouter }, { default: webRouter }
 app.use(`${basePath}/auth`, authRouter)
 app.use(`${basePath}/admin`, adminRouter)
 app.use(`${basePath}`, webRouter)
+
+app.use((_req, _res, next) => {
+  next(new NotFoundError('Route not found'))
+})
 
 app.use(errorMiddleware)
 
