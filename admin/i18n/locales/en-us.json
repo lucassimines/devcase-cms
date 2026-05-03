@@ -1,7 +1,8 @@
 {
   "nav": {
     "home": "Home",
-    "projects": "Projects"
+    "projects": "Projects",
+    "settings": "Settings"
   },
   "general": "General",
   "title": "Title",
@@ -90,6 +91,10 @@
       "name": "Solution | Solutions",
       "create": "Create Solution",
       "edit": "Edit Solution"
+    },
+    "settings": {
+      "name": "Settings",
+      "edit": "Edit Settings"
     }
   },
   "table": {

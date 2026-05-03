@@ -31,6 +31,12 @@ export default defineNuxtPlugin({
         icon: 'lucide:puzzle',
         label: i18n.t('entity.solution.name', 2)
       }
+      // settings: {
+      //   model: 'settings',
+      //   path: '/settings',
+      //   icon: 'lucide:settings',
+      //   label: i18n.t('entity.settings.name')
+      // }
     } satisfies Entities
 
     return {
