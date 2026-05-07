@@ -1,9 +1,8 @@
 import { prisma } from '@src/db.js'
+import { PageQuery } from '@src/web/queries/page.query.js'
 import { ProjectQuery } from '@src/web/queries/project.query.js'
 
 const CHUNK_SIZE = 100
-
-const pageWhere = { published: true }
 
 function paginate(page: number) {
   return { skip: (page - 1) * CHUNK_SIZE, take: CHUNK_SIZE }
@@ -14,7 +13,7 @@ export class SitemapService {
 
   static async getCounts() {
     const [pages, projects] = await Promise.all([
-      prisma.page.count({ where: pageWhere }),
+      prisma.page.count({ where: PageQuery.published() }),
       prisma.project.count({ where: ProjectQuery.published() })
     ])
 
@@ -22,6 +21,18 @@ export class SitemapService {
       pages: Math.max(1, Math.ceil(pages / CHUNK_SIZE)),
       projects: Math.max(1, Math.ceil(projects / CHUNK_SIZE))
     }
+  }
+
+  static async getPages(page: number) {
+    return await prisma.page.findMany({
+      where: PageQuery.published(),
+      select: {
+        slug: true,
+        updatedAt: true
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+      ...paginate(page)
+    })
   }
 
   static async getProjects(page: number) {

@@ -1,15 +1,5 @@
 import { prisma } from '@src/db.js'
-import type { Prisma } from '@src/generated/prisma/client.js'
-
-const PageQuery = {
-  published: (): Prisma.PageWhereInput => ({
-    published: true
-  }),
-
-  orderByPosition: (): Prisma.PageOrderByWithRelationInput => ({
-    order: 'asc'
-  })
-}
+import { PageQuery } from '@src/web/queries/page.query.js'
 
 export class PageService {
   static async menuPages() {
