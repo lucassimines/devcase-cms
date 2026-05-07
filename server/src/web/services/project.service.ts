@@ -1,16 +1,6 @@
 import { prisma } from '@src/db.js'
-import type { Prisma } from '@src/generated/prisma/client.js'
 import { paginate } from '@src/utils/paginate.utils.js'
-
-const ProjectQuery = {
-  published: (): Prisma.ProjectWhereInput => ({
-    published: true
-  }),
-
-  orderByPosition: (): Prisma.ProjectOrderByWithRelationInput => ({
-    order: 'asc'
-  })
-}
+import { ProjectQuery } from '@src/web/queries/project.query.js'
 
 export class ProjectService {
   static featured() {

@@ -4,6 +4,7 @@ import bootstrap from './bootstrap.route.js'
 import health from './health.route.js'
 import page from './page.route.js'
 import project from './project.route.js'
+import sitemap from './sitemap.route.js'
 
 const router = Router()
 
@@ -11,7 +12,8 @@ const routes = [
   ['bootstrap', bootstrap],
   ['health', health],
   ['pages', page],
-  ['projects', project]
+  ['projects', project],
+  ['sitemap', sitemap]
 ] as const
 
 for (const [path, route] of routes) {
