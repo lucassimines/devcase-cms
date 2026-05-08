@@ -9,8 +9,12 @@
     <UEditorToolbar
       :editor="editor"
       :items="items"
-      class="border-b border-muted overflow-x-auto p-2"
-    />
+      class="border-muted overflow-x-auto border-b p-2"
+    >
+      <template #link>
+        <EditorLinkPopover :editor="editor" auto-open />
+      </template>
+    </UEditorToolbar>
   </UEditor>
 </template>
 
@@ -79,6 +83,10 @@ const items = [
       kind: 'mark',
       mark: 'code',
       icon: 'i-lucide-code'
+    },
+    {
+      slot: 'link' as const,
+      icon: 'i-lucide-link'
     }
   ]
 ] satisfies EditorToolbarItem[][]
