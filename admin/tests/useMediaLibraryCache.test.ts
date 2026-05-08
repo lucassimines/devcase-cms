@@ -1,7 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-
-import type { File } from '~/types/file'
 import { useMediaLibraryCache } from '~/composables/useMediaLibraryCache'
+import type { File } from '~/types/file'
 
 type StateRef<T> = { value: T }
 
