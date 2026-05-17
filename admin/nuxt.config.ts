@@ -1,7 +1,5 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
-const imagesBase = (process.env.NUXT_PUBLIC_IMAGES_URL || '').replace(/\/$/, '')
-
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
@@ -96,7 +94,9 @@ export default defineNuxtConfig({
   image: {
     provider: 'ipx',
     domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
-    alias: imagesBase ? { cms: imagesBase } : {},
+    alias: {
+      cms: process.env.NUXT_PUBLIC_IMAGES_URL || ''
+    },
     presets: {
       fieldImage: {
         modifiers: {
