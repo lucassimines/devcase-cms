@@ -8,7 +8,7 @@ const CACHE_TTL_MS = 60 * 60 * 1000 // 1 hour
 
 const TYPES = ['pages', 'projects'] as const
 
-const { FRONT_URL } = process.env
+const { FRONTEND_URL } = process.env
 
 type SitemapType = (typeof TYPES)[number]
 
@@ -61,7 +61,7 @@ export class SitemapController {
 
       for (const type of TYPES) {
         for (let i = 1; i <= counts[type]; i++) {
-          entries.push(`  <sitemap><loc>${FRONT_URL}/sitemap/${type}-${i}.xml</loc></sitemap>`)
+          entries.push(`  <sitemap><loc>${FRONTEND_URL}/sitemap/${type}-${i}.xml</loc></sitemap>`)
         }
       }
 
@@ -103,10 +103,10 @@ export class SitemapController {
     if (cached) return res.send(cached)
 
     try {
-      const hostname = FRONT_URL
+      const hostname = FRONTEND_URL
 
-      if (!FRONT_URL) {
-        throw new Error('FRONT_URL is not defined')
+      if (!FRONTEND_URL) {
+        throw new Error('FRONTEND_URL is not defined')
       }
 
       const smStream = new SitemapStream({ hostname })

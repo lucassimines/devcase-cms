@@ -9,7 +9,7 @@ const headerName = 'x-prerender-revalidate' as const
  */
 export class RevalidateService {
   static async revalidateFrontend(): Promise<void> {
-    const url = process.env.FRONT_URL
+    const url = process.env.FRONTEND_URL
     const token = process.env.PRERENDER_REVALIDATE_TOKEN
 
     if (!url || !token) {

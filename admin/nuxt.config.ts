@@ -23,7 +23,8 @@ export default defineNuxtConfig({
       apiUrl: process.env.API_BASE_URL,
       adminApiUrl: `${process.env.API_BASE_URL}/admin`,
       appName: process.env.APP_NAME,
-      imagesUrl: process.env.NUXT_PUBLIC_IMAGES_URL
+      imagesUrl: process.env.NUXT_PUBLIC_IMAGES_URL,
+      frontendUrl: process.env.FRONTEND_URL
     }
   },
 

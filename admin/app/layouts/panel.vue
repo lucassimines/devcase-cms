@@ -17,7 +17,7 @@
     </template>
 
     <template #body>
-      <div :class="{ 'flex gap-6 flex-col xl:flex-row': slots.sidebar }">
+      <div :class="{ 'flex flex-col gap-6 xl:flex-row': slots.sidebar }">
         <Container>
           <slot />
         </Container>

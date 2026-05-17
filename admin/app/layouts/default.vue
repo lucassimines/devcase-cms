@@ -8,8 +8,10 @@
       class="bg-elevated/25"
       :ui="{ footer: 'lg:border-t lg:border-default' }"
     >
-      <template #header="{ collapsed }">
-        <TeamsMenu :collapsed="collapsed" />
+      <template #header>
+        <NuxtLink :to="frontendUrl" target="_blank">
+          <Logo />
+        </NuxtLink>
       </template>
 
       <template #default="{ collapsed }">
@@ -35,4 +37,6 @@
 const open = ref(false)
 
 const { navigation } = useNavigation()
+
+const { frontendUrl } = useRuntimeConfig().public
 </script>
