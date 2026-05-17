@@ -12,6 +12,8 @@
   "slug": "Slug",
   "order": "Order",
   "published": "Published",
+  "draft": "Draft",
+  "status": "Status",
   "date": "Date",
   "profile": "Profile",
   "content": "Content",

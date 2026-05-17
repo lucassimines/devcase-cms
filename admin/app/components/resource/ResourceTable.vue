@@ -250,7 +250,7 @@ const columnVisibility = ref()
 const UCheckbox = resolveComponent('UCheckbox')
 const ULink = resolveComponent('ULink')
 const UButton = resolveComponent('UButton')
-const USwitch = resolveComponent('USwitch')
+const UBadge = resolveComponent('UBadge')
 const Icon = resolveComponent('Icon')
 
 const baseColumns: TableColumn<T>[] = [
@@ -317,11 +317,13 @@ const publishedColumn = computed<TableColumn<T> | undefined>(() => {
   return {
     id: 'published',
     accessorKey: 'published',
-    header: $t('published'),
+    header: $t('status'),
     cell: ({ row }) =>
-      h(USwitch, {
-        modelValue: Boolean(row.original.published),
-        disabled: true
+      h(UBadge, {
+        label: row.original.published ? $t('published') : $t('draft'),
+        color: row.original.published ? 'success' : 'neutral',
+        variant: 'soft',
+        size: 'sm'
       }),
     meta: {
       class: {
