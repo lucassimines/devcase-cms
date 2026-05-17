@@ -1,14 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 const imagesBase = (process.env.NUXT_PUBLIC_IMAGES_URL || '').replace(/\/$/, '')
-let imagesDomain = process.env.NUXT_IMAGES_DOMAIN || ''
-if (!imagesDomain && imagesBase) {
-  try {
-    imagesDomain = new URL(imagesBase).host
-  } catch {
-    /* invalid NUXT_PUBLIC_IMAGES_URL */
-  }
-}
 
 export default defineNuxtConfig({
   modules: [
@@ -102,8 +94,8 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: process.env.VERCEL ? 'vercel' : 'ipx',
-    domains: imagesDomain ? [imagesDomain] : [],
+    provider: 'ipx',
+    domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
     alias: imagesBase ? { cms: imagesBase } : {},
     presets: {
       fieldImage: {
