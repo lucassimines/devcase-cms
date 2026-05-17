@@ -32,6 +32,17 @@ const columns: TableColumn<Project>[] = [
     header: $t('slug')
   },
   {
+    id: 'sortOrder',
+    accessorKey: 'order',
+    header: $t('order'),
+    meta: {
+      class: {
+        th: 'w-20',
+        td: 'w-20 tabular-nums'
+      }
+    }
+  },
+  {
     id: 'actions'
   }
 ]

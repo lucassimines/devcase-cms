@@ -10,6 +10,8 @@
   "code": "Code",
   "name": "Name",
   "slug": "Slug",
+  "order": "Order",
+  "date": "Date",
   "profile": "Profile",
   "content": "Content",
   "icon": "Icon",

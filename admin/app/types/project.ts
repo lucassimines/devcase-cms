@@ -4,7 +4,10 @@ import type { Technology } from '~/types/technology'
 
 export interface Project {
   id: string
+  order: number
   published: boolean
+  createdAt: string
+  updatedAt: string
   name: string
   url?: string
   description: string

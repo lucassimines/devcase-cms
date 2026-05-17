@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-col gap-4 sm:gap-6 flex-1">
+  <div class="flex flex-1 flex-col gap-4 sm:gap-6">
     <div class="flex flex-wrap items-center justify-between gap-1.5">
       <UInput
         :key="status"
@@ -36,7 +36,7 @@
       </UButton>
     </div>
 
-    <div class="flex-1 max-h-full overflow-hidden flex flex-col">
+    <div class="flex max-h-full flex-1 flex-col overflow-hidden">
       <UTable
         ref="table"
         v-model:column-visibility="columnVisibility"
@@ -76,10 +76,10 @@
 
       <div
         v-if="paginatedList?.data"
-        class="flex items-center justify-between gap-3 border-t border-default pt-4 mt-auto"
+        class="border-default mt-auto flex items-center justify-between gap-3 border-t pt-4"
       >
         <div
-          class="text-sm text-muted"
+          class="text-muted text-sm"
           v-text="`${selectedCount} of ${paginatedList.meta.total || 0} row(s) selected.`"
         />
 
@@ -97,18 +97,28 @@
   </div>
 </template>
 
-<script setup lang="ts" generic="T extends { id?: string | number; name?: string; slug?: string }">
+<script
+  setup
+  lang="ts"
+  generic="T extends { id?: string | number; name?: string; slug?: string; createdAt?: string }"
+>
 import type { TableColumn, TableRow, TableSlots } from '@nuxt/ui'
 import { useSortable } from '@vueuse/integrations/useSortable'
 import type { PaginationQuery } from '~/types/pagination'
 import type { PaginatedTableList, TableListItem } from '~/types/table-list'
 
-const props = defineProps<{
-  columns: TableColumn<T>[]
-  endpoint: string
-  filterBy: keyof T | keyof T[]
-  reorderable?: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    columns: TableColumn<T>[]
+    endpoint: string
+    filterBy: keyof T | keyof T[]
+    reorderable?: boolean
+    showCreatedAt?: boolean
+  }>(),
+  {
+    showCreatedAt: true
+  }
+)
 
 defineSlots<
   TableSlots<T> & {
@@ -118,6 +128,7 @@ defineSlots<
 >()
 
 const route = useRoute()
+const { format: formatDate } = useDate()
 
 const searchTerm = ref('')
 const searchTermDebounced = refDebounced(searchTerm, 400)
@@ -289,8 +300,39 @@ const orderColumn = computed<TableColumn<T> | undefined>(() => {
   }
 })
 
+const createdAtColumn = computed<TableColumn<T> | undefined>(() => {
+  if (!props.showCreatedAt) return
+
+  return {
+    id: 'createdAt',
+    accessorKey: 'createdAt',
+    header: $t('date'),
+    cell: ({ row }) => formatDate(row.original.createdAt),
+    meta: {
+      class: {
+        th: 'w-32',
+        td: 'w-32 text-muted'
+      }
+    }
+  }
+})
+
+function mergeUserColumns(columns: TableColumn<T>[]): TableColumn<T>[] {
+  const withoutCreatedAt = columns.filter((column) => column.id !== 'createdAt')
+  const createdAt = createdAtColumn.value
+  if (!createdAt) return withoutCreatedAt
+
+  const actionsIndex = withoutCreatedAt.findIndex((column) => column.id === 'actions')
+  if (actionsIndex === -1) return [...withoutCreatedAt, createdAt]
+
+  return [
+    ...withoutCreatedAt.slice(0, actionsIndex),
+    createdAt,
+    ...withoutCreatedAt.slice(actionsIndex)
+  ]
+}
+
 const normalizedColumns = computed<TableColumn<T>[]>(() => {
-  // Merge "name" column from props.columns if it exists
   const nameColumn = props.columns.find((column) => column.id === 'name')
   const slugColumn = props.columns.find((column) => column.id === 'slug')
 
@@ -302,7 +344,7 @@ const normalizedColumns = computed<TableColumn<T>[]>(() => {
     nameColumn.cell = ({ row }) => makeLinkRow(row, 'name')
   }
 
-  return [orderColumn.value, ...baseColumns, ...props.columns].filter(
+  return [orderColumn.value, ...baseColumns, ...mergeUserColumns(props.columns)].filter(
     (c): c is TableColumn<T> => c != null
   )
 })
