@@ -17,14 +17,24 @@ export class RevalidateService {
     const headers = { [headerName]: token }
 
     try {
-      let res = await fetch(url, { method: 'HEAD', headers })
+      let res = await fetch(url, { method: 'GET', headers })
       if (res.status === 405) {
-        res = await fetch(url, { method: 'GET', headers })
+        res = await fetch(url, { method: 'HEAD', headers })
       }
+
+      const cacheStatus = res.headers.get('x-vercel-cache') ?? 'unknown'
       if (!res.ok) {
         const text = await res.text().catch(() => '')
-        logger.error('Frontend revalidate failed: status %d %s', res.status, text)
+        logger.error(
+          'Frontend revalidate failed: status %d cache=%s %s',
+          res.status,
+          cacheStatus,
+          text
+        )
+        return
       }
+
+      logger.info('Frontend revalidate ok: status %d cache=%s url=%s', res.status, cacheStatus, url)
     } catch (err) {
       logger.error('Frontend revalidate request error: %o', err)
     }
