@@ -6,17 +6,18 @@
 
   --text-xxs: 0.6875rem; /* 11px */
 
-  --color-green-50: #effdf5;
-  --color-green-100: #d9fbe8;
-  --color-green-200: #b3f5d1;
-  --color-green-300: #75edae;
-  --color-green-400: #00dc82;
-  --color-green-500: #00c16a;
-  --color-green-600: #00a155;
-  --color-green-700: #007f45;
-  --color-green-800: #016538;
-  --color-green-900: #0a5331;
-  --color-green-950: #052e16;
+  --ui-primary: var(--color-primary-500);
+  --color-primary-50: #eef4ff;
+  --color-primary-100: #d9e6ff;
+  --color-primary-200: #bcd3ff;
+  --color-primary-300: #8eb4ff;
+  --color-primary-400: #5b8cff;
+  --color-primary-500: #0055ff;
+  --color-primary-600: #0047d6;
+  --color-primary-700: #0038ab;
+  --color-primary-800: #002d87;
+  --color-primary-900: #00266d;
+  --color-primary-950: #00153d;
 }
 
 html,

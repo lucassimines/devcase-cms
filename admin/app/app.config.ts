@@ -51,7 +51,7 @@ export default defineAppConfig({
       }
     },
     colors: {
-      primary: 'green',
+      primary: 'primary',
       neutral: 'zinc'
     },
     button: {
