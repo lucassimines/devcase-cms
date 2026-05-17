@@ -92,6 +92,7 @@ export default defineNuxtConfig({
 
   image: {
     domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
+    provider: 'vercel',
     presets: {
       fieldImage: {
         modifiers: {
