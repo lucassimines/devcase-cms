@@ -100,7 +100,15 @@
 <script
   setup
   lang="ts"
-  generic="T extends { id?: string | number; name?: string; slug?: string; createdAt?: string }"
+  generic="
+    T extends {
+      id?: string | number
+      name?: string
+      slug?: string
+      createdAt?: string
+      published?: boolean
+    }
+  "
 >
 import type { TableColumn, TableRow, TableSlots } from '@nuxt/ui'
 import { useSortable, type UseSortableOptions } from '@vueuse/integrations/useSortable'
@@ -114,9 +122,11 @@ const props = withDefaults(
     filterBy: keyof T | keyof T[]
     reorderable?: boolean
     showCreatedAt?: boolean
+    showPublished?: boolean
   }>(),
   {
-    showCreatedAt: true
+    showCreatedAt: true,
+    showPublished: false
   }
 )
 
@@ -240,6 +250,7 @@ const columnVisibility = ref()
 const UCheckbox = resolveComponent('UCheckbox')
 const ULink = resolveComponent('ULink')
 const UButton = resolveComponent('UButton')
+const USwitch = resolveComponent('USwitch')
 const Icon = resolveComponent('Icon')
 
 const baseColumns: TableColumn<T>[] = [
@@ -300,6 +311,27 @@ const orderColumn = computed<TableColumn<T> | undefined>(() => {
   }
 })
 
+const publishedColumn = computed<TableColumn<T> | undefined>(() => {
+  if (!props.showPublished) return
+
+  return {
+    id: 'published',
+    accessorKey: 'published',
+    header: $t('published'),
+    cell: ({ row }) =>
+      h(USwitch, {
+        modelValue: Boolean(row.original.published),
+        disabled: true
+      }),
+    meta: {
+      class: {
+        th: 'w-24',
+        td: 'w-24'
+      }
+    }
+  }
+})
+
 const createdAtColumn = computed<TableColumn<T> | undefined>(() => {
   if (!props.showCreatedAt) return
 
@@ -317,19 +349,27 @@ const createdAtColumn = computed<TableColumn<T> | undefined>(() => {
   }
 })
 
+function insertBeforeActions(
+  columns: TableColumn<T>[],
+  column: TableColumn<T> | undefined
+): TableColumn<T>[] {
+  if (!column) return columns
+
+  const actionsIndex = columns.findIndex((col) => col.id === 'actions')
+  if (actionsIndex === -1) return [...columns, column]
+
+  return [...columns.slice(0, actionsIndex), column, ...columns.slice(actionsIndex)]
+}
+
 function mergeUserColumns(columns: TableColumn<T>[]): TableColumn<T>[] {
-  const withoutCreatedAt = columns.filter((column) => column.id !== 'createdAt')
-  const createdAt = createdAtColumn.value
-  if (!createdAt) return withoutCreatedAt
+  const withoutAutoColumns = columns.filter(
+    (column) => column.id !== 'createdAt' && column.id !== 'published'
+  )
 
-  const actionsIndex = withoutCreatedAt.findIndex((column) => column.id === 'actions')
-  if (actionsIndex === -1) return [...withoutCreatedAt, createdAt]
-
-  return [
-    ...withoutCreatedAt.slice(0, actionsIndex),
-    createdAt,
-    ...withoutCreatedAt.slice(actionsIndex)
-  ]
+  return insertBeforeActions(
+    insertBeforeActions(withoutAutoColumns, createdAtColumn.value),
+    publishedColumn.value
+  )
 }
 
 const normalizedColumns = computed<TableColumn<T>[]>(() => {

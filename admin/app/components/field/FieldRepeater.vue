@@ -10,11 +10,11 @@
       class="flex flex-col gap-3"
     >
       <template #item="{ index }: { index: number }">
-        <div class="flex flex-col gap-4 p-4 bg-muted rounded-md" :data-item="`${name}-${index}`">
+        <div class="bg-muted flex flex-col gap-4 rounded-md p-4" :data-item="`${name}-${index}`">
           <header v-if="max > 1" class="flex items-center justify-between gap-2">
             <UButton
               icon="lucide:grip-vertical"
-              class="handle cursor-grab active:cursor-grabbing px-0"
+              class="handle cursor-grab px-0 active:cursor-grabbing"
               color="neutral"
               variant="link"
               :label="`${typeof labels.header === 'function' ? labels.header(index, draggedItems.length) : labels.header}`"

@@ -11,6 +11,7 @@
   "name": "Name",
   "slug": "Slug",
   "order": "Order",
+  "published": "Published",
   "date": "Date",
   "profile": "Profile",
   "content": "Content",

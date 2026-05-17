@@ -4,7 +4,7 @@
       <ResourceFormCreate endpoint="/page" has-slug :title="$t('entity.page.create')" />
     </template>
 
-    <ResourceTable :columns="columns" endpoint="/page" filter-by="name" reorderable>
+    <ResourceTable :columns="columns" endpoint="/page" filter-by="name" reorderable show-published>
       <template #actions-cell="{ row, refresh }">
         <ResourceTableActions
           :to="{ name: 'page-id', params: { id: row.original.id } }"
