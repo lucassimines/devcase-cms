@@ -50,24 +50,11 @@ export class ProjectService {
   }
 
   /** Next published project in display order, or null if last / slug not found. */
-  static async findNextProject(slug: string) {
-    const nextSelect = {
-      id: true,
-      name: true,
-      slug: true
-    } as const
-
-    const current = await prisma.project.findFirst({
-      where: { slug, ...ProjectQuery.published() },
-      select: { order: true, slug: true }
-    })
-
-    if (!current) return null
-
+  static async findNextProject(order: number, slug: string) {
     return prisma.project.findFirst({
       where: {
         ...ProjectQuery.published(),
-        OR: [{ order: { gt: current.order } }, { order: current.order, slug: { gt: current.slug } }]
+        OR: [{ order: { gt: order } }, { order: order, slug: { gt: slug } }]
       },
       orderBy: ProjectQuery.orderByDisplay(),
       select: {
