@@ -96,26 +96,21 @@ export default defineNuxtConfig({
     presets: {
       fieldImage: {
         modifiers: {
-          format: 'webp',
           quality: 80,
           width: 'auto',
-          height: '100%',
-          fit: 'contain'
+          height: '100%'
         }
       },
       avatar: {
         modifiers: {
-          format: 'webp',
           width: 300
         }
       },
       mediaLibraryThumb: {
         modifiers: {
-          format: 'webp',
           quality: 80,
           width: 240,
-          height: 240,
-          fit: 'contain'
+          height: 240
         }
       }
     }
