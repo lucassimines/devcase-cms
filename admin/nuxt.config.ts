@@ -91,26 +91,34 @@ export default defineNuxtConfig({
   },
 
   image: {
-    domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
-    provider: 'vercel',
+    provider: process.env.VERCEL ? 'vercel' : 'ipx',
+    domains:
+      process.env.NUXT_IMAGES_DOMAIN?.split(',')
+        .map((domain) => domain.trim())
+        .filter(Boolean) ?? [],
     presets: {
       fieldImage: {
         modifiers: {
+          format: 'webp',
           quality: 80,
-          width: 'auto',
-          height: '100%'
+          width: 1280,
+          fit: 'inside'
         }
       },
       avatar: {
         modifiers: {
+          format: 'webp',
+          quality: 80,
           width: 300
         }
       },
       mediaLibraryThumb: {
         modifiers: {
+          format: 'webp',
           quality: 80,
           width: 240,
-          height: 240
+          height: 240,
+          fit: 'inside'
         }
       }
     }

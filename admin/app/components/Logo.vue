@@ -1,5 +1,5 @@
 <template>
-  <NuxtImg :src="`/images/logo${mono ? '-mono' : ''}.svg`" alt="Logo" :class="logo({ size })" />
+  <img :src="`/images/logo${mono ? '-mono' : ''}.svg`" alt="Logo" :class="logo({ size })" />
 </template>
 
 <script setup lang="ts">
