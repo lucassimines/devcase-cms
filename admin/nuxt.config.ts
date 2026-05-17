@@ -93,9 +93,9 @@ export default defineNuxtConfig({
 
   image: {
     provider: 'ipx',
-    domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
+    domains: process.env.NUXT_IMAGE_DOMAINS?.split(',') || [],
     alias: {
-      cms: process.env.NUXT_PUBLIC_IMAGES_URL || ''
+      cms: process.env.NUXT_IMAGE_CMS_ALIAS || ''
     },
     presets: {
       fieldImage: {
