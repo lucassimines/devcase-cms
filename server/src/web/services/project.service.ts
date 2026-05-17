@@ -1,4 +1,5 @@
 import { prisma } from '@src/db.js'
+import type { ProjectSelect } from '@src/generated/prisma/models.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { ProjectQuery } from '@src/web/queries/project.query.js'
 
@@ -49,19 +50,29 @@ export class ProjectService {
     })
   }
 
-  /** Next published project in display order, or null if last / slug not found. */
+  /** Next published project in display order; wraps to the first when last. */
   static async findNextProject(order: number, slug: string) {
-    return prisma.project.findFirst({
+    const select: ProjectSelect = {
+      id: true,
+      name: true,
+      slug: true
+    }
+
+    const next = await prisma.project.findFirst({
       where: {
         ...ProjectQuery.published(),
         OR: [{ order: { gt: order } }, { order: order, slug: { gt: slug } }]
       },
       orderBy: ProjectQuery.orderByDisplay(),
-      select: {
-        id: true,
-        name: true,
-        slug: true
-      }
+      select
+    })
+
+    if (next) return next
+
+    return prisma.project.findFirst({
+      where: ProjectQuery.published(),
+      orderBy: ProjectQuery.orderByDisplay(),
+      select
     })
   }
 }
