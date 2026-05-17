@@ -91,7 +91,7 @@ export default defineNuxtConfig({
   },
 
   image: {
-    domains: process.env.NUXT_IMAGES_DOMAIN?.split(',') || [],
+    domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
     presets: {
       fieldImage: {
         modifiers: {
