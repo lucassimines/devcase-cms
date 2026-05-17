@@ -6,7 +6,7 @@ export class ProjectService {
   static featured() {
     return prisma.project.findMany({
       where: ProjectQuery.published(),
-      orderBy: ProjectQuery.orderByPosition(),
+      orderBy: ProjectQuery.orderByDisplay(),
       select: {
         id: true,
         slug: true,
@@ -21,7 +21,7 @@ export class ProjectService {
   static paginatedList() {
     return paginate(prisma.project, {
       where: ProjectQuery.published(),
-      orderBy: ProjectQuery.orderByPosition()
+      orderBy: ProjectQuery.orderByDisplay()
     })
   }
 
@@ -49,9 +49,27 @@ export class ProjectService {
     })
   }
 
-  static async findProjectByOrder(order: number) {
+  /** Next published project in display order, or null if last / slug not found. */
+  static async findNextProject(slug: string) {
+    const nextSelect = {
+      id: true,
+      name: true,
+      slug: true
+    } as const
+
+    const current = await prisma.project.findFirst({
+      where: { slug, ...ProjectQuery.published() },
+      select: { order: true, slug: true }
+    })
+
+    if (!current) return null
+
     return prisma.project.findFirst({
-      where: { order },
+      where: {
+        ...ProjectQuery.published(),
+        OR: [{ order: { gt: current.order } }, { order: current.order, slug: { gt: current.slug } }]
+      },
+      orderBy: ProjectQuery.orderByDisplay(),
       select: {
         id: true,
         name: true,

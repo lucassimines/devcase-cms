@@ -5,7 +5,8 @@ export const PageQuery = {
     published: true
   }),
 
-  orderByPosition: (): Prisma.PageOrderByWithRelationInput => ({
-    order: 'asc'
+  orderByDisplay: (): Prisma.PageOrderByWithRelationInput => ({
+    order: 'asc',
+    slug: 'asc'
   })
 }

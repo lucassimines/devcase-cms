@@ -5,7 +5,7 @@ export class PageService {
   static async menuPages() {
     const pages = await prisma.page.findMany({
       where: PageQuery.published(),
-      orderBy: PageQuery.orderByPosition(),
+      orderBy: PageQuery.orderByDisplay(),
       select: {
         id: true,
         name: true,

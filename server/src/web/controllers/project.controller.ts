@@ -14,18 +14,19 @@ export class ProjectController {
   static async show(req: Request<{ slug: string }>, res: Response) {
     const { slug } = req.params
 
-    const project = await ProjectService.findBySlug(slug)
+    const [project, nextProject] = await Promise.all([
+      ProjectService.findBySlug(slug),
+      ProjectService.findNextProject(slug)
+    ])
 
     if (!project) {
       throw new NotFoundError('Project not found')
     }
 
-    const nextProject = await ProjectService.findProjectByOrder(project.order + 1)
-
     res.json({
       data: project,
       meta: {
-        next: nextProject ?? null
+        next: nextProject
       }
     })
   }
