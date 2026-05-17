@@ -91,11 +91,8 @@ export default defineNuxtConfig({
   },
 
   image: {
-    provider: process.env.VERCEL ? 'vercel' : 'ipx',
-    domains:
-      process.env.NUXT_IMAGES_DOMAIN?.split(',')
-        .map((domain) => domain.trim())
-        .filter(Boolean) ?? [],
+    provider: 'ipx',
+    domains: [process.env.NUXT_IMAGES_DOMAIN || ''],
     presets: {
       fieldImage: {
         modifiers: {
