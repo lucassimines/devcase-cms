@@ -1,17 +1,17 @@
-import { ProjectService } from '@src/web/services/project.service.js'
 import { NotFoundError } from '@src/errors/index.js'
+import { ProjectService } from '@src/web/services/project.service.js'
 import { Request, Response } from 'express'
 
 export class ProjectController {
+  static async index(_req: Request, res: Response) {
+    res.json(await ProjectService.paginatedList())
+  }
+
   static async featured(_req: Request, res: Response) {
     res.json(await ProjectService.featured())
   }
 
-  static async paginatedList(_req: Request, res: Response) {
-    res.json(await ProjectService.paginatedList())
-  }
-
-  static async getBySlug(req: Request<{ slug: string }>, res: Response) {
+  static async show(req: Request<{ slug: string }>, res: Response) {
     const { slug } = req.params
 
     const project = await ProjectService.findBySlug(slug)
@@ -20,6 +20,13 @@ export class ProjectController {
       throw new NotFoundError('Project not found')
     }
 
-    res.json(project)
+    const nextProject = await ProjectService.findProjectByOrder(project.order + 1)
+
+    res.json({
+      data: project,
+      meta: {
+        next: nextProject ?? null
+      }
+    })
   }
 }

@@ -48,4 +48,15 @@ export class ProjectService {
       }
     })
   }
+
+  static async findProjectByOrder(order: number) {
+    return prisma.project.findFirst({
+      where: { order },
+      select: {
+        id: true,
+        name: true,
+        slug: true
+      }
+    })
+  }
 }

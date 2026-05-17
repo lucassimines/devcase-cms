@@ -3,8 +3,8 @@ import { Router } from 'express'
 
 const router = Router()
 
+router.get('/', ProjectController.index)
 router.get('/featured', ProjectController.featured)
-router.get('/list', ProjectController.paginatedList)
-router.get('/:slug', ProjectController.getBySlug)
+router.get('/:slug', ProjectController.show)
 
 export default router
