@@ -119,6 +119,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     if (res?.id) {
       notify.success()
       item.value = res as unknown as typeof item.value
+      try {
+        await $adminApi('/revalidate', { method: 'POST' })
+      } catch {
+        /* ISR webhook is best-effort; save already persisted */
+      }
       return
     }
   } catch (err: unknown) {

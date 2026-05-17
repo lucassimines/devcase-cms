@@ -6,6 +6,7 @@ import dashboardRouter from './dashboard.route.js'
 import fileRouter from './file.route.js'
 import pageRouter from './page.route.js'
 import projectRouter from './project.route.js'
+import revalidateRouter from './revalidate.route.js'
 import solutionRouter from './solution.route.js'
 import technologyRouter from './technology.route.js'
 import userRouter from './user.route.js'
@@ -18,6 +19,7 @@ router.use((req, _res, next) => {
 })
 
 const routes = [
+  ['revalidate', revalidateRouter],
   ['dashboard', dashboardRouter],
   ['file', fileRouter],
   ['user', userRouter],
