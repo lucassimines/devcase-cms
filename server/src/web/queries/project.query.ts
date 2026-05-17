@@ -5,6 +5,10 @@ export const ProjectQuery = {
     published: true
   }),
 
+  orderByPosition: (): Prisma.ProjectOrderByWithRelationInput => ({
+    order: 'asc'
+  }),
+
   orderByDisplay: (): Prisma.ProjectOrderByWithRelationInput[] => [
     { order: 'asc' },
     { slug: 'asc' }

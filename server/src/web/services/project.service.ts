@@ -6,7 +6,7 @@ export class ProjectService {
   static featured() {
     return prisma.project.findMany({
       where: ProjectQuery.published(),
-      orderBy: ProjectQuery.orderByDisplay(),
+      orderBy: ProjectQuery.orderByPosition(),
       select: {
         id: true,
         slug: true,
@@ -21,7 +21,7 @@ export class ProjectService {
   static paginatedList() {
     return paginate(prisma.project, {
       where: ProjectQuery.published(),
-      orderBy: ProjectQuery.orderByDisplay()
+      orderBy: ProjectQuery.orderByPosition()
     })
   }
 
