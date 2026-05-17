@@ -3,7 +3,8 @@ export default defineNuxtPlugin((nuxtApp) => {
     provide: {
       file: (filename: string) => {
         if (!filename) return
-        return `${nuxtApp.$config.public.imagesUrl}/${filename}`
+        // Alias path for NuxtImg — resolved via `image.alias.cms` in nuxt.config
+        return `/cms/${filename}`
       }
     }
   }
