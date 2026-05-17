@@ -103,7 +103,7 @@
   generic="T extends { id?: string | number; name?: string; slug?: string; createdAt?: string }"
 >
 import type { TableColumn, TableRow, TableSlots } from '@nuxt/ui'
-import { useSortable } from '@vueuse/integrations/useSortable'
+import { useSortable, type UseSortableOptions } from '@vueuse/integrations/useSortable'
 import type { PaginationQuery } from '~/types/pagination'
 import type { PaginatedTableList, TableListItem } from '~/types/table-list'
 
@@ -294,7 +294,7 @@ const orderColumn = computed<TableColumn<T> | undefined>(() => {
     cell: () => {
       return h(Icon, {
         name: 'lucide:arrow-up-down',
-        class: 'cursor-grab active:cursor-grabbing text-base hover:text-primary'
+        class: 'drag-handle cursor-grab active:cursor-grabbing text-base hover:text-primary'
       })
     }
   }
@@ -391,6 +391,8 @@ const draggedItems = computed<TableListItem<T>[]>({
   }
 })
 
-const { option } = useSortable('.table-tbody', draggedItems)
-option('animation', 150)
+useSortable('.table-tbody', draggedItems, {
+  animation: 150,
+  handle: '.drag-handle'
+} as UseSortableOptions)
 </script>
