@@ -121,8 +121,9 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
       item.value = res as unknown as typeof item.value
       try {
         await $adminApi('/revalidate', { method: 'POST' })
-      } catch {
+      } catch (revalidateErr: unknown) {
         /* ISR webhook is best-effort; save already persisted */
+        console.warn('ISR revalidate request failed:', revalidateErr)
       }
       return
     }
