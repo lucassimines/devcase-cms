@@ -1,5 +1,6 @@
 import { prisma } from '@src/db.js'
 import type { PageCreateInput, PageUpdateInput } from '@src/generated/prisma/models.js'
+import { createAtTopOrder } from '@src/utils/order.utils.js'
 import { toSlug } from '@src/utils/string.utils.js'
 
 export class PageRepository {
@@ -10,11 +11,9 @@ export class PageRepository {
   }
 
   static create(data: PageCreateInput) {
-    return prisma.page.create({
-      data: {
-        ...data,
-        code: toSlug(data.name)
-      }
+    return createAtTopOrder('page', {
+      ...data,
+      code: toSlug(data.name)
     })
   }
 

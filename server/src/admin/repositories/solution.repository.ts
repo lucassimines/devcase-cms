@@ -1,5 +1,6 @@
 import { prisma } from '@src/db.js'
 import type { SolutionCreateInput, SolutionUpdateInput } from '@src/generated/prisma/models.js'
+import { createAtTopOrder } from '@src/utils/order.utils.js'
 
 export class SolutionRepository {
   static all() {
@@ -13,9 +14,7 @@ export class SolutionRepository {
   }
 
   static create(data: SolutionCreateInput) {
-    return prisma.solution.create({
-      data
-    })
+    return createAtTopOrder('solution', data)
   }
 
   static update(id: string, data: SolutionUpdateInput) {

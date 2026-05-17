@@ -1,6 +1,7 @@
 import { prisma } from '@src/db.js'
 import type { Prisma } from '@src/generated/prisma/client.js'
 import type { ProjectCreateInput, ProjectUpdateInput } from '@src/generated/prisma/models.js'
+import { createAtTopOrder } from '@src/utils/order.utils.js'
 
 type ProjectWithIncludes = Prisma.ProjectGetPayload<{
   include: { technologies: true; solutions: true }
@@ -30,9 +31,7 @@ export class ProjectRepository {
   }
 
   static create(data: ProjectCreateInput) {
-    return prisma.project.create({
-      data
-    })
+    return createAtTopOrder('project', data)
   }
 
   static async update(
