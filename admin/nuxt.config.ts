@@ -32,9 +32,6 @@ export default defineNuxtConfig({
   routeRules: {
     '/api/**': {
       cors: true
-    },
-    '/': {
-      redirect: { to: '/page' }
     }
   },
 
