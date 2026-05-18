@@ -1,16 +1,17 @@
-.PHONY: help up dev dev-server dev-admin down clean whois db-dump db-dump-prisma db-restore-prisma
+.PHONY: help up dev dev-server dev-admin down clean whois db-dump db-restore db-dump-prisma db-restore-prisma
 
 PROJECT_NAME := devcase
 
 SERVER_DIR := server
 ADMIN_DIR := admin
+COMPOSE := docker compose -p $(PROJECT_NAME)
 
 # Default target
 run: up dev
 
 # Start Docker services in detached mode
 up:
-	docker compose -p $(PROJECT_NAME) up -d
+	$(COMPOSE) up -d
 
 # Run development servers for both admin and server concurrently
 dev:
@@ -26,11 +27,11 @@ dev-admin:
 
 # Stop Docker services
 down:
-	docker compose down
+	$(COMPOSE) down
 
 # Stop Docker services and remove volumes
 clean:
-	docker compose down -v
+	$(COMPOSE) down -v
 	
 # Run Prisma Studio
 prisma-studio:
@@ -73,20 +74,45 @@ help:
 	@echo "  make prisma-generate   - Run Prisma Generate"
 	@echo "  make prisma-reset      - Reset database"
 	@echo "  make db-dump           - Dump Postgres database to backups/"
+	@echo "  make db-restore        - Restore SQL dump into local Docker Postgres (DUMP_FILE=path optional)"
 	@echo "  make db-dump-prisma    - Dump database for Prisma (prompts for DATABASE_URL)"
 	@echo "  make db-restore-prisma - Restore db_dump.bak to Prisma (prompts for DATABASE_URL)"
 
 # Dump Postgres database
 db-dump:
 	@mkdir -p backups
-	docker compose exec db pg_dumpall -U postgres > backups/dump_$(shell date +%Y%m%d_%H%M%S).sql
+	$(COMPOSE) exec db pg_dumpall -U postgres > backups/dump_$(shell date +%Y%m%d_%H%M%S).sql
 	@echo "Database dumped to backups/"
+
+# Restore SQL dump into local Docker Postgres
+# Usage:
+#   make db-restore
+#   make db-restore DUMP_FILE=backups/dump_YYYYMMDD_HHMMSS.sql
+db-restore:
+	@DUMP_FILE=$${DUMP_FILE:-$$(ls -1t backups/dump_*.sql 2>/dev/null | awk 'NR==1 { print; exit }')}; \
+	if [ -z "$$DUMP_FILE" ]; then \
+		echo "No SQL dump found in backups/. Pass DUMP_FILE=path/to/dump.sql"; \
+		exit 1; \
+	fi; \
+	if [ ! -f "$$DUMP_FILE" ]; then \
+		echo "Dump file not found: $$DUMP_FILE"; \
+		exit 1; \
+	fi; \
+	echo "Restoring $$DUMP_FILE into local Docker Postgres..."; \
+	$(COMPOSE) exec -T db pg_isready -U postgres >/dev/null; \
+	if awk '/^\\connect postgres$$/{found=1} END{exit found ? 0 : 1}' "$$DUMP_FILE"; then \
+		echo "Detected pg_dumpall format; skipping global role/header section."; \
+		awk 'found{print} /^\\connect postgres$$/{found=1}' "$$DUMP_FILE" | $(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 || exit 1; \
+	else \
+		$(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 < "$$DUMP_FILE" || exit 1; \
+	fi; \
+	echo "Restore complete."
 
 # Dump database for Prisma — prompts for DATABASE_URL
 db-dump-prisma:
 	@read -p "DATABASE_URL: " DATABASE_URL; \
 	CLEAN_URL=$$(echo "$$DATABASE_URL" | sed 's/[&?]pool=[^&]*//g'); \
-	docker compose exec db pg_dump -Fc -v -d "$$CLEAN_URL" -n public > db_dump.bak
+	$(COMPOSE) exec db pg_dump -Fc -v -d "$$CLEAN_URL" -n public > db_dump.bak
 
 # Restore database to Prisma — prompts for DATABASE_URL
 db-restore-prisma:
