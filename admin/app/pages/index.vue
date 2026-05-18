@@ -5,7 +5,7 @@
     </template>
 
     <template #body>
-      <Container>
+      <div class="w-full max-w-2xl">
         <div class="grid gap-4 sm:grid-cols-2">
           <ULink
             v-for="card in dashboardCards"
@@ -33,7 +33,7 @@
             </UCard>
           </ULink>
         </div>
-      </Container>
+      </div>
     </template>
   </UDashboardPanel>
 </template>
