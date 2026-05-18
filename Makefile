@@ -1,4 +1,4 @@
-.PHONY: help up dev dev-server dev-admin down clean whois db-dump db-restore db-dump-prisma db-restore-prisma
+.PHONY: help up dev dev-server dev-admin down clean whois db-dump db-restore db-dump-prisma db-restore-prisma images-prune
 
 PROJECT_NAME := devcase
 
@@ -77,6 +77,7 @@ help:
 	@echo "  make db-restore        - Restore SQL dump into local Docker Postgres (DUMP_FILE=path optional)"
 	@echo "  make db-dump-prisma    - Dump database for Prisma (prompts for DATABASE_URL)"
 	@echo "  make db-restore-prisma - Restore db_dump.bak to Prisma (prompts for DATABASE_URL)"
+	@echo "  make images-prune      - Delete unreferenced files from server/public/images"
 
 # Dump Postgres database
 db-dump:
@@ -120,3 +121,22 @@ db-restore-prisma:
 	CLEAN_URL=$$(echo "$$DATABASE_URL" | sed 's/[&?]pool=[^&]*//g'); \
 	docker run --rm -v "$$(pwd)/db_dump.bak:/db_dump.bak" postgres:17 pg_restore -d "$$CLEAN_URL" -v --no-owner --no-privileges --clean --if-exists /db_dump.bak; \
 	echo "-complete-"
+
+# Delete image files that are not referenced in File table
+images-prune:
+	@set -e; \
+	$(COMPOSE) exec -T db pg_isready -U postgres >/dev/null; \
+	USED_FILE_LIST=$$(mktemp); \
+	$(COMPOSE) exec -T db psql -U postgres -d postgres -At -c 'SELECT filename FROM "File";' > "$$USED_FILE_LIST"; \
+	PRUNED=0; \
+	for FILEPATH in server/public/images/* server/public/images/.*; do \
+		[ -f "$$FILEPATH" ] || continue; \
+		FILENAME=$$(basename "$$FILEPATH"); \
+		[ "$$FILENAME" = "." ] || [ "$$FILENAME" = ".." ] && continue; \
+		if ! awk -v f="$$FILENAME" '$$0==f {found=1} END{exit found?0:1}' "$$USED_FILE_LIST"; then \
+			rm -f "$$FILEPATH"; \
+			PRUNED=$$((PRUNED + 1)); \
+		fi; \
+	done; \
+	rm -f "$$USED_FILE_LIST"; \
+	echo "Pruned $$PRUNED unreferenced image(s)."
