@@ -37,6 +37,10 @@
   "mobile": "Mobile",
   "text": "Text",
   "web": "Web",
+  "text_image": "Image + Text",
+  "textPosition": "Text position",
+  "left": "Left",
+  "right": "Right",
   "showPassword": "Show password",
   "hidePassword": "Hide password",
   "editor": {

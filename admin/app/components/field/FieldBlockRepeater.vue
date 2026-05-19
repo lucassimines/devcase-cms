@@ -24,7 +24,12 @@
 <script setup lang="ts">
 import { blockType, type Block } from '~/types/block'
 
-const { createTextBlockInput, createWebBlockInput, createImageBlockInput } = useFormBlocks()
+const {
+  createTextBlockInput,
+  createWebBlockInput,
+  createImageBlockInput,
+  createTextImageBlockInput
+} = useFormBlocks()
 
 function createBlockInput(): Block {
   return {
@@ -49,6 +54,9 @@ function handleBlockTypeChange(model: Block) {
       break
     case blockType.IMAGE:
       model.content = createImageBlockInput()
+      break
+    case blockType.TEXT_IMAGE:
+      model.content = createTextImageBlockInput()
       break
     default:
       model.content = createTextBlockInput()
