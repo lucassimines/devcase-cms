@@ -69,6 +69,23 @@ model Project {
   updatedAt DateTime @updatedAt
 }
 
+// model Post {
+//   id       String @id @default(uuid())
+//   order    Int    @default(0)
+//   title    Json
+//   subtitle Json?
+
+//   content Json
+//   slug    String  @unique
+//   image   Json
+//   visible Boolean
+
+//   categories Category[] @relation("PostCategories")
+
+//   created_at DateTime @default(now())
+//   updated_at DateTime @updatedAt
+// }
+
 model Technology {
   id   String  @id @default(uuid())
   name String
@@ -94,16 +111,26 @@ model Solution {
 }
 
 // model Category {
-//   id       String     @id @default(uuid())
-//   name     String
-//   order    Int        @default(0)
-//   slug     String     @unique
-//   image    String?
-//   parent   Category?  @relation("ChildToParent", fields: [parentId], references: [id])
-//   parentId String?
-//   children Category[] @relation("ChildToParent")
-//   projects Project[]
+//   id     String       @id @default(uuid())
+//   type   CategoryType
+//   order  Int          @default(0)
+//   title  Json
+//   desc   Json?
+//   slug   String       @unique
+//   fields Json?
 
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
+//   parent    Category? @relation("ChildToParent", fields: [parent_id], references: [id])
+//   parent_id String?
+
+//   children Category[] @relation("ChildToParent")
+
+//   posts Post[] @relation("PostCategories")
+
+//   created_at DateTime  @default(now())
+//   updated_at DateTime  @updatedAt
+//   projects   Project[]
+// }
+
+// enum CategoryType {
+//   POST
 // }
