@@ -1,6 +1,6 @@
 # Devcase CMS
 
-Headless content management system with an admin panel and a public REST API for consuming content on any frontend.
+Headless CMS for developer portfolios — an admin panel and public REST API that powers [Devcase Web](https://github.com/lucassimines/devcase-web).
 
 [![License: PolyForm Shield](https://img.shields.io/badge/License-PolyForm%20Shield-red.svg)](LICENSE)
 
@@ -16,7 +16,18 @@ Devcase CMS separates content management from presentation:
 | **Admin API** (`/api/v1/admin/*`) | Authenticated CRUD, file uploads, cache revalidation |
 | **Public API** (`/api/v1/*`) | Headless content delivery for frontends — pages, projects, bootstrap data, sitemap |
 
-Content is stored as structured JSON (blocks, metadata) in PostgreSQL and served to decoupled frontends (e.g. a marketing site on Vercel).
+Content is stored as structured JSON (blocks, metadata) in PostgreSQL and served to decoupled frontends.
+
+## Companion Frontend
+
+This CMS and its APIs are **ready to work with** [Devcase Web](https://github.com/lucassimines/devcase-web) — a portfolio site for developers to showcase their projects, powered by the public headless API (`/api/v1/*`).
+
+| Piece | Repository | Role |
+| ----- | ---------- | ---- |
+| **CMS & APIs** | [devcase-cms](https://github.com/lucassimines/devcase-cms) (this repo) | Admin panel, content storage, public & admin APIs |
+| **Frontend** | [devcase-web](https://github.com/lucassimines/devcase-web) | Developer portfolio site — pages, projects, bootstrap data, sitemap |
+
+Run the CMS locally (or point at production), configure the web app with your API base URL, and the two repos work together out of the box.
 
 ## Tech Stack
 
@@ -152,7 +163,7 @@ make dev-admin    # Nuxt admin panel only (port 3000)
 | ---------- | --------- |
 | Database   | Prisma.io |
 | API Server | Render    |
-| Frontend   | Vercel    |
+| Frontend   | [devcase-web](https://github.com/lucassimines/devcase-web) (Vercel) |
 
 ---
 
