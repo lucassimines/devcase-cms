@@ -1,6 +1,22 @@
-# Devcase
+# Devcase CMS
 
-Time-tracking and client management platform for freelancers and agencies.
+Headless content management system with an admin panel and a public REST API for consuming content on any frontend.
+
+[![License: PolyForm Shield](https://img.shields.io/badge/License-PolyForm%20Shield-red.svg)](LICENSE)
+
+> This repository is **public and source available**, not open source under OSI terms. You may view, learn from, and contribute to the code, but you may not offer a competing product or resell it as a service. See [License](#license).
+
+## Overview
+
+Devcase CMS separates content management from presentation:
+
+| Layer | Role |
+| ----- | ---- |
+| **Admin panel** (`admin/`) | Nuxt 4 SPA for editors — manage pages, projects, solutions, technologies, media, and users |
+| **Admin API** (`/api/v1/admin/*`) | Authenticated CRUD, file uploads, cache revalidation |
+| **Public API** (`/api/v1/*`) | Headless content delivery for frontends — pages, projects, bootstrap data, sitemap |
+
+Content is stored as structured JSON (blocks, metadata) in PostgreSQL and served to decoupled frontends (e.g. a marketing site on Vercel).
 
 ## Tech Stack
 
@@ -11,16 +27,26 @@ Time-tracking and client management platform for freelancers and agencies.
 | Database  | PostgreSQL 17, Prisma ORM 7                                         |
 | Dev Tools | Docker Compose, Makefile, Mailpit, ESLint, Prettier                 |
 
+## Content Types
+
+| Entity       | Description                                      |
+| ------------ | ------------------------------------------------ |
+| **Pages**    | Site pages with slug, JSON content, and blocks   |
+| **Projects** | Portfolio entries with technologies and solutions |
+| **Solutions**| Service/solution catalog items                   |
+| **Technologies** | Tech stack tags linked to projects           |
+| **Files**    | Media library (images served from `/static`)     |
+
 ## Project Structure
 
 ```
 devcase-cms/
-├── admin/             # Nuxt 4 frontend (SPA)
+├── admin/             # Nuxt 4 admin panel (SPA)
 ├── server/            # Express API
 │   ├── prisma/        # Schema & migrations
 │   └── src/
-│       ├── admin/     # Admin routes, controllers, services, middleware
-│       ├── client/    # Public client routes
+│       ├── admin/     # Authenticated admin routes, controllers, services
+│       ├── web/       # Public headless API (pages, projects, sitemap)
 │       ├── errors/    # Custom HTTP errors
 │       ├── generated/ # Prisma generated client
 │       ├── types/     # Shared TypeScript types
@@ -29,6 +55,34 @@ devcase-cms/
 ├── server.Dockerfile  # Multi-stage production build
 └── Makefile           # Dev & DB shortcuts
 ```
+
+## API Routes
+
+Base path: `/api/v1` (configurable via `API_BASE_PATH`).
+
+**Public (headless)**
+
+| Method | Path                  | Description              |
+| ------ | --------------------- | ------------------------ |
+| GET    | `/bootstrap`          | Site menu / bootstrap data |
+| GET    | `/pages/:slug`        | Page by slug             |
+| GET    | `/projects/:slug`     | Project by slug          |
+| GET    | `/sitemap`            | Sitemap entries          |
+| GET    | `/health`             | Health check             |
+| GET    | `/static/images/*`    | Uploaded media           |
+
+**Admin (JWT required)**
+
+| Prefix              | Resources                              |
+| ------------------- | -------------------------------------- |
+| `/auth`             | Login, register, token refresh         |
+| `/admin/page`       | Pages CRUD                             |
+| `/admin/project`    | Projects CRUD                          |
+| `/admin/solution`   | Solutions CRUD                         |
+| `/admin/technology` | Technologies CRUD                    |
+| `/admin/file`       | Media uploads                          |
+| `/admin/user`       | User management                        |
+| `/admin/revalidate` | Trigger frontend ISR revalidation    |
 
 ## Getting Started
 
@@ -51,6 +105,10 @@ make up
 cd server && npm install && cd ..
 cd admin && pnpm install && cd ..
 
+# Copy env files and adjust as needed
+cp server/.env.example server/.env
+cp admin/.env.example admin/.env
+
 # Run migrations & seed
 cd server
 npx prisma migrate dev
@@ -65,8 +123,8 @@ cd ..
 make run
 
 # Or individually
-make dev-server   # Express API only
-make dev-admin    # Nuxt frontend only
+make dev-server   # Express API only (port 8080)
+make dev-admin    # Nuxt admin panel only (port 3000)
 ```
 
 ## Makefile Commands
@@ -95,3 +153,28 @@ make dev-admin    # Nuxt frontend only
 | Database   | Prisma.io |
 | API Server | Render    |
 | Frontend   | Vercel    |
+
+---
+
+## License
+
+Copyright © 2025–2026 Lucas Simines. All rights reserved.
+
+Licensed under the [PolyForm Shield License 1.0.0](LICENSE).
+
+### You may
+
+- View, clone, and study the source code
+- Run it locally for learning, evaluation, or contributing
+- Submit pull requests and improvements
+
+### You may not (without written permission)
+
+- Offer a product or service that competes with Devcase CMS
+- Resell, white-label, or sublicense this software as a commercial product
+
+### Commercial licensing
+
+For commercial use or a separate license agreement, open an issue on [GitHub](https://github.com/lucassimines/devcase-cms/issues) or contact the maintainer directly.
+
+Full terms: [LICENSE](LICENSE)
