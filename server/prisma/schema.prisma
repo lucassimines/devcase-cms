@@ -7,6 +7,11 @@ datasource db {
   provider = "postgresql"
 }
 
+enum Locale {
+  EN_US @map("en-US")
+  PT_BR @map("pt-BR")
+}
+
 model Page {
   id        String  @id @default(uuid())
   name      String
@@ -59,8 +64,6 @@ model Project {
   slug        String
   blocks      Json?
 
-  // categories  Category[]
-
   technologies Technology[]
 
   solutions Solution[]
@@ -110,27 +113,35 @@ model Solution {
   updatedAt DateTime @updatedAt
 }
 
-// model Category {
-//   id     String       @id @default(uuid())
-//   type   CategoryType
-//   order  Int          @default(0)
-//   title  Json
-//   desc   Json?
-//   slug   String       @unique
-//   fields Json?
+model Category {
+  id    String       @id @default(uuid())
+  type  CategoryType
+  order Int          @default(0)
+  slug  String       @unique
 
-//   parent    Category? @relation("ChildToParent", fields: [parent_id], references: [id])
-//   parent_id String?
+  parentId String?
+  parent   Category?  @relation("ChildToParent", fields: [parentId], references: [id], onDelete: SetNull)
+  children Category[] @relation("ChildToParent")
 
-//   children Category[] @relation("ChildToParent")
+  translations CategoryTranslation[]
 
-//   posts Post[] @relation("PostCategories")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
-//   created_at DateTime  @default(now())
-//   updated_at DateTime  @updatedAt
-//   projects   Project[]
-// }
+model CategoryTranslation {
+  id          String  @id @default(uuid())
+  categoryId  String
+  locale      Locale
+  name        String
+  description String?
 
-// enum CategoryType {
-//   POST
-// }
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  @@unique([categoryId, locale])
+  @@index([locale, name])
+}
+
+enum CategoryType {
+  POST
+}
