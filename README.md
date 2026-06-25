@@ -152,10 +152,9 @@ make dev-admin    # Nuxt admin panel only (port 3000)
 | `make prisma-studio`     | Open Prisma Studio                          |
 | `make prisma-seed`       | Seed the database                           |
 | `make prisma-migrate`    | Run Prisma migrations                       |
-| `make prisma-reset`      | Force-reset the database                    |
+| `make prisma-reset`      | Wipe local public schema                    |
+| `make db-import-prod`    | Import production data (schema from migrations) |
 | `make db-dump`           | Dump local Postgres to `backups/`           |
-| `make db-dump-prisma`    | Dump remote DB (prompts for `DATABASE_URL`) |
-| `make db-restore-prisma` | Restore `.bak` to remote DB                 |
 
 ## Production Infrastructure
 

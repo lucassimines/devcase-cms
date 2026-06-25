@@ -9,7 +9,7 @@ datasource db {
 
 model Page {
   id        String  @id @default(uuid())
-  name      String
+  name      Json
   code      String  @unique
   slug      String  @unique
   order     Int     @default(0)
