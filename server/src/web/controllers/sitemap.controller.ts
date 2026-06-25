@@ -140,7 +140,7 @@ export class SitemapController {
         url: `/${slug}`,
         lastmod: pageItem.updatedAt.toISOString(),
         changefreq: 'monthly',
-        priority: 0.7
+        priority: pageItem.slug === 'home' ? 1.0 : 0.8
       })
     }
   }
