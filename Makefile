@@ -1,4 +1,4 @@
-.PHONY: help up dev dev-server dev-admin down clean whois db-dump db-restore db-dump-prisma db-restore-prisma images-prune
+.PHONY: help up dev dev-server dev-admin down clean whois db-dump db-restore db-pull-prod db-import-prod db-dump-prisma db-restore-prisma images-prune
 
 PROJECT_NAME := devcase
 
@@ -54,9 +54,13 @@ prisma-new-migration:
 prisma-migrate:
 	@cd $(SERVER_DIR) && npx prisma migrate dev
 
-# Reset database
+# Reset local database (wipes public schema; dump recreates it on restore)
 prisma-reset:
-	@cd $(SERVER_DIR) && npx prisma db push --force-reset
+	@echo "Resetting local database..."
+	@$(COMPOSE) exec -T db pg_isready -U postgres >/dev/null
+	@$(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 -c \
+		'DROP SCHEMA IF EXISTS public CASCADE;'
+	@echo "Local database reset."
 
 # Show help
 help:
@@ -72,12 +76,36 @@ help:
 	@echo "  make prisma-studio     - Run Prisma Studio"
 	@echo "  make prisma-seed       - Run Prisma Seed"
 	@echo "  make prisma-generate   - Run Prisma Generate"
-	@echo "  make prisma-reset      - Reset database"
+	@echo "  make prisma-reset      - Wipe local public schema"
 	@echo "  make db-dump           - Dump Postgres database to backups/"
-	@echo "  make db-restore        - Restore SQL dump into local Docker Postgres (DUMP_FILE=path optional)"
+	@echo "  make db-restore        - Restore SQL dump and apply pending Prisma migrations (DUMP_FILE=path optional)"
+	@echo "  make db-pull-prod      - Download production database to backups/ (requires PROD_DATABASE_URL in server/.env)"
+	@echo "  make db-import-prod    - Download production database and restore into local Docker Postgres"
 	@echo "  make db-dump-prisma    - Dump database for Prisma (prompts for DATABASE_URL)"
 	@echo "  make db-restore-prisma - Restore db_dump.bak to Prisma (prompts for DATABASE_URL)"
 	@echo "  make images-prune      - Delete unreferenced files from server/public/images"
+
+# Download production database (requires PROD_DATABASE_URL in server/.env)
+db-pull-prod:
+	@set -e; \
+	set -a; [ -f $(SERVER_DIR)/.env ] && . $(SERVER_DIR)/.env; set +a; \
+	if [ -z "$$PROD_DATABASE_URL" ]; then \
+		echo "PROD_DATABASE_URL is not set. Add it to server/.env"; \
+		exit 1; \
+	fi; \
+	mkdir -p backups; \
+	CLEAN_URL=$$(echo "$$PROD_DATABASE_URL" | sed 's/[&?]pool=[^&]*//g'); \
+	DUMP_FILE=backups/prod_$$(date +%Y%m%d_%H%M%S).sql; \
+	echo "Downloading production database to $$DUMP_FILE..."; \
+	docker run --rm postgres:17 pg_dump "$$CLEAN_URL" \
+		--no-owner --no-privileges -n public \
+		> "$$DUMP_FILE"; \
+	echo "Saved to $$DUMP_FILE"
+
+# Download production database and restore locally
+db-import-prod: up db-pull-prod
+	@DUMP_FILE=$$(ls -1t backups/prod_*.sql 2>/dev/null | awk 'NR==1 { print; exit }'); \
+	$(MAKE) db-restore DUMP_FILE="$$DUMP_FILE"
 
 # Dump Postgres database
 db-dump:
@@ -89,8 +117,9 @@ db-dump:
 # Usage:
 #   make db-restore
 #   make db-restore DUMP_FILE=backups/dump_YYYYMMDD_HHMMSS.sql
-db-restore:
-	@DUMP_FILE=$${DUMP_FILE:-$$(ls -1t backups/dump_*.sql 2>/dev/null | awk 'NR==1 { print; exit }')}; \
+db-restore: up prisma-reset
+	@set -e; \
+	DUMP_FILE=$${DUMP_FILE:-$$(ls -1t backups/dump_*.sql 2>/dev/null | awk 'NR==1 { print; exit }')}; \
 	if [ -z "$$DUMP_FILE" ]; then \
 		echo "No SQL dump found in backups/. Pass DUMP_FILE=path/to/dump.sql"; \
 		exit 1; \
@@ -103,11 +132,13 @@ db-restore:
 	$(COMPOSE) exec -T db pg_isready -U postgres >/dev/null; \
 	if awk '/^\\connect postgres$$/{found=1} END{exit found ? 0 : 1}' "$$DUMP_FILE"; then \
 		echo "Detected pg_dumpall format; skipping global role/header section."; \
-		awk 'found{print} /^\\connect postgres$$/{found=1}' "$$DUMP_FILE" | $(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 || exit 1; \
+		awk 'found{print} /^\\connect postgres$$/{found=1}' "$$DUMP_FILE" | $(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1; \
 	else \
-		$(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 < "$$DUMP_FILE" || exit 1; \
+		$(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 < "$$DUMP_FILE"; \
 	fi; \
-	echo "Restore complete."
+	echo "Restore complete."; \
+	echo "Applying pending Prisma migrations..."; \
+	cd $(SERVER_DIR) && npx prisma migrate deploy
 
 # Dump database for Prisma — prompts for DATABASE_URL
 db-dump-prisma:
