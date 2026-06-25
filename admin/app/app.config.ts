@@ -1,5 +1,19 @@
+import type { Locale } from '~/types/locale'
+
 export default defineAppConfig({
   timeZone: 'America/Sao_Paulo',
+  locales: [
+    {
+      code: 'en-US',
+      abbr: 'en',
+      name: 'English'
+    },
+    {
+      code: 'pt-BR',
+      abbr: 'pt',
+      name: 'Portuguese'
+    }
+  ] as Locale[],
   ui: {
     input: {
       variants: {

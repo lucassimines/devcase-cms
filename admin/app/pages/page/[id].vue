@@ -13,7 +13,7 @@
     <template #default="{ state }">
       <FormTab>
         <UFormField :label="$t('name')" name="name">
-          <UInput v-model="state.name" />
+          <FieldText v-model="state.name" translate />
         </UFormField>
 
         <UFormField :label="$t('slug')" name="slug">
@@ -38,6 +38,7 @@
 import * as z from 'zod'
 import PageAbout from '~/components/page/PageAbout.vue'
 import PageHome from '~/components/page/PageHome.vue'
+import { localizedStringSchema } from '~/utils/locale.utils'
 import type { PageUpdate } from '~/types/page'
 import type { ModelInput } from '~/types/utils'
 
@@ -75,7 +76,7 @@ function getContentSchema(code: string) {
 
 const schema = z
   .object({
-    name: z.string().min(2).default(''),
+    name: localizedStringSchema(),
     code: z.string().min(2).default(''),
     published: z.boolean().default(false),
     slug: z.string().default(''),

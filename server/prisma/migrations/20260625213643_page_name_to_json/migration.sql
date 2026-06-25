@@ -5,5 +5,6 @@
 
 */
 -- AlterTable
-ALTER TABLE "Page" DROP COLUMN "name",
-ADD COLUMN     "name" JSONB NOT NULL;
+ALTER TABLE "Page"
+  ALTER COLUMN "name" SET DATA TYPE JSONB
+  USING jsonb_build_object('en-US', "name");
