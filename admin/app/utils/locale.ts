@@ -1,8 +1,6 @@
 import * as z from 'zod'
 
-import { localeCodes, type LocaleCode } from '~/types/locale'
-
-export type LocalizedString = Record<LocaleCode, string>
+import { localeCodes, type LocaleCode, type LocalizedString } from '~/types/locale'
 
 export function emptyLocalizedString(): LocalizedString {
   return Object.fromEntries(localeCodes.map((code) => [code, ''])) as LocalizedString

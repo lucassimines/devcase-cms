@@ -112,6 +112,7 @@
 >
 import type { TableColumn, TableRow, TableSlots } from '@nuxt/ui'
 import { useSortable, type UseSortableOptions } from '@vueuse/integrations/useSortable'
+import type { LocalizedString } from '~/types/locale'
 import type { PaginationQuery } from '~/types/pagination'
 import type { PaginatedTableList, TableListItem } from '~/types/table-list'
 

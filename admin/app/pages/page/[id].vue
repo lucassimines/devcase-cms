@@ -17,11 +17,11 @@
         </UFormField>
 
         <UFormField :label="$t('slug')" name="slug">
-          <UInput v-model="state.slug" />
+          <FieldText v-model="state.slug" />
         </UFormField>
 
         <UFormField :label="$t('code')" name="code">
-          <UInput v-model="state.code" />
+          <FieldText v-model="state.code" />
         </UFormField>
       </FormTab>
 
@@ -40,7 +40,6 @@ import PageAbout from '~/components/page/PageAbout.vue'
 import PageHome from '~/components/page/PageHome.vue'
 import type { PageUpdate } from '~/types/page'
 import type { ModelInput } from '~/types/utils'
-import { localizedStringSchema } from '~/utils/locale'
 
 const { $entities } = useNuxtApp()
 
@@ -56,7 +55,7 @@ function getContentSchema(code: string) {
     case 'home':
       return z.object({
         intro: z.object({
-          title: z.string().default(''),
+          title: localizedStringSchema(),
           description: z.string().default('')
         })
       })

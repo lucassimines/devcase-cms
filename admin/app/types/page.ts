@@ -1,5 +1,5 @@
 import type { Block } from '~/types/block'
-import type { LocalizedString } from '~/utils/locale'
+import type { LocalizedString } from '~/types/locale'
 
 export interface Page<T = null> {
   id: string
@@ -27,7 +27,7 @@ export type PageAbout = typeof PAGE_ABOUT_DEFAULT
 
 export const PAGE_HOME_DEFAULT = {
   intro: {
-    title: '',
+    title: emptyLocalizedString(),
     description: ''
   }
 }

@@ -8,7 +8,7 @@
     :min="0"
   >
     <template #leading>
-      <p class="text-sm text-muted" v-text="$t('currency')" />
+      <p class="text-muted text-sm" v-text="$t('currency')" />
     </template>
   </UInput>
 </template>

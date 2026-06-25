@@ -1,7 +1,7 @@
 <template>
   <FormTab v-if="model" :title="$t('content')">
     <UFormField :label="$t('title')" name="content.intro.title">
-      <UInput v-model="model.intro.title" />
+      <FieldText v-model="model.intro.title" translate />
     </UFormField>
 
     <UFormField :label="$t('description')" name="content.intro.description">
