@@ -1,5 +1,5 @@
 import type { Block } from '~/types/block'
-import type { LocalizedString } from '~/utils/locale.utils'
+import type { LocalizedString } from '~/utils/locale'
 
 export interface Page<T = null> {
   id: string

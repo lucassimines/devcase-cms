@@ -103,7 +103,7 @@
   generic="
     T extends {
       id?: string | number
-      name?: string
+      name?: string | LocalizedString
       slug?: string
       createdAt?: string
       published?: boolean
@@ -139,6 +139,8 @@ defineSlots<
 
 const route = useRoute()
 const { format: formatDate } = useDate()
+
+const { $tr } = useNuxtApp()
 
 const searchTerm = ref('')
 const searchTermDebounced = refDebounced(searchTerm, 400)
@@ -287,7 +289,7 @@ function makeLinkRow(row: TableRow<T>, key: keyof T) {
       to: { name: `${route.name?.toString()}-id`, params: { id: row.id } },
       class: 'hover:text-primary'
     },
-    () => row.original[key]
+    () => $tr(row.original[key] as LocalizedString | string)
   )
 }
 

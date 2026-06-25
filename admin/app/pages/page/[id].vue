@@ -38,9 +38,9 @@
 import * as z from 'zod'
 import PageAbout from '~/components/page/PageAbout.vue'
 import PageHome from '~/components/page/PageHome.vue'
-import { localizedStringSchema } from '~/utils/locale.utils'
 import type { PageUpdate } from '~/types/page'
 import type { ModelInput } from '~/types/utils'
+import { localizedStringSchema } from '~/utils/locale'
 
 const { $entities } = useNuxtApp()
 
