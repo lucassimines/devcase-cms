@@ -1,8 +1,7 @@
-import { DEFAULT_LOCALE } from '~/types/locale'
+import { DEFAULT_LOCALE, type LocalizedString } from '~/types/locale'
 
 export default defineNuxtPlugin(() => {
-  // @TODO: get locale from config
-  const locale = DEFAULT_LOCALE
+  const { locale } = useLocale()
 
   return {
     provide: {
@@ -11,11 +10,7 @@ export default defineNuxtPlugin(() => {
 
         if (typeof text === 'string') return text
 
-        if (locale) {
-          return text[locale] || text[DEFAULT_LOCALE]
-        }
-
-        return ''
+        return text[locale.value] || text[DEFAULT_LOCALE]
       }
     }
   }
