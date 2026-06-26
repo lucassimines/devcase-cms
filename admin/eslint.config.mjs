@@ -5,7 +5,7 @@ import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 export default withNuxt([
   {
-    ignores: ['**/*.md']
+    ignores: ['**/*.md', '.agents/**']
   },
   ...vueI18n.configs['flat/recommended'],
   eslintPluginPrettierRecommended,
