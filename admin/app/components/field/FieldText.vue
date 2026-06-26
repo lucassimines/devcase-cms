@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { DEFAULT_LOCALE, type LocaleCode } from '~/types/locale'
+import { DEFAULT_LOCALE, type LocaleCode, type LocalizedString } from '~/types/locale'
 
 interface Props {
   name: string
@@ -17,7 +17,7 @@ interface Props {
 
 const props = defineProps<Props>()
 
-const model = defineModel<string | Record<string, string>>({ required: true })
+const model = defineModel<string | LocalizedString>({ required: true })
 
 const locale = ref<LocaleCode>(DEFAULT_LOCALE)
 
