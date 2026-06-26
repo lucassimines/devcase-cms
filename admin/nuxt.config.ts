@@ -37,14 +37,6 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-07-11',
 
-  typescript: {
-    tsConfig: {
-      vueCompilerOptions: {
-        plugins: []
-      }
-    }
-  },
-
   vite: {
     optimizeDeps: {
       include: [
@@ -58,6 +50,14 @@ export default defineNuxtConfig({
         'zod',
         'vuedraggable'
       ]
+    }
+  },
+
+  typescript: {
+    tsConfig: {
+      vueCompilerOptions: {
+        plugins: []
+      }
     }
   },
 
