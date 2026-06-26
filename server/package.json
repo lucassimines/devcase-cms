@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "dev": "prisma generate && tsx watch src/server.ts",
+    "migrate:projects": "tsx scripts/migrate-project-localization.ts",
     "build": "prisma generate && tsc && tsc-alias",
     "clean": "rm -rf ./dist && tsc -b --clean",
     "watch": "npx tsc -b -w",

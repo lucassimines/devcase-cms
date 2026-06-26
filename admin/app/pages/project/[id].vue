@@ -12,25 +12,22 @@
 
     <template #default="{ state }">
       <FormTab>
-        <UFormField :label="$t('name')" name="name">
-          <UInput v-model="state.name" />
-        </UFormField>
+        <FieldText v-model="state.name" :label="$t('name')" name="name" translate />
 
-        <UFormField :label="$t('slug')" name="slug">
-          <UInput v-model="state.slug" />
-        </UFormField>
+        <FieldText v-model="state.slug" :label="$t('slug')" name="slug" />
 
-        <UFormField :label="$t('url')" name="url">
-          <UInput v-model="state.url" type="url" />
-        </UFormField>
+        <FieldText v-model="state.url" :label="$t('url')" name="url" translate />
 
-        <UFormField :label="$t('description')" name="description">
-          <UTextarea v-model="state.description" :rows="8" />
-        </UFormField>
+        <FieldTextarea
+          v-model="state.description"
+          :label="$t('description')"
+          name="description"
+          translate
+        />
 
-        <FieldImage v-model="state.background" name="background" />
+        <FieldImage v-model="state.background" name="background" translate />
 
-        <FieldImage v-model="state.image" name="image" />
+        <FieldImage v-model="state.image" name="image" translate />
       </FormTab>
 
       <FormTab :title="$t('block', 2)">
@@ -72,13 +69,13 @@ import type { ModelInput } from '~/types/utils'
 const { $entities, $tr } = useNuxtApp()
 
 const schema: z.ZodType<ModelInput<ProjectUpdate>> = z.object({
-  name: z.string().min(2).default(''),
+  name: localizedStringSchema(z.string().min(2)),
   published: z.boolean().default(false),
   order: z.number().default(0),
-  url: z.url().or(z.literal('')).optional(),
-  description: z.string().default(''),
-  background: z.string().default(''),
-  image: z.string().default(''),
+  url: localizedStringSchema(z.union([z.url(), z.literal('')])),
+  description: localizedStringSchema(),
+  background: localizedStringSchema(),
+  image: localizedStringSchema(),
   slug: z.string().default(''),
   blocks: z.array(z.any()).default([]),
   technologies: z.array(z.string()).default([]),

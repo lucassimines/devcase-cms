@@ -6,10 +6,10 @@ export function emptyLocalizedString(): LocalizedString {
   return Object.fromEntries(localeCodes.map((code) => [code, ''])) as LocalizedString
 }
 
-export function localizedStringSchema(schema: z.ZodString = z.string()) {
+export function localizedStringSchema(schema: z.ZodType<string> = z.string()) {
   const shape = Object.fromEntries(
     localeCodes.map((code) => [code, code === DEFAULT_LOCALE ? schema : z.string()])
-  ) as Record<LocaleCode, z.ZodString>
+  ) as Record<LocaleCode, z.ZodType<string>>
 
   return z.object(shape).default(emptyLocalizedString())
 }

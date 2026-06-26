@@ -120,5 +120,13 @@ describe('locale utilities', () => {
 
       expect(result.success).toBe(false)
     })
+
+    it('accepts a url or empty string for the default locale', () => {
+      const schema = localizedStringSchema(z.union([z.url(), z.literal('')]))
+
+      expect(schema.safeParse({ 'en-US': 'https://example.com', 'pt-BR': '' }).success).toBe(true)
+      expect(schema.safeParse({ 'en-US': '', 'pt-BR': '' }).success).toBe(true)
+      expect(schema.safeParse({ 'en-US': 'not-a-url', 'pt-BR': '' }).success).toBe(false)
+    })
   })
 })
