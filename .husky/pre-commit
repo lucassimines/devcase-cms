@@ -1,2 +1,3 @@
 #!/usr/bin/env sh
-cd admin && npm test
+npm test --prefix admin
+npm test --prefix server

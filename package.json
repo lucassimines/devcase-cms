@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "prepare": "husky",
-    "test": "npm test --prefix admin"
+    "test": "npm test --prefix admin && npm test --prefix server"
   },
   "devDependencies": {
     "husky": "^9.1.7"
