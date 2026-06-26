@@ -112,7 +112,7 @@ git clone git@github.com:lucassimines/devcase-cms.git
 # Start Postgres, Mailpit, Redis
 make up
 
-# Install dependencies (root install enables git hooks via Husky)
+# Install dependencies
 npm install
 cd server && npm install && cd ..
 cd admin && npm install && cd ..

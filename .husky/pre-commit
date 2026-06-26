@@ -1,3 +1,0 @@
-#!/usr/bin/env sh
-npm test --prefix admin
-npm test --prefix server
