@@ -58,7 +58,7 @@ function getContentSchema(code: string) {
       return z.object({
         profile: z.object({
           title: localizedStringSchema(),
-          image: localizedStringSchema(z.string().min(1))
+          image: localizedStringSchema()
         })
       })
 

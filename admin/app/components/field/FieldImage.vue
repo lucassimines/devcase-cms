@@ -33,7 +33,7 @@
 
               <div
                 class="bg-muted/90 text-xxs text-accented absolute bottom-0 left-0 w-full truncate rounded-sm p-1.5"
-                v-text="model"
+                v-text="localizedModel"
               />
             </div>
 
