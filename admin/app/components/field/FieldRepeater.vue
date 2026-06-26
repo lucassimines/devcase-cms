@@ -69,7 +69,7 @@ const props = withDefaults(defineProps<Props>(), {
 
 const { t } = useI18n()
 
-const model = defineModel<T[]>({ required: true, default: [] })
+const model = defineModel<T[]>({ required: true })
 
 defineSlots<{
   default: (slotProps: { accessorKey: string; index: number; model: T }) => VNode

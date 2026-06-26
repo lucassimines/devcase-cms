@@ -5,18 +5,19 @@
       name="blocks"
       :default-item="createBlockInput()"
       :label="$t('block')"
-      #="{ accessorKey, model }"
     >
-      <div class="relative">
-        <USelect
-          v-model="model.type"
-          value-key="value"
-          :items="blockTypeOptions"
-          @change="handleBlockTypeChange(model)"
-        />
-      </div>
+      <template #default="{ accessorKey, model }">
+        <div class="relative">
+          <USelect
+            v-model="model.type"
+            value-key="value"
+            :items="blockTypeOptions"
+            @change="handleBlockTypeChange(model)"
+          />
+        </div>
 
-      <FieldBlock v-model="model.content" :type="model.type" :accessor-key="accessorKey" />
+        <FieldBlock v-model="model.content" :type="model.type" :accessor-key="accessorKey" />
+      </template>
     </FieldRepeater>
   </div>
 </template>
@@ -38,7 +39,7 @@ function createBlockInput(): Block {
   }
 }
 
-const modelBlocks = defineModel<Block[]>({ required: true, default: [] })
+const modelBlocks = defineModel<Block[]>({ required: true })
 
 const blockTypeOptions = computed(() => {
   return Object.entries(blockType).map(([_key, value]) => ({
