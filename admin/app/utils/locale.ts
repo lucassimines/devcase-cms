@@ -13,3 +13,7 @@ export function localizedStringSchema() {
 
   return z.object(shape).default(emptyLocalizedString())
 }
+
+export function makeLocalizedPath(field: string, locale: LocaleCode) {
+  return `${field}.${locale}`
+}

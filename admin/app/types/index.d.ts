@@ -58,3 +58,9 @@ export interface Range {
   start: Date
   end: Date
 }
+
+declare module '@tanstack/vue-table' {
+  interface ColumnMeta {
+    localized?: boolean
+  }
+}

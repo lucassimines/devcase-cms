@@ -143,6 +143,34 @@ const { format: formatDate } = useDate()
 
 const { $tr } = useNuxtApp()
 
+const { locale } = useLocale()
+
+function getColumnKey(column: TableColumn<T>) {
+  if ('accessorKey' in column && column.accessorKey != null) {
+    return String(column.accessorKey)
+  }
+
+  return String(column.id ?? '')
+}
+
+function isLocalizedFilterKey(key: string) {
+  return props.columns.some((column) => {
+    return getColumnKey(column) === key && column.meta?.localized === true
+  })
+}
+
+function resolveFilterBy() {
+  const keys = Array.isArray(props.filterBy) ? props.filterBy : [props.filterBy]
+
+  return keys.map((key) => {
+    const normalized = String(key)
+
+    return isLocalizedFilterKey(normalized)
+      ? makeLocalizedPath(normalized, locale.value)
+      : normalized
+  })
+}
+
 const searchTerm = ref('')
 const searchTermDebounced = refDebounced(searchTerm, 400)
 
@@ -173,8 +201,18 @@ const pagination = ref({
 const apiQuery = ref({
   ...paginationQuery.value,
   term: searchTermDebounced.value,
-  filterBy: props.filterBy,
+  filterBy: resolveFilterBy(),
   orderBy: props.reorderable ? { order: 'asc' } : undefined
+})
+
+watch(locale, () => {
+  apiQuery.value = {
+    ...apiQuery.value,
+    filterBy: resolveFilterBy(),
+    page: 1
+  }
+
+  paginationQuery.value.page = 1
 })
 
 // Fetch paginated data from API
