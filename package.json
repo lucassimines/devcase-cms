@@ -1,0 +1,11 @@
+{
+  "name": "devcase-cms",
+  "private": true,
+  "scripts": {
+    "prepare": "husky",
+    "test": "npm test --prefix admin"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}

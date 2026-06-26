@@ -1,3 +1,18 @@
+# Dependencies
+node_modules
+
+# Local data
 mailpit-data
 backups
+
+# Logs
+*.log
+
+# OS
 .DS_Store
+
+# IDE
+.idea
+.fleet
+.vscode
+.history
