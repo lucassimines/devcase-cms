@@ -10,31 +10,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Install pnpm
-        uses: pnpm/action-setup@v4
-
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version: 22
-          cache: pnpm
-          cache-dependency-path: admin/pnpm-lock.yaml
+          node-version: 24
+          cache: npm
+          cache-dependency-path: admin/package-lock.json
 
       - name: Install admin dependencies
         working-directory: admin
-        run: pnpm install
+        run: npm ci
 
       - name: Lint
         working-directory: admin
-        run: pnpm run lint
+        run: npm run lint
 
       - name: Typecheck
         working-directory: admin
-        run: pnpm run typecheck
+        run: npm run typecheck
 
       - name: Test
         working-directory: admin
-        run: pnpm run test
+        run: npm test
 
   server:
     runs-on: ubuntu-latest
@@ -64,7 +61,7 @@ jobs:
       - name: Install node
         uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
           cache-dependency-path: server/package-lock.json
 

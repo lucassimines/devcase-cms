@@ -14,14 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
-        with: {node-version: 22, cache: pnpm}
-      - run: pnpm install --frozen-lockfile
-      - run: pnpm prepare
-      - run: pnpm lint
-      - run: pnpm typecheck
-      - run: pnpm test # if tests exist
+        with: {node-version: 24, cache: npm}
+      - run: npm ci
+      - run: npm run prepare
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test # if tests exist
 ```
 
 **With env vars:**
@@ -43,7 +42,6 @@ export default withNuxt(
   antfu({
     formatters: true,
     vue: true,
-    pnpm: true,
     ignores: ['.eslintcache', 'cache/**', '.claude/**', 'README.md', 'docs/**'],
   }),
 )
@@ -75,8 +73,8 @@ ignores: ['apps/web/.nuxt/**', 'packages/**/dist/**']
 
 | Convention      | Standard                                              |
 | --------------- | ----------------------------------------------------- |
-| Package manager | pnpm with `--frozen-lockfile` in CI                   |
-| Node version    | 22-24                                                 |
+| Package manager | npm with `npm ci` in CI                               |
+| Node version    | 24+                                                   |
 | ESLint base     | @antfu/eslint-config                                  |
 | Formatter       | Via ESLint (`formatters: true`), no separate Prettier |
 | Cache           | `--cache` flag on lint scripts                        |
@@ -95,13 +93,12 @@ jobs:
     permissions: {contents: read, id-token: write}
     steps:
       - uses: actions/checkout@v4
-      - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
-        with: {node-version: 22, cache: pnpm}
-      - run: pnpm install
+        with: {node-version: 24, cache: npm}
+      - run: npm ci
       - uses: nuxt-hub/action@v2
         with:
           project-key: your-project-key
 ```
 
-> **For pnpm catalogs, release workflows, tsconfig patterns:** see `ts-library` skill
+> **For release workflows and tsconfig patterns:** see `ts-library` skill

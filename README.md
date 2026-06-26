@@ -101,7 +101,7 @@ Base path: `/api/v1` (configurable via `API_BASE_PATH`).
 
 - Node.js 24+
 - Docker & Docker Compose
-- npm (server) / pnpm (admin)
+- npm
 
 ### Setup
 
@@ -115,7 +115,7 @@ make up
 # Install dependencies (root install enables git hooks via Husky)
 npm install
 cd server && npm install && cd ..
-cd admin && pnpm install && cd ..
+cd admin && npm install && cd ..
 
 # Copy env files and adjust as needed
 cp server/.env.example server/.env
