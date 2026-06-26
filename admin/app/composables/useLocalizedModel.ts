@@ -4,11 +4,15 @@ import type { LocaleCode, LocalizedString } from '~/types/locale'
 
 type LocalizedModel = string | LocalizedString | Record<string, string>
 
-export function useLocalizedModel(locale: Ref<LocaleCode>) {
+export function useLocalizedModel(translate: boolean | undefined, locale: Ref<LocaleCode>) {
   function defineLocalizedModel(model: Ref<LocalizedModel>) {
-    return computed({
+    return computed<string>({
       get() {
         const value = model.value
+
+        if (!translate) {
+          return typeof value === 'string' ? value : ''
+        }
 
         if (typeof value === 'object' && value !== null) {
           return value[locale.value] ?? ''
@@ -17,6 +21,11 @@ export function useLocalizedModel(locale: Ref<LocaleCode>) {
         return ''
       },
       set(value: string) {
+        if (!translate) {
+          model.value = value
+          return
+        }
+
         const current = typeof model.value === 'object' && model.value !== null ? model.value : {}
 
         model.value = { ...current, [locale.value]: value }
@@ -24,7 +33,7 @@ export function useLocalizedModel(locale: Ref<LocaleCode>) {
     })
   }
 
-  function normalizeFieldName(name: string, translate: boolean) {
+  function normalizeFieldName(name: string) {
     if (translate) {
       return `${name}.${locale.value}`
     }

@@ -7,9 +7,7 @@
     <UInput v-model="model.title" />
   </UFormField>
 
-  <UFormField :label="$t('text')" :name="`${accessorKey}.text`">
-    <FieldEditor v-model="model.text" />
-  </UFormField>
+  <FieldEditor v-model="model.text" :label="$t('text')" :name="`${accessorKey}.text`" />
 
   <UFormField :label="$t('textPosition')" :name="`${accessorKey}.textPosition`">
     <USelect v-model="model.textPosition" value-key="value" :items="textPositionOptions" />

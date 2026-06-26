@@ -1,3 +1,5 @@
+import type { LocalizedString } from '~/types/locale'
+
 export const blockType = {
   TEXT: 'text',
   IMAGE: 'image',
@@ -8,7 +10,7 @@ export const blockType = {
 export type BlockType = (typeof blockType)[keyof typeof blockType]
 
 export interface TextBlock {
-  text: string
+  text: LocalizedString
 }
 
 export interface ImageBlock {

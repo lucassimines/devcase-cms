@@ -1,7 +1,5 @@
 <template>
-  <UFormField :name="`${accessorKey}.text`">
-    <FieldEditor v-model="model.text" />
-  </UFormField>
+  <FieldEditor v-model="model.text" :name="`${accessorKey}.text`" translate />
 </template>
 
 <script setup lang="ts">

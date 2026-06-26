@@ -1,8 +1,8 @@
 <template>
   <div class="space-y-2">
-    <slot :locale="activeLocale" />
+    <slot />
 
-    <nav v-if="locales.length > 1" class="flex flex-wrap gap-1">
+    <nav v-if="translate && locales.length > 1" class="flex flex-wrap gap-1">
       <UButton
         v-for="locale in locales"
         :key="locale.code"
@@ -22,11 +22,11 @@ import { DEFAULT_LOCALE, type LocaleCode } from '~/types/locale'
 
 const { locales } = useAppConfig()
 
+defineProps<{
+  translate?: boolean
+}>()
+
 const activeLocale = defineModel<LocaleCode>({
   default: () => DEFAULT_LOCALE
 })
-
-defineSlots<{
-  default: (props: { locale: LocaleCode }) => VNode
-}>()
 </script>

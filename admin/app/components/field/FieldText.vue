@@ -1,8 +1,6 @@
 <template>
   <UFormField :label="label" :name="fieldName">
-    <UInput v-if="!translate && typeof model === 'string'" v-model="model" />
-
-    <NavTranslate v-else v-model="currentLocale">
+    <NavTranslate v-model="locale" :translate="translate">
       <UInput v-model="localizedModel" />
     </NavTranslate>
   </UFormField>
@@ -13,7 +11,7 @@ import { DEFAULT_LOCALE, type LocaleCode } from '~/types/locale'
 
 interface Props {
   name: string
-  label: string
+  label?: string
   translate?: boolean
 }
 
@@ -21,11 +19,11 @@ const props = defineProps<Props>()
 
 const model = defineModel<string | Record<string, string>>({ required: true })
 
-const currentLocale = ref<LocaleCode>(DEFAULT_LOCALE)
+const locale = ref<LocaleCode>(DEFAULT_LOCALE)
 
-const { defineLocalizedModel, normalizeFieldName } = useLocalizedModel(currentLocale)
+const { defineLocalizedModel, normalizeFieldName } = useLocalizedModel(props.translate, locale)
 
-const fieldName = normalizeFieldName(props.name, props.translate)
+const fieldName = normalizeFieldName(props.name)
 
 const localizedModel = defineLocalizedModel(model)
 </script>
