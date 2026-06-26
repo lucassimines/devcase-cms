@@ -9,7 +9,7 @@
           variant="outline"
           :ui="{ leadingIcon: 'size-3.5' }"
           square
-          @click="model = ''"
+          @click="resetValue()"
         />
 
         <MediaLibrary v-model="localizedModel">
@@ -20,7 +20,7 @@
             square
           >
             <div
-              v-if="model"
+              v-if="localizedModel"
               class="bg-default group-hover:bg-default/50 relative flex size-full items-center justify-center"
             >
               <figure class="size-full overflow-hidden">
@@ -75,7 +75,16 @@ const locale = ref<LocaleCode>(DEFAULT_LOCALE)
 
 const { defineLocalizedModel, normalizeFieldName } = useLocalizedModel(props.translate, locale)
 
+const localizedModel = defineLocalizedModel(model)
+
 const fieldName = normalizeFieldName(props.name)
 
-const localizedModel = defineLocalizedModel(model)
+function resetValue() {
+  if (props.translate && typeof model.value === 'object') {
+    model.value = { ...model.value, [locale.value]: '' }
+    return
+  }
+
+  model.value = ''
+}
 </script>
