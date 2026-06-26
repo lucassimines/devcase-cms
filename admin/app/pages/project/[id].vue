@@ -69,7 +69,7 @@ import type { Solution } from '~/types/solution'
 import type { Technology } from '~/types/technology'
 import type { ModelInput } from '~/types/utils'
 
-const { $entities } = useNuxtApp()
+const { $entities, $tr } = useNuxtApp()
 
 const schema: z.ZodType<ModelInput<ProjectUpdate>> = z.object({
   name: z.string().min(2).default(''),
@@ -103,7 +103,7 @@ const { data: solutions } = useAdminApi<Solution[]>('/solution/all')
 const solutionItems = computed(() => {
   return (
     solutions.value?.map((solution) => ({
-      label: solution.name,
+      label: $tr(solution.name),
       value: solution.id
     })) ?? []
   )

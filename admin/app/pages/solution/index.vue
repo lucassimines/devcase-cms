@@ -24,7 +24,10 @@ const columns: TableColumn<Solution>[] = [
   {
     id: 'name',
     accessorKey: 'name',
-    header: $t('name')
+    header: $t('name'),
+    meta: {
+      localized: true
+    }
   },
   {
     id: 'actions'
