@@ -2,11 +2,10 @@
   <div class="flex flex-1 flex-col gap-4 sm:gap-6">
     <div class="flex flex-wrap items-center justify-between gap-1.5">
       <UInput
-        :key="status"
         v-model="searchTerm"
         class="w-full max-w-72"
         icon="lucide:search"
-        :loading="status === 'pending'"
+        :loading="pending"
         :placeholder="$t('placeholder.search')"
         :ui="{ trailing: 'pe-1' }"
       >
@@ -45,7 +44,7 @@
         :pagination="pagination"
         :data="draggedItems ?? []"
         :columns="normalizedColumns"
-        :loading="status === 'pending'"
+        :loading="pending"
         sticky
         :ui="{
           base: 'table-fixed border-separate border-spacing-0',
@@ -218,15 +217,14 @@ watch(locale, () => {
 // Fetch paginated data from API
 const {
   data: paginatedList,
-  status,
+  pending,
   refresh
 } = await useAdminApi<PaginatedTableList<T>>(props.endpoint, {
   query: apiQuery
 })
 
 watch(searchTermDebounced, (newTerm) => {
-  // Skip to prevent double fetch when clearing search
-  if (!newTerm) return
+  if (apiQuery.value.term === newTerm) return
 
   apiQuery.value = {
     ...apiQuery.value,
@@ -239,6 +237,8 @@ watch(searchTermDebounced, (newTerm) => {
 
 function clearSearchTerm() {
   searchTerm.value = ''
+
+  if (apiQuery.value.term === '') return
 
   paginationQuery.value.page = 1
 
