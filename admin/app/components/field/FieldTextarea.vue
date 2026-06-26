@@ -1,9 +1,9 @@
 <template>
   <UFormField :label="label" :name="fieldName">
-    <UInput v-if="!translate && typeof model === 'string'" v-model="model" />
+    <UTextarea v-if="!translate && typeof model === 'string'" v-model="model" :rows="rows" />
 
     <NavTranslate v-else v-model="currentLocale">
-      <UInput v-model="localizedModel" />
+      <UTextarea v-model="localizedModel" :rows="rows" />
     </NavTranslate>
   </UFormField>
 </template>
@@ -14,6 +14,7 @@ import { DEFAULT_LOCALE, type LocaleCode } from '~/types/locale'
 interface Props {
   name: string
   label: string
+  rows?: number
   translate?: boolean
 }
 

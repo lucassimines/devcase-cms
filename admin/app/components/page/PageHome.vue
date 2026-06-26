@@ -1,12 +1,19 @@
 <template>
   <FormTab v-if="model" :title="$t('content')">
-    <UFormField :label="$t('title')" name="content.intro.title">
-      <FieldText v-model="model.intro.title" translate />
-    </UFormField>
+    <FieldText
+      v-model="model.intro.title"
+      :label="$t('title')"
+      name="content.intro.title"
+      translate
+    />
 
-    <UFormField :label="$t('description')" name="content.intro.description">
-      <UTextarea v-model="model.intro.description" :rows="8" />
-    </UFormField>
+    <FieldTextarea
+      v-model="model.intro.description"
+      :label="$t('description')"
+      name="content.intro.description"
+      :rows="8"
+      translate
+    />
   </FormTab>
 </template>
 

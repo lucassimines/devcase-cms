@@ -12,17 +12,11 @@
 
     <template #default="{ state }">
       <FormTab>
-        <UFormField :label="$t('name')" name="name">
-          <FieldText v-model="state.name" translate />
-        </UFormField>
+        <FieldText v-model="state.name" :label="$t('name')" name="name" translate />
 
-        <UFormField :label="$t('slug')" name="slug">
-          <FieldText v-model="state.slug" />
-        </UFormField>
+        <FieldText v-model="state.slug" :label="$t('slug')" name="slug" />
 
-        <UFormField :label="$t('code')" name="code">
-          <FieldText v-model="state.code" />
-        </UFormField>
+        <FieldText v-model="state.code" :label="$t('code')" name="code" />
       </FormTab>
 
       <FormTab :title="$t('block', 2)">
@@ -56,7 +50,7 @@ function getContentSchema(code: string) {
       return z.object({
         intro: z.object({
           title: localizedStringSchema(),
-          description: z.string().default('')
+          description: localizedStringSchema()
         })
       })
 
