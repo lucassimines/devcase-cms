@@ -28,13 +28,9 @@
           <UTextarea v-model="state.description" :rows="8" />
         </UFormField>
 
-        <UFormField :label="$t('background')" name="background">
-          <FieldImage v-model="state.background" />
-        </UFormField>
+        <FieldImage v-model="state.background" name="background" />
 
-        <UFormField :label="$t('image')" name="image">
-          <FieldImage v-model="state.image" />
-        </UFormField>
+        <FieldImage v-model="state.image" name="image" />
       </FormTab>
 
       <FormTab :title="$t('block', 2)">
@@ -78,6 +74,7 @@ const { $entities } = useNuxtApp()
 const schema: z.ZodType<ModelInput<ProjectUpdate>> = z.object({
   name: z.string().min(2).default(''),
   published: z.boolean().default(false),
+  order: z.number().default(0),
   url: z.url().or(z.literal('')).optional(),
   description: z.string().default(''),
   background: z.string().default(''),

@@ -1,4 +1,4 @@
-import type { Locale } from '~/types/locale'
+import type { Locale } from './types/locale'
 
 export default defineAppConfig({
   timeZone: 'America/Sao_Paulo',

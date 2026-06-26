@@ -2,6 +2,7 @@ import type { BreadcrumbItem } from '@nuxt/ui'
 import type { Ref } from 'vue'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import type { Entities } from '~/types/entity'
+import type { LocalizedString } from '~/types/locale'
 
 type BreadcrumbLabelResolver = (context: BreadcrumbResolverContext) => string | undefined
 
