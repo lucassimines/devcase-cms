@@ -1,12 +1,18 @@
 <template>
   <FormColumns>
-    <UFormField :label="$t('desktop')" :name="`${accessorKey}.image.desktop`">
-      <FieldImage v-model="model.image.desktop" />
-    </UFormField>
+    <FieldImage
+      v-model="model.image.desktop"
+      :name="`${accessorKey}.image.desktop`"
+      :label="$t('desktop')"
+      translate
+    />
 
-    <UFormField :label="$t('mobile')" :name="`${accessorKey}.image.mobile`">
-      <FieldImage v-model="model.image.mobile" />
-    </UFormField>
+    <FieldImage
+      v-model="model.image.mobile"
+      :name="`${accessorKey}.image.mobile`"
+      :label="$t('mobile')"
+      translate
+    />
   </FormColumns>
 </template>
 

@@ -1,12 +1,18 @@
 <template>
   <FormTab v-if="model" :title="$t('content')">
-    <UFormField :label="$t('title')" name="content.profile.title">
-      <UInput v-model="model.profile.title" />
-    </UFormField>
+    <FieldText
+      v-model="model.profile.title"
+      :label="$t('title')"
+      name="content.profile.title"
+      translate
+    />
 
-    <UFormField :label="$t('profile')" name="content.profile.image">
-      <FieldImage v-model="model.profile.image" />
-    </UFormField>
+    <FieldImage
+      v-model="model.profile.image"
+      :label="$t('profile')"
+      name="content.profile.image"
+      translate
+    />
   </FormTab>
 </template>
 

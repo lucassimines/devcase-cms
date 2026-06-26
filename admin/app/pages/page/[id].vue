@@ -57,8 +57,8 @@ function getContentSchema(code: string) {
     case 'about':
       return z.object({
         profile: z.object({
-          title: z.string().default(''),
-          image: z.string().default('')
+          title: localizedStringSchema(),
+          image: localizedStringSchema()
         })
       })
 

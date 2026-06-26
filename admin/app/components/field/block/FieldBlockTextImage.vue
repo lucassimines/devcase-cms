@@ -1,13 +1,9 @@
 <template>
-  <UFormField :label="$t('image')" :name="`${accessorKey}.image`">
-    <FieldImage v-model="model.image" />
-  </UFormField>
+  <FieldImage v-model="model.image" :name="`${accessorKey}.image`" :label="$t('image')" translate />
 
-  <UFormField :label="$t('title')" :name="`${accessorKey}.title`">
-    <UInput v-model="model.title" />
-  </UFormField>
+  <FieldText v-model="model.title" :label="$t('title')" name="title" translate />
 
-  <FieldEditor v-model="model.text" :label="$t('text')" :name="`${accessorKey}.text`" />
+  <FieldEditor v-model="model.text" :label="$t('text')" :name="`${accessorKey}.text`" translate />
 
   <UFormField :label="$t('textPosition')" :name="`${accessorKey}.textPosition`">
     <USelect v-model="model.textPosition" value-key="value" :items="textPositionOptions" />

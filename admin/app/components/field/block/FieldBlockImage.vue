@@ -1,7 +1,5 @@
 <template>
-  <UFormField :label="$t('image')" :name="`${accessorKey}.image`">
-    <FieldImage v-model="model.image" />
-  </UFormField>
+  <FieldImage v-model="model.image" :name="`${accessorKey}.image`" :label="$t('image')" translate />
 </template>
 
 <script setup lang="ts">

@@ -14,20 +14,20 @@ export interface TextBlock {
 }
 
 export interface ImageBlock {
-  image: string
+  image: LocalizedString
 }
 
 export interface WebBlock {
   image: {
-    desktop: string
-    mobile: string
+    desktop: LocalizedString
+    mobile: LocalizedString
   }
 }
 
 export interface TextImageBlock {
-  image: string
-  title: string
-  text: string
+  image: LocalizedString
+  title: LocalizedString
+  text: LocalizedString
   textPosition: 'left' | 'right'
 }
 

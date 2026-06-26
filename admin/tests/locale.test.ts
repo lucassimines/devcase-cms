@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import * as z from 'zod'
 
 import { localeCodes } from '~/types/locale'
 import {
@@ -70,13 +71,13 @@ describe('locale utilities', () => {
       expect(result.success).toBe(true)
     })
 
-    it('requires the default locale to be non-empty', () => {
+    it('allows an empty default locale', () => {
       const result = localizedStringSchema().safeParse({
         'en-US': '',
         'pt-BR': 'Início'
       })
 
-      expect(result.success).toBe(false)
+      expect(result.success).toBe(true)
     })
 
     it('allows an empty optional locale', () => {
@@ -100,6 +101,24 @@ describe('locale utilities', () => {
       const defaulted = localizedStringSchema().parse(undefined)
 
       expect(defaulted).toEqual(Object.fromEntries(localeCodes.map((code) => [code, ''])))
+    })
+
+    it('requires the default locale to be non-empty when a min-length schema is provided', () => {
+      const result = localizedStringSchema(z.string().min(1)).safeParse({
+        'en-US': '',
+        'pt-BR': 'Início'
+      })
+
+      expect(result.success).toBe(false)
+    })
+
+    it('accepts a custom zod string schema', () => {
+      const result = localizedStringSchema(z.string().min(3)).safeParse({
+        'en-US': 'Hi',
+        'pt-BR': ''
+      })
+
+      expect(result.success).toBe(false)
     })
   })
 })

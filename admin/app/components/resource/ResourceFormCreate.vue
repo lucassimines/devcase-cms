@@ -49,7 +49,7 @@ const { toSlug } = useHelpers()
 const { $tr } = useNuxtApp()
 
 const formSchema = z.object({
-  name: localizedStringSchema(),
+  name: localizedStringSchema(z.string().min(1)),
   slug: z.string().optional().or(z.literal(''))
 })
 
