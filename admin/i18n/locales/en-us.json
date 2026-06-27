@@ -25,6 +25,7 @@
   "password": "Password",
   "confirmPassword": "Confirm password",
   "currency": "Currency",
+  "resumeUrl": "Resume URL",
   "actions": "Actions",
   "light": "Light",
   "dark": "Dark",

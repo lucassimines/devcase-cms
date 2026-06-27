@@ -53,9 +53,12 @@ const { tabs } = useFormTabs()
 const formRef = useTemplateRef('formRef')
 
 const profileSchema = z.object({
+  name: z.string().min(2),
   role: localizedStringSchema(),
   location: localizedStringSchema(),
-  image: localizedStringSchema()
+  image: localizedStringSchema(),
+  resumeUrl: localizedStringSchema(),
+  email: z.email()
 })
 
 const schema = z.object({
