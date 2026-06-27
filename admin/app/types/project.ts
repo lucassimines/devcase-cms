@@ -1,4 +1,5 @@
 import type { Block } from '~/types/block'
+import type { LocalizedString } from '~/types/locale'
 import type { Solution } from '~/types/solution'
 import type { Technology } from '~/types/technology'
 
@@ -8,11 +9,11 @@ export interface Project {
   published: boolean
   createdAt: string
   updatedAt: string
-  name: string
-  url?: string
-  description: string
-  background: string
-  image: string
+  name: LocalizedString
+  url: LocalizedString
+  description: LocalizedString
+  background: LocalizedString
+  image: LocalizedString
   slug: string
   blocks: Block[]
   technologies: Technology[]

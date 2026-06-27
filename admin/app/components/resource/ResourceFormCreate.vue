@@ -4,11 +4,9 @@
 
     <template #body>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
-        <UFormField label="Name" name="name">
-          <UInput v-model="state.name" />
-        </UFormField>
+        <FieldText v-model="state.name" :label="$t('name')" name="name" translate />
 
-        <UFormField v-if="hasSlug" label="Slug" name="slug">
+        <UFormField v-if="hasSlug" :label="$t('slug')" name="slug">
           <UInput v-model="state.slug" />
         </UFormField>
 
@@ -48,20 +46,26 @@ const props = defineProps<{
 
 const { toSlug } = useHelpers()
 
-const schema = z
-  .object({
-    name: z.string().min(1),
-    slug: z.string().optional().or(z.literal(''))
-  })
-  .transform((data) => ({
-    ...data,
-    slug: data.slug?.length ? toSlug(data.slug) : toSlug(data.name)
-  }))
+const { $tr } = useNuxtApp()
+
+const formSchema = z.object({
+  name: localizedStringSchema(z.string().min(1)),
+  slug: z.string().optional().or(z.literal(''))
+})
+
+const schema = formSchema.transform((data) => ({
+  ...data,
+  slug: data.slug?.length ? toSlug(data.slug) : toSlug($tr(data.name))
+}))
 
 type Schema = z.output<typeof schema>
 
-const state = reactive<Partial<Schema>>({
-  name: '',
+type FormState = Pick<Schema, 'name'> & {
+  slug?: string
+}
+
+const state = reactive<FormState>({
+  name: emptyLocalizedString(),
   slug: ''
 })
 

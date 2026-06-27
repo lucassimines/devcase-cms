@@ -3,30 +3,30 @@ import type { ImageBlock, TextBlock, TextImageBlock, WebBlock } from '~/types/bl
 export function useFormBlocks() {
   function createTextBlockInput(): TextBlock {
     return {
-      text: ''
+      text: emptyLocalizedString()
     }
   }
 
   function createWebBlockInput(): WebBlock {
     return {
       image: {
-        desktop: '',
-        mobile: ''
+        desktop: emptyLocalizedString(),
+        mobile: emptyLocalizedString()
       }
     }
   }
 
   function createImageBlockInput(): ImageBlock {
     return {
-      image: ''
+      image: emptyLocalizedString()
     }
   }
 
   function createTextImageBlockInput(): TextImageBlock {
     return {
-      image: '',
-      title: '',
-      text: '',
+      image: emptyLocalizedString(),
+      title: emptyLocalizedString(),
+      text: emptyLocalizedString(),
       textPosition: 'left'
     }
   }

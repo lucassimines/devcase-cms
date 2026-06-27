@@ -1,5 +1,6 @@
 import { prisma } from '@src/db.js'
 import type { PageCreateInput, PageUpdateInput } from '@src/generated/prisma/models.js'
+import { resolveLocalizedText } from '@src/utils/locale.utils.js'
 import { createAtTopOrder } from '@src/utils/order.utils.js'
 import { toSlug } from '@src/utils/string.utils.js'
 
@@ -13,7 +14,7 @@ export class PageRepository {
   static create(data: PageCreateInput) {
     return createAtTopOrder('page', {
       ...data,
-      code: toSlug(data.name)
+      code: toSlug(resolveLocalizedText(data.name))
     })
   }
 

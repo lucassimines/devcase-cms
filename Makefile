@@ -1,4 +1,4 @@
-.PHONY: help up dev dev-server dev-admin down clean whois db-dump db-restore db-dump-prisma db-restore-prisma images-prune
+.PHONY: help up dev dev-server dev-admin down clean whois db-sync-schema db-dump db-pull-prod-data db-restore-prod-data db-import-prod images-prune
 
 PROJECT_NAME := devcase
 
@@ -54,9 +54,13 @@ prisma-new-migration:
 prisma-migrate:
 	@cd $(SERVER_DIR) && npx prisma migrate dev
 
-# Reset database
+# Reset local database (wipes public schema)
 prisma-reset:
-	@cd $(SERVER_DIR) && npx prisma db push --force-reset
+	@echo "Resetting local database..."
+	@$(COMPOSE) exec -T db pg_isready -U postgres >/dev/null
+	@$(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 -c \
+		'DROP SCHEMA IF EXISTS public CASCADE;'
+	@echo "Local database reset."
 
 # Show help
 help:
@@ -72,55 +76,77 @@ help:
 	@echo "  make prisma-studio     - Run Prisma Studio"
 	@echo "  make prisma-seed       - Run Prisma Seed"
 	@echo "  make prisma-generate   - Run Prisma Generate"
-	@echo "  make prisma-reset      - Reset database"
-	@echo "  make db-dump           - Dump Postgres database to backups/"
-	@echo "  make db-restore        - Restore SQL dump into local Docker Postgres (DUMP_FILE=path optional)"
-	@echo "  make db-dump-prisma    - Dump database for Prisma (prompts for DATABASE_URL)"
-	@echo "  make db-restore-prisma - Restore db_dump.bak to Prisma (prompts for DATABASE_URL)"
+	@echo "  make prisma-reset      - Wipe local public schema"
+	@echo "  make db-import-prod    - Reset, migrate, download prod data, import"
+	@echo "  make db-sync-schema    - Reset local DB and apply Prisma migrations (schema only)"
+	@echo "  make db-pull-prod-data - Download production data only to backups/"
+	@echo "  make db-restore-prod-data - Sync schema and import a data dump (DUMP_FILE= optional)"
+	@echo "  make db-dump           - Dump local Postgres to backups/"
 	@echo "  make images-prune      - Delete unreferenced files from server/public/images"
 
-# Dump Postgres database
-db-dump:
-	@mkdir -p backups
-	$(COMPOSE) exec db pg_dumpall -U postgres > backups/dump_$(shell date +%Y%m%d_%H%M%S).sql
-	@echo "Database dumped to backups/"
+# Reset local DB and apply Prisma migrations (schema only, no data)
+db-sync-schema: up prisma-reset
+	@echo "Applying Prisma migrations..."
+	@cd $(SERVER_DIR) && npx prisma migrate deploy
+	@echo "Local schema ready."
 
-# Restore SQL dump into local Docker Postgres
+# Download production data only (requires PROD_DATABASE_URL in server/.env)
+db-pull-prod-data:
+	@set -e; \
+	set -a; [ -f $(SERVER_DIR)/.env ] && . $(SERVER_DIR)/.env; set +a; \
+	if [ -z "$$PROD_DATABASE_URL" ]; then \
+		echo "PROD_DATABASE_URL is not set. Add it to server/.env"; \
+		exit 1; \
+	fi; \
+	mkdir -p backups; \
+	CLEAN_URL=$$(echo "$$PROD_DATABASE_URL" | sed 's/[&?]pool=[^&]*//g'); \
+	DUMP_FILE=backups/prod_data_$$(date +%Y%m%d_%H%M%S).sql; \
+	echo "Downloading production data to $$DUMP_FILE..."; \
+	docker run --rm postgres:17 pg_dump "$$CLEAN_URL" \
+		--no-owner \
+		--no-privileges \
+		--data-only \
+		--exclude-table-data='_prisma_migrations' \
+		--schema=public \
+		> "$$DUMP_FILE"; \
+	echo "Saved to $$DUMP_FILE"
+
+# Import a data-only dump into a migrated local schema
 # Usage:
-#   make db-restore
-#   make db-restore DUMP_FILE=backups/dump_YYYYMMDD_HHMMSS.sql
-db-restore:
-	@DUMP_FILE=$${DUMP_FILE:-$$(ls -1t backups/dump_*.sql 2>/dev/null | awk 'NR==1 { print; exit }')}; \
+#   make db-restore-prod-data
+#   make db-restore-prod-data DUMP_FILE=backups/prod_data_YYYYMMDD_HHMMSS.sql
+db-restore-prod-data: db-sync-schema
+	@set -e; \
+	DUMP_FILE=$${DUMP_FILE:-$$(ls -1t backups/prod_data_*.sql 2>/dev/null | awk 'NR==1 { print; exit }')}; \
 	if [ -z "$$DUMP_FILE" ]; then \
-		echo "No SQL dump found in backups/. Pass DUMP_FILE=path/to/dump.sql"; \
+		echo "No data dump found in backups/. Pass DUMP_FILE=path/to/prod_data.sql"; \
 		exit 1; \
 	fi; \
 	if [ ! -f "$$DUMP_FILE" ]; then \
 		echo "Dump file not found: $$DUMP_FILE"; \
 		exit 1; \
 	fi; \
-	echo "Restoring $$DUMP_FILE into local Docker Postgres..."; \
+	echo "Importing data from $$DUMP_FILE..."; \
 	$(COMPOSE) exec -T db pg_isready -U postgres >/dev/null; \
-	if awk '/^\\connect postgres$$/{found=1} END{exit found ? 0 : 1}' "$$DUMP_FILE"; then \
-		echo "Detected pg_dumpall format; skipping global role/header section."; \
-		awk 'found{print} /^\\connect postgres$$/{found=1}' "$$DUMP_FILE" | $(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 || exit 1; \
-	else \
-		$(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 < "$$DUMP_FILE" || exit 1; \
-	fi; \
-	echo "Restore complete."
+	$(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 < "$$DUMP_FILE"; \
+	echo "Production data imported."
 
-# Dump database for Prisma — prompts for DATABASE_URL
-db-dump-prisma:
-	@read -p "DATABASE_URL: " DATABASE_URL; \
-	CLEAN_URL=$$(echo "$$DATABASE_URL" | sed 's/[&?]pool=[^&]*//g'); \
-	$(COMPOSE) exec db pg_dump -Fc -v -d "$$CLEAN_URL" -n public > db_dump.bak
+# Reset, migrate, download prod data, import (requires PROD_DATABASE_URL in server/.env)
+db-import-prod: up
+	@set -e; \
+	$(MAKE) db-sync-schema; \
+	$(MAKE) db-pull-prod-data; \
+	DUMP_FILE=$$(ls -1t backups/prod_data_*.sql 2>/dev/null | awk 'NR==1 { print; exit }'); \
+	echo "Importing data from $$DUMP_FILE..."; \
+	$(COMPOSE) exec -T db pg_isready -U postgres >/dev/null; \
+	$(COMPOSE) exec -T db psql -U postgres -d postgres -v ON_ERROR_STOP=1 < "$$DUMP_FILE"; \
+	echo "Production data imported."
 
-# Restore database to Prisma — prompts for DATABASE_URL
-db-restore-prisma:
-	@read -p "DATABASE_URL: " DATABASE_URL; \
-	CLEAN_URL=$$(echo "$$DATABASE_URL" | sed 's/[&?]pool=[^&]*//g'); \
-	docker run --rm -v "$$(pwd)/db_dump.bak:/db_dump.bak" postgres:17 pg_restore -d "$$CLEAN_URL" -v --no-owner --no-privileges --clean --if-exists /db_dump.bak; \
-	echo "-complete-"
+# Dump local Postgres database
+db-dump:
+	@mkdir -p backups
+	$(COMPOSE) exec db pg_dumpall -U postgres > backups/dump_$(shell date +%Y%m%d_%H%M%S).sql
+	@echo "Database dumped to backups/"
 
 # Delete image files that are not referenced in File table
 images-prune:

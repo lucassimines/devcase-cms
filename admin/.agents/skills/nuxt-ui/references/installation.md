@@ -3,7 +3,7 @@
 ## Nuxt Installation
 
 ```bash
-pnpm add @nuxt/ui
+npm install @nuxt/ui
 ```
 
 ```ts
@@ -41,7 +41,7 @@ If using pnpm, either:
 ## Vue Installation (Vite)
 
 ```bash
-pnpm add @nuxt/ui
+npm install @nuxt/ui
 ```
 
 ```ts

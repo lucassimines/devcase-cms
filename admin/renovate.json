@@ -8,6 +8,5 @@
       "matchDepTypes": ["resolutions"],
       "enabled": false
     }
-  ],
-  "postUpdateOptions": ["pnpmDedupe"]
+  ]
 }

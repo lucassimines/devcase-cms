@@ -12,17 +12,11 @@
 
     <template #default="{ state }">
       <FormTab>
-        <UFormField :label="$t('name')" name="name">
-          <UInput v-model="state.name" />
-        </UFormField>
+        <FieldText v-model="state.name" :label="$t('name')" name="name" translate />
 
-        <UFormField :label="$t('slug')" name="slug">
-          <UInput v-model="state.slug" />
-        </UFormField>
+        <FieldText v-model="state.slug" :label="$t('slug')" name="slug" />
 
-        <UFormField :label="$t('code')" name="code">
-          <UInput v-model="state.code" />
-        </UFormField>
+        <FieldText v-model="state.code" :label="$t('code')" name="code" />
       </FormTab>
 
       <FormTab :title="$t('block', 2)">
@@ -55,16 +49,16 @@ function getContentSchema(code: string) {
     case 'home':
       return z.object({
         intro: z.object({
-          title: z.string().default(''),
-          description: z.string().default('')
+          title: localizedStringSchema(),
+          description: localizedStringSchema()
         })
       })
 
     case 'about':
       return z.object({
         profile: z.object({
-          title: z.string().default(''),
-          image: z.string().default('')
+          title: localizedStringSchema(),
+          image: localizedStringSchema()
         })
       })
 
@@ -75,7 +69,7 @@ function getContentSchema(code: string) {
 
 const schema = z
   .object({
-    name: z.string().min(2).default(''),
+    name: localizedStringSchema(),
     code: z.string().min(2).default(''),
     published: z.boolean().default(false),
     slug: z.string().default(''),

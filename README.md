@@ -101,7 +101,7 @@ Base path: `/api/v1` (configurable via `API_BASE_PATH`).
 
 - Node.js 24+
 - Docker & Docker Compose
-- npm (server) / pnpm (admin)
+- npm
 
 ### Setup
 
@@ -113,8 +113,9 @@ git clone git@github.com:lucassimines/devcase-cms.git
 make up
 
 # Install dependencies
+npm install
 cd server && npm install && cd ..
-cd admin && pnpm install && cd ..
+cd admin && npm install && cd ..
 
 # Copy env files and adjust as needed
 cp server/.env.example server/.env
@@ -152,10 +153,9 @@ make dev-admin    # Nuxt admin panel only (port 3000)
 | `make prisma-studio`     | Open Prisma Studio                          |
 | `make prisma-seed`       | Seed the database                           |
 | `make prisma-migrate`    | Run Prisma migrations                       |
-| `make prisma-reset`      | Force-reset the database                    |
+| `make prisma-reset`      | Wipe local public schema                    |
+| `make db-import-prod`    | Import production data (schema from migrations) |
 | `make db-dump`           | Dump local Postgres to `backups/`           |
-| `make db-dump-prisma`    | Dump remote DB (prompts for `DATABASE_URL`) |
-| `make db-restore-prisma` | Restore `.bak` to remote DB                 |
 
 ## Production Infrastructure
 

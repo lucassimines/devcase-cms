@@ -2,11 +2,10 @@
   <div class="flex flex-1 flex-col gap-4 sm:gap-6">
     <div class="flex flex-wrap items-center justify-between gap-1.5">
       <UInput
-        :key="status"
         v-model="searchTerm"
         class="w-full max-w-72"
         icon="lucide:search"
-        :loading="status === 'pending'"
+        :loading="pending"
         :placeholder="$t('placeholder.search')"
         :ui="{ trailing: 'pe-1' }"
       >
@@ -45,7 +44,7 @@
         :pagination="pagination"
         :data="draggedItems ?? []"
         :columns="normalizedColumns"
-        :loading="status === 'pending'"
+        :loading="pending"
         sticky
         :ui="{
           base: 'table-fixed border-separate border-spacing-0',
@@ -103,7 +102,7 @@
   generic="
     T extends {
       id?: string | number
-      name?: string
+      name?: string | LocalizedString
       slug?: string
       createdAt?: string
       published?: boolean
@@ -112,6 +111,7 @@
 >
 import type { TableColumn, TableRow, TableSlots } from '@nuxt/ui'
 import { useSortable, type UseSortableOptions } from '@vueuse/integrations/useSortable'
+import type { LocalizedString } from '~/types/locale'
 import type { PaginationQuery } from '~/types/pagination'
 import type { PaginatedTableList, TableListItem } from '~/types/table-list'
 
@@ -139,6 +139,36 @@ defineSlots<
 
 const route = useRoute()
 const { format: formatDate } = useDate()
+
+const { $tr } = useNuxtApp()
+
+const { locale } = useLocale()
+
+function getColumnKey(column: TableColumn<T>) {
+  if ('accessorKey' in column && column.accessorKey != null) {
+    return String(column.accessorKey)
+  }
+
+  return String(column.id ?? '')
+}
+
+function isLocalizedFilterKey(key: string) {
+  return props.columns.some((column) => {
+    return getColumnKey(column) === key && column.meta?.localized === true
+  })
+}
+
+function resolveFilterBy() {
+  const keys = Array.isArray(props.filterBy) ? props.filterBy : [props.filterBy]
+
+  return keys.map((key) => {
+    const normalized = String(key)
+
+    return isLocalizedFilterKey(normalized)
+      ? makeLocalizedPath(normalized, locale.value)
+      : normalized
+  })
+}
 
 const searchTerm = ref('')
 const searchTermDebounced = refDebounced(searchTerm, 400)
@@ -170,22 +200,31 @@ const pagination = ref({
 const apiQuery = ref({
   ...paginationQuery.value,
   term: searchTermDebounced.value,
-  filterBy: props.filterBy,
+  filterBy: resolveFilterBy(),
   orderBy: props.reorderable ? { order: 'asc' } : undefined
+})
+
+watch(locale, () => {
+  apiQuery.value = {
+    ...apiQuery.value,
+    filterBy: resolveFilterBy(),
+    page: 1
+  }
+
+  paginationQuery.value.page = 1
 })
 
 // Fetch paginated data from API
 const {
   data: paginatedList,
-  status,
+  pending,
   refresh
 } = await useAdminApi<PaginatedTableList<T>>(props.endpoint, {
   query: apiQuery
 })
 
 watch(searchTermDebounced, (newTerm) => {
-  // Skip to prevent double fetch when clearing search
-  if (!newTerm) return
+  if (apiQuery.value.term === newTerm) return
 
   apiQuery.value = {
     ...apiQuery.value,
@@ -198,6 +237,8 @@ watch(searchTermDebounced, (newTerm) => {
 
 function clearSearchTerm() {
   searchTerm.value = ''
+
+  if (apiQuery.value.term === '') return
 
   paginationQuery.value.page = 1
 
@@ -287,7 +328,7 @@ function makeLinkRow(row: TableRow<T>, key: keyof T) {
       to: { name: `${route.name?.toString()}-id`, params: { id: row.id } },
       class: 'hover:text-primary'
     },
-    () => row.original[key]
+    () => $tr(row.original[key] as LocalizedString | string)
   )
 }
 

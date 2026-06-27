@@ -5,15 +5,16 @@ import { z } from 'zod'
 
 const jsonStringOrObject = z.union([z.string(), z.record(z.string(), z.any())])
 
+const stringArrayQuery = z.preprocess((val) => {
+  if (val === undefined || val === null || val === '') return []
+  return Array.isArray(val) ? val : [val]
+}, z.array(z.string()))
+
 const PaginatedQuerySchema = z.object({
   page: z.string().optional(),
   limit: z.string().optional(),
   term: z.string().optional(),
-  filterBy: z
-    .preprocess((val) => {
-      return Array.isArray(val) ? val : [val]
-    }, z.array(z.string()))
-    .default([]),
+  filterBy: stringArrayQuery.default([]),
   include: jsonStringOrObject.optional(),
   orderBy: jsonStringOrObject.optional(),
   where: jsonStringOrObject.optional()
@@ -51,17 +52,50 @@ function handlePageErrors(page: number, limit: number) {
   }
 }
 
+function hasWhereConditions(where: object) {
+  return Object.keys(where).length > 0
+}
+
+function makeJsonPathFilter(field: string, path: string[], term: string) {
+  return {
+    [field]: {
+      path,
+      string_contains: term,
+      mode: 'insensitive'
+    }
+  }
+}
+
 /**
  * Make filter query based on filter keys and term
  */
 function makeFilterQuery(term: string, filterKeys: string[]) {
-  const filterQueries: Record<string, any> = {}
+  const orConditions: Record<string, unknown>[] = []
 
   filterKeys.forEach((key) => {
-    filterQueries[key] = { contains: term, mode: 'insensitive' }
+    const [field, ...path] = key.split('.')
+
+    if (path.length > 0) {
+      orConditions.push(makeJsonPathFilter(field, path, term))
+      return
+    }
+
+    orConditions.push({
+      [key]: { contains: term, mode: 'insensitive' }
+    })
   })
 
-  return filterQueries
+  if (orConditions.length === 0) return {}
+  if (orConditions.length === 1) return orConditions[0]!
+
+  return { OR: orConditions }
+}
+
+function mergeWhereQuery(baseWhere: object, termWhere: object) {
+  if (!hasWhereConditions(termWhere)) return baseWhere
+  if (!hasWhereConditions(baseWhere)) return termWhere
+
+  return { AND: [baseWhere, termWhere] }
 }
 
 async function findPaginated<T>(model: PrismaDelegate, args: PaginatedArgs) {
@@ -111,11 +145,8 @@ export async function paginate<T = unknown>(model: PrismaDelegate, query: Prisma
 
   let whereQuery = handleQueryParameters(where)
 
-  if (term) {
-    whereQuery = {
-      ...whereQuery,
-      ...makeFilterQuery(term.toString(), filterBy)
-    }
+  if (term && filterBy.length > 0) {
+    whereQuery = mergeWhereQuery(whereQuery, makeFilterQuery(term.toString(), filterBy))
   }
 
   // Check if page and limit are valid numbers

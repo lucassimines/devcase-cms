@@ -1,0 +1,7 @@
+{
+  "name": "devcase-cms",
+  "private": true,
+  "scripts": {
+    "test": "npm test --prefix admin && npm test --prefix server"
+  }
+}

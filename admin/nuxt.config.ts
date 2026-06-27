@@ -53,6 +53,14 @@ export default defineNuxtConfig({
     }
   },
 
+  typescript: {
+    tsConfig: {
+      vueCompilerOptions: {
+        plugins: []
+      }
+    }
+  },
+
   eslint: {
     config: {
       stylistic: {

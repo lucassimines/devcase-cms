@@ -4,6 +4,9 @@ import vueI18n from '@intlify/eslint-plugin-vue-i18n'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 
 export default withNuxt([
+  {
+    ignores: ['**/*.md', '.agents/**']
+  },
   ...vueI18n.configs['flat/recommended'],
   eslintPluginPrettierRecommended,
   {

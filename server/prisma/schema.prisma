@@ -9,7 +9,7 @@ datasource db {
 
 model Page {
   id        String  @id @default(uuid())
-  name      String
+  name      Json
   code      String  @unique
   slug      String  @unique
   order     Int     @default(0)
@@ -49,13 +49,13 @@ model File {
 
 model Project {
   id          String  @id @default(uuid())
-  name        String
+  name        Json
   order       Int     @default(0)
   published   Boolean @default(false)
-  url         String?
-  description String?
-  background  String?
-  image       String?
+  url         Json?
+  description Json?
+  background  Json?
+  image       Json?
   slug        String
   blocks      Json?
 
@@ -101,7 +101,7 @@ model Technology {
 
 model Solution {
   id    String @id @default(uuid())
-  name  String
+  name  Json
   order Int    @default(0)
 
   projects Project[]

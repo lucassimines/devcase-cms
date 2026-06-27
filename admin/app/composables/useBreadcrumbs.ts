@@ -2,6 +2,7 @@ import type { BreadcrumbItem } from '@nuxt/ui'
 import type { Ref } from 'vue'
 import type { RouteLocationNormalizedLoaded } from 'vue-router'
 import type { Entities } from '~/types/entity'
+import type { LocalizedString } from '~/types/locale'
 
 type BreadcrumbLabelResolver = (context: BreadcrumbResolverContext) => string | undefined
 
@@ -65,7 +66,13 @@ function prettifyLabel(value: string): string {
 function getEntityLabel(entity: Record<string, unknown> | null): string | undefined {
   if (!entity) return undefined
 
-  const candidate = entity.title ?? entity.name ?? entity.slug ?? entity.id
+  const { $tr } = useNuxtApp()
+
+  const candidate =
+    $tr(entity.title as LocalizedString | string) ||
+    $tr(entity.name as LocalizedString | string) ||
+    entity.slug ||
+    entity.id
 
   if (candidate == null) return undefined
   if (typeof candidate === 'string') return candidate

@@ -12,9 +12,7 @@
 
     <template #default="{ state }">
       <FormTab>
-        <UFormField :label="$t('name')" name="name">
-          <UInput v-model="state.name" />
-        </UFormField>
+        <FieldText v-model="state.name" :label="$t('name')" name="name" translate />
       </FormTab>
     </template>
   </ResourceFormUpdate>
@@ -28,7 +26,7 @@ import type { ModelInput } from '~/types/utils'
 const { $entities } = useNuxtApp()
 
 const schema: z.ZodType<ModelInput<Solution>> = z.object({
-  name: z.string().min(2).default(''),
+  name: localizedStringSchema(z.string().min(2)),
   order: z.number().int().default(0)
 })
 
