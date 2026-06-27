@@ -1,15 +1,17 @@
 import { prisma } from '@src/db.js'
 import type {
   PageCreateInput,
+  PostCreateInput,
   ProjectCreateInput,
   SolutionCreateInput
 } from '@src/generated/prisma/models.js'
 
 /** Models with an `order` column used for manual sort in the admin. */
-export type OrderedModel = 'page' | 'project' | 'solution'
+export type OrderedModel = 'page' | 'post' | 'project' | 'solution'
 
 type CreateInput = {
   page: Omit<PageCreateInput, 'order'>
+  post: Omit<PostCreateInput, 'order'>
   project: Omit<ProjectCreateInput, 'order'>
   solution: Omit<SolutionCreateInput, 'order'>
 }
@@ -23,6 +25,10 @@ export async function createAtTopOrder<M extends OrderedModel>(model: M, data: C
       case 'page': {
         await tx.page.updateMany({ data: { order: { increment: 1 } } })
         return tx.page.create({ data: { ...data, order: 0 } as PageCreateInput })
+      }
+      case 'post': {
+        await tx.post.updateMany({ data: { order: { increment: 1 } } })
+        return tx.post.create({ data: { ...data, order: 0 } as PostCreateInput })
       }
       case 'project': {
         await tx.project.updateMany({ data: { order: { increment: 1 } } })

@@ -69,22 +69,21 @@ model Project {
   updatedAt DateTime @updatedAt
 }
 
-// model Post {
-//   id       String @id @default(uuid())
-//   order    Int    @default(0)
-//   title    Json
-//   subtitle Json?
+model Post {
+  id        String  @id @default(uuid())
+  order     Int     @default(0)
+  title     Json
+  subtitle  Json?
+  content   Json?
+  slug      String  @unique
+  image     Json?
+  published Boolean @default(false)
 
-//   content Json
-//   slug    String  @unique
-//   image   Json
-//   visible Boolean
+  // categories Category[] @relation("PostCategories")
 
-//   categories Category[] @relation("PostCategories")
-
-//   created_at DateTime @default(now())
-//   updated_at DateTime @updatedAt
-// }
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
 
 model Technology {
   id   String  @id @default(uuid())
@@ -118,27 +117,26 @@ model Setting {
   updatedAt DateTime @updatedAt
 }
 
-// model Category {
-//   id     String       @id @default(uuid())
-//   type   CategoryType
-//   order  Int          @default(0)
-//   title  Json
-//   desc   Json?
-//   slug   String       @unique
-//   fields Json?
+model Category {
+  id     String       @id @default(uuid())
+  type   CategoryType
+  order  Int          @default(0)
+  title  Json
+  desc   Json?
+  slug   String       @unique
+  fields Json?
 
-//   parent    Category? @relation("ChildToParent", fields: [parent_id], references: [id])
-//   parent_id String?
+  parent    Category? @relation("ChildToParent", fields: [parent_id], references: [id])
+  parent_id String?
 
-//   children Category[] @relation("ChildToParent")
+  children Category[] @relation("ChildToParent")
 
-//   posts Post[] @relation("PostCategories")
+  // posts Post[] @relation("PostCategories")
 
-//   created_at DateTime  @default(now())
-//   updated_at DateTime  @updatedAt
-//   projects   Project[]
-// }
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
 
-// enum CategoryType {
-//   POST
-// }
+enum CategoryType {
+  POST
+}
