@@ -71,15 +71,15 @@ model Project {
 
 model Post {
   id        String  @id @default(uuid())
+  name      Json
   order     Int     @default(0)
-  title     Json
-  subtitle  Json?
+  excerpt   Json?
   content   Json?
   slug      String  @unique
   image     Json?
   published Boolean @default(false)
 
-  // categories Category[] @relation("PostCategories")
+  categories Category[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -118,23 +118,21 @@ model Setting {
 }
 
 model Category {
-  id     String       @id @default(uuid())
-  type   CategoryType
-  order  Int          @default(0)
-  title  Json
-  desc   Json?
-  slug   String       @unique
-  fields Json?
+  id    String       @id @default(uuid())
+  name  Json
+  type  CategoryType
+  order Int          @default(0)
+  slug  String       @unique
 
-  parent    Category? @relation("ChildToParent", fields: [parent_id], references: [id])
-  parent_id String?
+  parent   Category? @relation("ChildToParent", fields: [parentId], references: [id])
+  parentId String?
 
   children Category[] @relation("ChildToParent")
 
-  // posts Post[] @relation("PostCategories")
+  posts Post[]
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum CategoryType {
