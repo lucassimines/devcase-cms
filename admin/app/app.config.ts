@@ -39,6 +39,15 @@ export default defineAppConfig({
         size: 'xl'
       }
     },
+    selectMenu: {
+      variants: {
+        size: {
+          xl: {
+            base: 'w-full'
+          }
+        }
+      }
+    },
     textarea: {
       variants: {
         size: {

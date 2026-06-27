@@ -30,21 +30,16 @@ export class PostRepository {
     return createAtTopOrder('post', data)
   }
 
-  static async update(
-    id: string,
-    data: PostUpdateInput & { categories?: string[] }
-  ) {
+  static async update(id: string, data: PostUpdateInput & { categories?: string[] }) {
     const { categories, ...rest } = data
 
     const post = await prisma.post.update({
       where: { id },
       data: {
         ...rest,
-        ...(categories !== undefined && {
-          categories: {
-            set: categories.map((categoryId) => ({ id: categoryId }))
-          }
-        })
+        categories: {
+          set: categories?.map((id) => ({ id })) ?? []
+        }
       },
       include: { categories: true }
     })

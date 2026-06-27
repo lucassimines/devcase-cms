@@ -1,10 +1,12 @@
 <template>
-  <UFormField :label="label ?? $t('entity.category.name', 2)" :name="name">
-    <UCheckboxGroup
+  <UFormField :label="$t('entity.category.name', 2)" :name="name">
+    <USelectMenu
       v-model="model"
       :items="categoryItems"
-      orientation="horizontal"
-      variant="card"
+      value-key="value"
+      size="xl"
+      multiple
+      :placeholder="$t('select.label')"
     />
   </UFormField>
 </template>
@@ -15,7 +17,6 @@ import type { Category, CategoryType } from '~/types/category'
 const props = defineProps<{
   name: string
   type: CategoryType
-  label?: string
 }>()
 
 const model = defineModel<string[]>({ required: true })
