@@ -4,7 +4,6 @@
       v-model="model"
       :items="categoryItems"
       value-key="value"
-      size="xl"
       multiple
       :placeholder="$t('select.label')"
     />

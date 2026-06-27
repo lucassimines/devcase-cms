@@ -46,6 +46,9 @@ export default defineAppConfig({
             base: 'w-full'
           }
         }
+      },
+      defaultVariants: {
+        size: 'xl'
       }
     },
     textarea: {
