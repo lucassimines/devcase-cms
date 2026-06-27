@@ -16,15 +16,6 @@ export type PageUpdate = Omit<Page, 'order'>
 
 export type PageContent<T = null> = Pick<Page<T>, 'content'>
 
-export const PAGE_ABOUT_DEFAULT = {
-  profile: {
-    title: emptyLocalizedString(),
-    image: emptyLocalizedString()
-  }
-}
-
-export type PageAbout = typeof PAGE_ABOUT_DEFAULT
-
 export const PAGE_HOME_DEFAULT = {
   intro: {
     title: emptyLocalizedString(),
