@@ -16,8 +16,6 @@ function getCategoryType(req: Request<CategoryRouteParams>) {
 
 export class CategoryController {
   static async reorder(req: Request<CategoryRouteParams>, res: Response) {
-    getCategoryType(req)
-
     return res.json(await reorder(prisma.category, req.body))
   }
 

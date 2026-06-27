@@ -7,7 +7,7 @@
     <ResourceTable :columns="columns" :endpoint="apiPath" filter-by="name" reorderable>
       <template #actions-cell="{ row, refresh }">
         <ResourceTableActions
-          :to="{ name: editRouteName, params: { id: row.original.id } }"
+          :to="{ name: categoryRoute, params: { id: row.original.id } }"
           :delete-path="`${apiPath}/${row.original.id}`"
           @deleted="refresh()"
         />
@@ -22,10 +22,10 @@ import type { Category, CategoryType } from '~/types/category'
 
 const props = defineProps<{
   type: CategoryType
-  editRouteName: string
 }>()
 
 const apiPath = computed(() => `/category/${props.type.toLowerCase()}`)
+const categoryRoute = computed(() => `${props.type.toLowerCase()}-category-id`)
 
 const columns: TableColumn<Category>[] = [
   {

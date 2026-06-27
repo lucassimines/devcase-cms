@@ -13,7 +13,3 @@ export function parseCategoryTypeParam(param: string): CategoryType {
 
   return type
 }
-
-export function categoryTypeToParam(type: CategoryType): string {
-  return type.toLowerCase()
-}

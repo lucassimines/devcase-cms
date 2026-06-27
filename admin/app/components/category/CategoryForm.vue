@@ -42,8 +42,7 @@ const { $entities, $tr } = useNuxtApp()
 
 const route = useRoute()
 
-const apiPath = computed(() => `/category/${props.type}`)
-
+const apiPath = computed(() => `/category/${props.type.toLowerCase()}`)
 const categoryRoute = computed(() => `${props.type.toLowerCase()}-category-id`)
 
 const schema: z.ZodType<ModelInput<CategoryUpdate>> = z.object({
