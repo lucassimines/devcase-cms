@@ -10,18 +10,21 @@
 </template>
 
 <script setup lang="ts">
-import type { Category } from '~/types/category'
+import type { Category, CategoryType } from '~/types/category'
 
-defineProps<{
+const props = defineProps<{
   name: string
+  type: CategoryType
   label?: string
 }>()
 
 const model = defineModel<string[]>({ required: true })
 
-const { $entities, $tr } = useNuxtApp()
+const { $tr } = useNuxtApp()
 
-const { data: categories } = useAdminApi<Category[]>(() => `${$entities.category.path}/all`)
+const { data: categories } = useAdminApi<Category[]>(
+  () => `/category/${props.type.toLowerCase()}/all`
+)
 
 const categoryItems = computed(() => {
   return (

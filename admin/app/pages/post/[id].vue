@@ -26,7 +26,7 @@
       </FormTab>
 
       <FormTab :title="$t('entity.category.name', 2)">
-        <FieldCategories v-model="state.categories" name="categories" />
+        <FieldCategories v-model="state.categories" name="categories" type="POST" />
       </FormTab>
     </template>
   </ResourceFormUpdate>

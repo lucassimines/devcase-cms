@@ -1,53 +1,73 @@
 import { CategoryRepository } from '@src/admin/repositories/category.repository.js'
-import { CategoryType } from '@src/generated/prisma/client.js'
 import { prisma } from '@src/db.js'
+import { parseCategoryTypeParam } from '@src/utils/category-type.utils.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { reorder } from '@src/utils/reorder.utils.js'
 import { Request, Response } from 'express'
 
-const POST_CATEGORY_TYPE = CategoryType.POST
+type CategoryRouteParams = {
+  type: string
+  id?: string
+}
+
+function getCategoryType(req: Request<CategoryRouteParams>) {
+  return parseCategoryTypeParam(req.params.type)
+}
 
 export class CategoryController {
-  static async reorder(req: Request, res: Response) {
+  static async reorder(req: Request<CategoryRouteParams>, res: Response) {
+    getCategoryType(req)
+
     return res.json(await reorder(prisma.category, req.body))
   }
 
-  static async all(_req: Request, res: Response) {
-    res.json(await CategoryRepository.all(POST_CATEGORY_TYPE))
+  static async all(req: Request<CategoryRouteParams>, res: Response) {
+    const type = getCategoryType(req)
+
+    res.json(await CategoryRepository.all(type))
   }
 
-  static async index(req: Request, res: Response) {
+  static async index(req: Request<CategoryRouteParams>, res: Response) {
+    const type = getCategoryType(req)
+
     res.json(
       await paginate(prisma.category, {
         ...req.query,
-        where: { type: POST_CATEGORY_TYPE }
+        where: { type }
       })
     )
   }
 
-  static async getById(req: Request<{ id: string }>, res: Response) {
-    const { id } = req.params
+  static async getById(req: Request<CategoryRouteParams>, res: Response) {
+    const type = getCategoryType(req)
+    const id = req.params.id!
 
-    res.json(await CategoryRepository.findById(id, POST_CATEGORY_TYPE))
+    res.json(await CategoryRepository.findById(id, type))
   }
 
-  static async create(req: Request, res: Response) {
-    res.json(await CategoryRepository.create({ ...req.body, type: POST_CATEGORY_TYPE }))
+  static async create(req: Request<CategoryRouteParams>, res: Response) {
+    const type = getCategoryType(req)
+
+    res.json(await CategoryRepository.create({ ...req.body, type }))
   }
 
-  static async update(req: Request<{ id: string }>, res: Response) {
-    const { id } = req.params
+  static async update(req: Request<CategoryRouteParams>, res: Response) {
+    const type = getCategoryType(req)
+    const id = req.params.id!
 
-    res.json(await CategoryRepository.update(id, POST_CATEGORY_TYPE, req.body))
+    res.json(await CategoryRepository.update(id, type, req.body))
   }
 
-  static async deleteMany(req: Request, res: Response) {
-    res.json(await CategoryRepository.deleteMany(req.body.ids, POST_CATEGORY_TYPE))
+  static async deleteMany(req: Request<CategoryRouteParams>, res: Response) {
+    const type = getCategoryType(req)
+
+    res.json(await CategoryRepository.deleteMany(req.body.ids, type))
   }
 
-  static async delete(req: Request<{ id: string }>, res: Response) {
-    const { id } = req.params
+  static async delete(req: Request<CategoryRouteParams>, res: Response) {
+    const type = getCategoryType(req)
+    const id = req.params.id!
 
-    res.json(await CategoryRepository.delete(id, POST_CATEGORY_TYPE))
+    res.json(await CategoryRepository.delete(id, type))
   }
 }

@@ -1,9 +1,11 @@
 import type { LocalizedString } from '~/types/locale'
 
+export type CategoryType = 'POST'
+
 export interface Category {
   id: string
   name: LocalizedString
-  type: 'POST'
+  type: CategoryType
   order: number
   slug: string
   parentId: string | null
