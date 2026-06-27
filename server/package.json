@@ -6,6 +6,8 @@
     "dev": "prisma generate && tsx watch src/server.ts",
     "migrate:projects": "tsx scripts/migrate-project-localization.ts",
     "build": "prisma generate && tsc && tsc-alias",
+    "release": "prisma migrate deploy",
+    "build:prod": "npm run build && npm run release",
     "clean": "rm -rf ./dist && tsc -b --clean",
     "watch": "npx tsc -b -w",
     "start": "node dist/src/server.js",
