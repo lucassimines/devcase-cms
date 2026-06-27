@@ -30,7 +30,6 @@
 
 <script setup lang="ts">
 import * as z from 'zod'
-import PageAbout from '~/components/page/PageAbout.vue'
 import PageHome from '~/components/page/PageHome.vue'
 import type { PageUpdate } from '~/types/page'
 import type { ModelInput } from '~/types/utils'
@@ -40,8 +39,7 @@ const { $entities } = useNuxtApp()
 const route = useRoute()
 
 const componentContentMap: Record<string, Component> = {
-  home: PageHome,
-  about: PageAbout
+  home: PageHome
 }
 
 function getContentSchema(code: string) {
@@ -51,14 +49,6 @@ function getContentSchema(code: string) {
         intro: z.object({
           title: localizedStringSchema(),
           description: localizedStringSchema()
-        })
-      })
-
-    case 'about':
-      return z.object({
-        profile: z.object({
-          title: localizedStringSchema(),
-          image: localizedStringSchema()
         })
       })
 

@@ -9,6 +9,8 @@
   "subtitle": "Subtitle",
   "code": "Code",
   "name": "Name",
+  "role": "Role",
+  "location": "Location",
   "slug": "Slug",
   "order": "Order",
   "published": "Published",

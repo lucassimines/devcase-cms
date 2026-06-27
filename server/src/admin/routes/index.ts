@@ -8,6 +8,7 @@ import pageRouter from './page.route.js'
 import projectRouter from './project.route.js'
 import revalidateRouter from './revalidate.route.js'
 import solutionRouter from './solution.route.js'
+import settingRouter from './setting.route.js'
 import technologyRouter from './technology.route.js'
 import userRouter from './user.route.js'
 
@@ -26,6 +27,7 @@ const routes = [
   ['page', pageRouter],
   ['project', projectRouter],
   ['solution', solutionRouter],
+  ['setting', settingRouter],
   ['technology', technologyRouter]
 ] as const
 
