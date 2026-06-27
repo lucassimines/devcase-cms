@@ -13,4 +13,6 @@ export interface Post {
   updatedAt: string
 }
 
-export type PostUpdate = Post
+export type PostUpdate = Omit<Post, 'createdAt' | 'updatedAt'> & {
+  categories: string[]
+}

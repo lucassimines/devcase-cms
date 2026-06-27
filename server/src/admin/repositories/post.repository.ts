@@ -1,23 +1,55 @@
 import { prisma } from '@src/db.js'
+import type { Prisma } from '@src/generated/prisma/client.js'
 import type { PostCreateInput, PostUpdateInput } from '@src/generated/prisma/models.js'
 import { createAtTopOrder } from '@src/utils/order.utils.js'
 
+type PostWithIncludes = Prisma.PostGetPayload<{
+  include: { categories: true }
+}>
+
+function normalizePostToForm(post: PostWithIncludes) {
+  return {
+    ...post,
+    categories: post.categories.map((category) => category.id)
+  }
+}
+
 export class PostRepository {
-  static findById(id: string) {
-    return prisma.post.findFirst({
-      where: { id }
+  static async findById(id: string) {
+    const post = await prisma.post.findFirst({
+      where: { id },
+      include: { categories: true }
     })
+
+    if (!post) return null
+
+    return normalizePostToForm(post)
   }
 
   static create(data: PostCreateInput) {
     return createAtTopOrder('post', data)
   }
 
-  static update(id: string, data: PostUpdateInput) {
-    return prisma.post.update({
+  static async update(
+    id: string,
+    data: PostUpdateInput & { categories?: string[] }
+  ) {
+    const { categories, ...rest } = data
+
+    const post = await prisma.post.update({
       where: { id },
-      data
+      data: {
+        ...rest,
+        ...(categories !== undefined && {
+          categories: {
+            set: categories.map((categoryId) => ({ id: categoryId }))
+          }
+        })
+      },
+      include: { categories: true }
     })
+
+    return normalizePostToForm(post)
   }
 
   static deleteMany(ids: string[]) {

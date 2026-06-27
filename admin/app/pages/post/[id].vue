@@ -24,6 +24,10 @@
       <FormTab :title="$t('content')">
         <FieldEditor v-model="state.content" name="content" translate />
       </FormTab>
+
+      <FormTab :title="$t('entity.category.name', 2)">
+        <FieldCategories v-model="state.categories" name="categories" />
+      </FormTab>
     </template>
   </ResourceFormUpdate>
 </template>
@@ -33,8 +37,6 @@ import * as z from 'zod'
 import type { PostUpdate } from '~/types/post'
 import type { ModelInput } from '~/types/utils'
 
-const { $entities } = useNuxtApp()
-
 const schema: z.ZodType<ModelInput<PostUpdate>> = z.object({
   name: localizedStringSchema(z.string().min(2)),
   published: z.boolean().default(false),
@@ -42,7 +44,8 @@ const schema: z.ZodType<ModelInput<PostUpdate>> = z.object({
   excerpt: localizedStringSchema(),
   content: localizedStringSchema(),
   image: localizedStringSchema(),
-  slug: z.string().default('')
+  slug: z.string().default(''),
+  categories: z.array(z.string()).default([])
 })
 
 const route = useRoute()

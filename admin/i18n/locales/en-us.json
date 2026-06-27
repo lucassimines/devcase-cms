@@ -95,6 +95,13 @@
       "create": "Create Post",
       "edit": "Edit Post"
     },
+    "category": {
+      "name": "Category | Categories",
+      "create": "Create Category",
+      "edit": "Edit Category",
+      "parent": "Parent category",
+      "noParent": "No parent"
+    },
     "project": {
       "name": "Project | Projects",
       "create": "Create Project",

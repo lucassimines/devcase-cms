@@ -126,8 +126,13 @@ export function useBreadcrumbs(options: UseBreadcrumbsOptions = {}) {
 
   const resources = $entities as Entities
   const resourcesByPath: Record<string, Entities[keyof Entities]> = {}
+
   for (const resource of Object.values(resources)) {
     resourcesByPath[normalizeResourcePath(resource.path)] = resource
+
+    for (const child of resource.children ?? []) {
+      resourcesByPath[normalizeResourcePath(child.path)] = child
+    }
   }
 
   const breadcrumbs = computed<BreadcrumbItem[]>(() => {
