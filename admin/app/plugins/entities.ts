@@ -13,6 +13,12 @@ export default defineNuxtPlugin({
         icon: 'lucide:file-text',
         label: i18n.t('entity.page.name', 2)
       },
+      post: {
+        model: 'post',
+        path: '/post',
+        icon: 'lucide:square-pen',
+        label: i18n.t('entity.post.name', 2)
+      },
       project: {
         model: 'project',
         path: '/project',

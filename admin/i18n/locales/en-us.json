@@ -34,6 +34,7 @@
   "appearance": "Appearance",
   "logout": "Logout",
   "description": "Description",
+  "excerpt": "Excerpt",
   "url": "URL",
   "item": "Item | Items",
   "desktop": "Desktop",
@@ -88,6 +89,11 @@
       "name": "Page | Pages",
       "create": "Create Page",
       "edit": "Edit Page"
+    },
+    "post": {
+      "name": "Post | Posts",
+      "create": "Create Post",
+      "edit": "Edit Post"
     },
     "project": {
       "name": "Project | Projects",

@@ -25,20 +25,20 @@ describe('Post admin API', () => {
   })
 
   describe('POST /admin/post', () => {
-    it('creates a post with localized title and slug', async () => {
+    it('creates a post with localized name and slug', async () => {
       const token = await loginAsTestUser(app)
 
       const res = await request(app)
         .post(`${basePath}/admin/post`)
         .set('Authorization', `Bearer ${token}`)
         .send({
-          title: { 'en-US': 'Hello World', 'pt-BR': 'Olá Mundo' },
+          name: { 'en-US': 'Hello World', 'pt-BR': 'Olá Mundo' },
           slug: 'hello-world'
         })
         .expect(200)
 
       expect(res.body).toMatchObject({
-        title: { 'en-US': 'Hello World', 'pt-BR': 'Olá Mundo' },
+        name: { 'en-US': 'Hello World', 'pt-BR': 'Olá Mundo' },
         slug: 'hello-world',
         published: false,
         order: 0
@@ -50,7 +50,7 @@ describe('Post admin API', () => {
       await request(app)
         .post(`${basePath}/admin/post`)
         .send({
-          title: { 'en-US': 'Private', 'pt-BR': '' },
+          name: { 'en-US': 'Private', 'pt-BR': '' },
           slug: 'private'
         })
         .expect(400)
@@ -65,7 +65,7 @@ describe('Post admin API', () => {
         .post(`${basePath}/admin/post`)
         .set('Authorization', `Bearer ${token}`)
         .send({
-          title: { 'en-US': 'My Post', 'pt-BR': 'Meu Post' },
+          name: { 'en-US': 'My Post', 'pt-BR': 'Meu Post' },
           slug: 'my-post'
         })
         .expect(200)
@@ -90,7 +90,7 @@ describe('Post admin API', () => {
         .post(`${basePath}/admin/post`)
         .set('Authorization', `Bearer ${token}`)
         .send({
-          title: { 'en-US': 'Temporary', 'pt-BR': '' },
+          name: { 'en-US': 'Temporary', 'pt-BR': '' },
           slug: 'temporary'
         })
         .expect(200)
