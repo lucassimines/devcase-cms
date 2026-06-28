@@ -2,6 +2,9 @@ import { prisma } from '@src/db.js'
 import type { ProjectSelect } from '@src/generated/prisma/models.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { ProjectQuery } from '@src/web/queries/project.query.js'
+import type { Request } from 'express'
+
+const PROJECTS_PER_PAGE = 12
 
 export class ProjectService {
   static featured() {
@@ -19,8 +22,10 @@ export class ProjectService {
     })
   }
 
-  static paginatedList() {
+  static paginatedList(query: Request['query'] = {}) {
     return paginate(prisma.project, {
+      limit: PROJECTS_PER_PAGE,
+      ...query,
       where: ProjectQuery.published(),
       orderBy: ProjectQuery.orderByPosition()
     })

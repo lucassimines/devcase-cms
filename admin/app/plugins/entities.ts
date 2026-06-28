@@ -6,6 +6,12 @@ export default defineNuxtPlugin({
   async setup(nuxtApp) {
     const i18n = nuxtApp.$i18n as Composer
 
+    const categoryEntity = {
+      model: 'category',
+      icon: 'lucide:tags',
+      label: i18n.t('entity.category.name', 2)
+    }
+
     const entities = {
       page: {
         model: 'page',
@@ -13,6 +19,19 @@ export default defineNuxtPlugin({
         icon: 'lucide:file-text',
         label: i18n.t('entity.page.name', 2)
       },
+      post: {
+        model: 'post',
+        path: '/post',
+        icon: 'lucide:square-pen',
+        label: i18n.t('entity.post.name', 2),
+        children: [
+          {
+            ...categoryEntity,
+            path: '/post/category'
+          }
+        ]
+      },
+      category: categoryEntity,
       project: {
         model: 'project',
         path: '/project',

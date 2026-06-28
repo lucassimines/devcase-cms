@@ -1,4 +1,18 @@
 import type { NavigationMenuItem } from '@nuxt/ui'
+import type { Entity } from '~/types/entity'
+
+function toNavItem(entity: Entity): NavigationMenuItem {
+  return {
+    label: entity.label,
+    icon: entity.icon,
+    to: entity.path,
+    children: entity.children?.map((child) => ({
+      label: child.label,
+      icon: child.icon,
+      to: child.path
+    }))
+  }
+}
 
 export function useNavigation() {
   const { $entities } = useNuxtApp()
@@ -11,11 +25,9 @@ export function useNavigation() {
         icon: 'lucide:home',
         to: '/'
       },
-      ...Object.values($entities).map((entity) => ({
-        label: entity.label,
-        icon: entity.icon,
-        to: entity.path
-      }))
+      ...Object.values($entities)
+        .filter((entity) => entity.model !== 'category')
+        .map((entity) => toNavItem(entity))
     ]
   }
 

@@ -1,13 +1,7 @@
 <template>
   <ResourceFormUpdate :schema="schema" :endpoint="`/page/${route.params.id}`">
     <template #right>
-      <UButton
-        :icon="$entities.page.icon"
-        :label="$t('entity.page.name', 2)"
-        variant="soft"
-        color="neutral"
-        :to="{ name: 'page-id', params: { id: route.params.id } }"
-      />
+      <ButtonModel entity="page" />
     </template>
 
     <template #default="{ state }">
@@ -34,8 +28,6 @@ import PageHome from '~/components/page/PageHome.vue'
 import type { PageUpdate } from '~/types/page'
 import type { ModelInput } from '~/types/utils'
 
-const { $entities } = useNuxtApp()
-
 const route = useRoute()
 
 const componentContentMap: Record<string, Component> = {
@@ -59,7 +51,7 @@ function getContentSchema(code: string) {
 
 const schema = z
   .object({
-    name: localizedStringSchema(),
+    name: localizedStringSchema(z.string().min(2)),
     code: z.string().min(2).default(''),
     published: z.boolean().default(false),
     slug: z.string().default(''),

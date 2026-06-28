@@ -1,23 +1,19 @@
 export type PaginatedArgs = {
-    page: number;
-    limit: number;
-    where?: Record<string, any>;
-    include?: Record<string, any>;
-    orderBy?: Record<string, any>;
-};
-
-export interface PaginatedQuery {
-    page: string;
-    limit: string;
-    term: string;
-    filterBy: string[];
-    include: string;
-    orderBy: string;
-    where: string;
+  page: number
+  limit: number
+  where?: Record<string, any>
+  include?: Record<string, any>
+  orderBy?: Record<string, any>
 }
 
-export interface PaginatedCategoriesQuery {
-    page: string;
-    limit: string;
-    term: string;
+export type PaginateInput = {
+  where?: any
+  orderBy?: any
+  skip?: number
+  take?: number
+  include?: any
+  page?: string | number
+  limit?: string | number
+  term?: string
+  filterBy?: string | string[]
 }

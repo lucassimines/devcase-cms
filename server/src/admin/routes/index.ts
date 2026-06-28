@@ -2,9 +2,11 @@ import { VerifyApiTokenMiddleware } from '@src/admin/middleware/verify-api-token
 import { requestContext } from '@src/request-context.js'
 import { Router } from 'express'
 
+import categoryRouter from './category.route.js'
 import dashboardRouter from './dashboard.route.js'
 import fileRouter from './file.route.js'
 import pageRouter from './page.route.js'
+import postRouter from './post.route.js'
 import projectRouter from './project.route.js'
 import revalidateRouter from './revalidate.route.js'
 import solutionRouter from './solution.route.js'
@@ -25,6 +27,8 @@ const routes = [
   ['file', fileRouter],
   ['user', userRouter],
   ['page', pageRouter],
+  ['post', postRouter],
+  ['category', categoryRouter],
   ['project', projectRouter],
   ['solution', solutionRouter],
   ['setting', settingRouter],

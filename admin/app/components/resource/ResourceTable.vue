@@ -188,7 +188,7 @@ function getRowId(row: T, index: number): string {
 
 const paginationQuery = ref<PaginationQuery>({
   page: 1,
-  limit: 10
+  limit: 24
 })
 
 const pagination = ref({
@@ -255,16 +255,10 @@ function goToPage(page: number) {
 
 const notify = useNotification()
 
-// Automatically get the entity model name from the route
-const entityModel = computed(() => {
-  // Get the last part of the route name
-  return route.name?.toString()?.split('-').pop()
-})
-
 // Delete selected rows
 async function deleteSelectedRows() {
   try {
-    const res = await $adminApi<{ count: number }>(`/${entityModel.value}`, {
+    const res = await $adminApi<{ count: number }>(props.endpoint, {
       method: 'DELETE',
       body: { ids: Object.keys(rowSelection.value) }
     })
@@ -325,7 +319,10 @@ function makeLinkRow(row: TableRow<T>, key: keyof T) {
   return h(
     ULink,
     {
-      to: { name: `${route.name?.toString()}-id`, params: { id: row.id } },
+      to: {
+        name: `${route.name?.toString()}-id`,
+        params: { ...route.params, id: row.id }
+      },
       class: 'hover:text-primary'
     },
     () => $tr(row.original[key] as LocalizedString | string)
@@ -445,7 +442,7 @@ const items = ref<TableListItem<T>[]>([])
 
 async function saveItemsOrder(rows: TableListItem<T>[]) {
   try {
-    await $adminApi(`/${entityModel.value}/reorder`, {
+    await $adminApi(`${props.endpoint}/reorder`, {
       method: 'PUT',
       body: rows
     })

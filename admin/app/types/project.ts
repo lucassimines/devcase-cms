@@ -7,8 +7,6 @@ export interface Project {
   id: string
   order: number
   published: boolean
-  createdAt: string
-  updatedAt: string
   name: LocalizedString
   url: LocalizedString
   description: LocalizedString
@@ -18,6 +16,8 @@ export interface Project {
   blocks: Block[]
   technologies: Technology[]
   solutions: Solution[]
+  createdAt: string
+  updatedAt: string
 }
 
 export interface ProjectUpdate extends Omit<Project, 'technologies' | 'solutions'> {

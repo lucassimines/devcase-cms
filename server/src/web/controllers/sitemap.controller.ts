@@ -6,7 +6,7 @@ import { createGzip } from 'zlib'
 const cache = new Map<string, { data: Buffer; timestamp: number }>()
 const CACHE_TTL_MS = 60 * 60 * 1000 // 1 hour
 
-const TYPES = ['pages', 'projects'] as const
+const TYPES = ['pages', 'posts', 'projects'] as const
 
 const { FRONTEND_URL } = process.env
 
@@ -114,6 +114,7 @@ export class SitemapController {
 
       const writers: Record<SitemapType, (stream: SitemapStream, page: number) => Promise<void>> = {
         pages: SitemapController.writePages,
+        posts: SitemapController.writePosts,
         projects: SitemapController.writeProjects
       }
 
@@ -141,6 +142,19 @@ export class SitemapController {
         lastmod: pageItem.updatedAt.toISOString(),
         changefreq: 'monthly',
         priority: pageItem.slug === 'home' ? 1.0 : 0.8
+      })
+    }
+  }
+
+  static async writePosts(stream: SitemapStream, page: number) {
+    const posts = await SitemapService.getPosts(page)
+
+    for (const post of posts) {
+      stream.write({
+        url: `/articles/${post.slug}`,
+        lastmod: post.updatedAt.toISOString(),
+        changefreq: 'weekly',
+        priority: 0.7
       })
     }
   }
