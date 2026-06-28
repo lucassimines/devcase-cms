@@ -10,9 +10,11 @@ const stringArrayQuery = z.preprocess((val) => {
   return Array.isArray(val) ? val : [val]
 }, z.array(z.string()))
 
+const numericQueryParam = z.union([z.string(), z.number()]).optional()
+
 const PaginatedQuerySchema = z.object({
-  page: z.string().optional(),
-  limit: z.string().optional(),
+  page: numericQueryParam,
+  limit: numericQueryParam,
   term: z.string().optional(),
   filterBy: stringArrayQuery.default([]),
   include: jsonStringOrObject.optional(),
