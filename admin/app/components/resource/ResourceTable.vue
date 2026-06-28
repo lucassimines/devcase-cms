@@ -188,7 +188,7 @@ function getRowId(row: T, index: number): string {
 
 const paginationQuery = ref<PaginationQuery>({
   page: 1,
-  limit: 10
+  limit: 24
 })
 
 const pagination = ref({
