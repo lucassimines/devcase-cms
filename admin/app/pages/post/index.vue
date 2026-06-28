@@ -1,6 +1,8 @@
 <template>
   <ResourceTablePanel>
     <template #header-right>
+      <ButtonModel entity="category" path="/post/category" />
+
       <ResourceFormCreate endpoint="/post" has-slug :title="$t('entity.post.create')" />
     </template>
 
