@@ -15,7 +15,7 @@ typeRouter.delete('/:id', CategoryController.delete)
 
 const router = Router()
 
-router.param('type', (req, res, next, type) => {
+router.param('type', (_req, res, next, type) => {
   try {
     parseCategoryTypeParam(type)
     next()

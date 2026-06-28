@@ -1,13 +1,7 @@
 <template>
   <ResourceFormUpdate :schema="schema" :endpoint="`/project/${route.params.id}`">
     <template #right>
-      <UButton
-        :icon="$entities.project.icon"
-        :label="$t('entity.project.name', 2)"
-        variant="soft"
-        color="neutral"
-        :to="{ name: 'project-id', params: { id: route.params.id } }"
-      />
+      <ButtonModel entity="project" />
     </template>
 
     <template #default="{ state }">
@@ -66,7 +60,7 @@ import type { Solution } from '~/types/solution'
 import type { Technology } from '~/types/technology'
 import type { ModelInput } from '~/types/utils'
 
-const { $entities, $tr } = useNuxtApp()
+const { $tr } = useNuxtApp()
 
 const schema: z.ZodType<ModelInput<ProjectUpdate>> = z.object({
   name: localizedStringSchema(z.string().min(2)),

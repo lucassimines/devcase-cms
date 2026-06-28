@@ -1,13 +1,7 @@
 <template>
   <ResourceFormUpdate :schema="schema" :endpoint="`/post/${route.params.id}`">
     <template #right>
-      <UButton
-        :icon="$entities.post.icon"
-        :label="$t('entity.post.name', 2)"
-        variant="soft"
-        color="neutral"
-        :to="{ name: 'post-id', params: { id: route.params.id } }"
-      />
+      <ButtonModel entity="post" />
     </template>
 
     <template #default="{ state }">
