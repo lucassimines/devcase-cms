@@ -1,13 +1,7 @@
 <template>
   <ResourceFormUpdate :schema="schema" :endpoint="`${apiPath}/${route.params.id}`">
     <template #right>
-      <UButton
-        :icon="$entities.category.icon"
-        :label="$t('entity.category.name', 2)"
-        variant="soft"
-        color="neutral"
-        :to="{ name: categoryRoute, params: { id: route.params.id } }"
-      />
+      <ButtonModel entity="category" :path="`/${props.type.toLowerCase()}/category`" />
     </template>
 
     <template #default="{ state }">
@@ -38,12 +32,11 @@ const props = defineProps<{
   type: CategoryType
 }>()
 
-const { $entities, $tr } = useNuxtApp()
+const { $tr } = useNuxtApp()
 
 const route = useRoute()
 
 const apiPath = computed(() => `/category/${props.type.toLowerCase()}`)
-const categoryRoute = computed(() => `${props.type.toLowerCase()}-category-id`)
 
 const schema: z.ZodType<ModelInput<CategoryUpdate>> = z.object({
   name: localizedStringSchema(z.string().min(2)),

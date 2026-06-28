@@ -4,7 +4,7 @@
  */
 export interface Entity {
   model: string
-  path: string
+  path?: string
   icon: string
   label: string
   children?: Entity[]
@@ -13,7 +13,7 @@ export interface Entity {
 /** Config for defining entities; label is derived from model in useEntitys(). */
 export interface EntityConfig {
   model: string
-  path: string
+  path?: string
   icon: string
 }
 
@@ -28,4 +28,6 @@ export type EntityKey =
   | 'settings'
 
 /** Shape of $entities from the entities plugin. Use `typeof nuxtApp.$entities` at runtime if you need the exact object type. */
-export type Entities = Record<EntityKey, Entity>
+export type Entities = {
+  [K in EntityKey]: K extends 'category' ? Omit<Entity, 'path'> : Entity & { path: string }
+}

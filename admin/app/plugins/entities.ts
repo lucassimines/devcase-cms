@@ -1,14 +1,13 @@
 import type { Composer } from 'vue-i18n'
-import type { Entities, Entity } from '~/types/entity'
+import type { Entities } from '~/types/entity'
 
 export default defineNuxtPlugin({
   name: 'resources',
   async setup(nuxtApp) {
     const i18n = nuxtApp.$i18n as Composer
 
-    const postCategory: Entity = {
+    const categoryEntity = {
       model: 'category',
-      path: '/post/category',
       icon: 'lucide:tags',
       label: i18n.t('entity.category.name', 2)
     }
@@ -25,9 +24,14 @@ export default defineNuxtPlugin({
         path: '/post',
         icon: 'lucide:square-pen',
         label: i18n.t('entity.post.name', 2),
-        children: [postCategory]
+        children: [
+          {
+            ...categoryEntity,
+            path: '/post/category'
+          }
+        ]
       },
-      category: postCategory,
+      category: categoryEntity,
       project: {
         model: 'project',
         path: '/project',

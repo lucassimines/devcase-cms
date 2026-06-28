@@ -128,10 +128,14 @@ export function useBreadcrumbs(options: UseBreadcrumbsOptions = {}) {
   const resourcesByPath: Record<string, Entities[keyof Entities]> = {}
 
   for (const resource of Object.values(resources)) {
-    resourcesByPath[normalizeResourcePath(resource.path)] = resource
+    if ('path' in resource && resource.path) {
+      resourcesByPath[normalizeResourcePath(resource.path)] = resource
+    }
 
     for (const child of resource.children ?? []) {
-      resourcesByPath[normalizeResourcePath(child.path)] = child
+      if (child.path) {
+        resourcesByPath[normalizeResourcePath(child.path)] = child
+      }
     }
   }
 
