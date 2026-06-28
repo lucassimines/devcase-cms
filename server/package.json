@@ -31,6 +31,7 @@
     "nodemailer-express-handlebars": "^7.0.0",
     "pg": "^8.18.0",
     "reflect-metadata": "^0.2.2",
+    "sharp": "^0.35.2",
     "sitemap": "^9.0.1",
     "tsconfig-paths": "^4.2.0",
     "winston": "^3.19.0",
