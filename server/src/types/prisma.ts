@@ -6,14 +6,6 @@ export type PrismaDelegate = {
   update: (args?: any) => Promise<any>
 }
 
-export type PrismaFindManyArgs = {
-  where?: any
-  orderBy?: any
-  skip?: number
-  take?: number
-  include?: any
-}
-
 export type WhereScopedOperation =
   | 'findMany'
   | 'findFirst'

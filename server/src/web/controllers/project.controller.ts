@@ -3,8 +3,8 @@ import { ProjectService } from '@src/web/services/project.service.js'
 import { Request, Response } from 'express'
 
 export class ProjectController {
-  static async index(_req: Request, res: Response) {
-    res.json(await ProjectService.paginatedList())
+  static async index(req: Request, res: Response) {
+    res.json(await ProjectService.paginatedList(req.query))
   }
 
   static async featured(_req: Request, res: Response) {

@@ -1,5 +1,5 @@
-import type { PaginatedArgs } from '@src/types/paginate.js'
-import type { PrismaDelegate, PrismaFindManyArgs } from '@src/types/prisma.js'
+import type { PaginatedArgs, PaginateInput } from '@src/types/paginate.js'
+import type { PrismaDelegate } from '@src/types/prisma.js'
 
 import { z } from 'zod'
 
@@ -126,7 +126,7 @@ async function findPaginated<T>(model: PrismaDelegate, args: PaginatedArgs) {
 /**
  * Fetch paginated list items
  */
-export async function paginate<T = unknown>(model: PrismaDelegate, query: PrismaFindManyArgs) {
+export async function paginate<T = unknown>(model: PrismaDelegate, query: PaginateInput) {
   const normalizedQuery = PaginatedQuerySchema.parse(query)
 
   const {
