@@ -1,5 +1,6 @@
 import { prisma } from '@src/db.js'
 import { PageQuery } from '@src/web/queries/page.query.js'
+import { PostQuery } from '@src/web/queries/post.query.js'
 import { ProjectQuery } from '@src/web/queries/project.query.js'
 
 const CHUNK_SIZE = 100
@@ -12,13 +13,15 @@ export class SitemapService {
   static readonly chunkSize = CHUNK_SIZE
 
   static async getCounts() {
-    const [pages, projects] = await Promise.all([
+    const [pages, posts, projects] = await Promise.all([
       prisma.page.count({ where: PageQuery.published() }),
+      prisma.post.count({ where: PostQuery.published() }),
       prisma.project.count({ where: ProjectQuery.published() })
     ])
 
     return {
       pages: Math.max(1, Math.ceil(pages / CHUNK_SIZE)),
+      posts: Math.max(1, Math.ceil(posts / CHUNK_SIZE)),
       projects: Math.max(1, Math.ceil(projects / CHUNK_SIZE))
     }
   }
@@ -26,6 +29,18 @@ export class SitemapService {
   static async getPages(page: number) {
     return await prisma.page.findMany({
       where: PageQuery.published(),
+      select: {
+        slug: true,
+        updatedAt: true
+      },
+      orderBy: [{ createdAt: 'desc' }, { id: 'asc' }],
+      ...paginate(page)
+    })
+  }
+
+  static async getPosts(page: number) {
+    return await prisma.post.findMany({
+      where: PostQuery.published(),
       select: {
         slug: true,
         updatedAt: true

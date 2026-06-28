@@ -51,7 +51,7 @@ function getContentSchema(code: string) {
 
 const schema = z
   .object({
-    name: localizedStringSchema(),
+    name: localizedStringSchema(z.string().min(2)),
     code: z.string().min(2).default(''),
     published: z.boolean().default(false),
     slug: z.string().default(''),
