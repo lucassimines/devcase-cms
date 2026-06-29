@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import { parseAgentOutput } from '../scripts/lib/post-generator.cursor.js'
+import { parseAgentOutput, parseGeneratedPostFromAgentStdout } from '../scripts/lib/post-generator.cursor.js'
 import { extractJson } from '../scripts/lib/post-generator.prompt.js'
 import { generatedPostSchema } from '../scripts/lib/post-generator.schema.js'
 import { resolvePostSlug } from '../scripts/lib/post-generator.store.js'
@@ -64,6 +64,40 @@ describe('parseAgentOutput', () => {
   it('extracts result field from json wrapper', () => {
     expect(parseAgentOutput(JSON.stringify({ result: '{"name":{"en-US":"Hi"}}' }))).toBe(
       '{"name":{"en-US":"Hi"}}'
+    )
+  })
+})
+
+describe('parseGeneratedPostFromAgentStdout', () => {
+  it('ignores cursor status text before post json', () => {
+    const stdout = `Checking eligibility for workspace access...
+
+${JSON.stringify(samplePost)}`
+
+    expect(parseGeneratedPostFromAgentStdout(stdout)).toEqual(samplePost)
+  })
+
+  it('extracts post json from a fenced block after status text', () => {
+    const stdout = `Checking eligibility...
+
+\`\`\`json
+${JSON.stringify(samplePost)}
+\`\`\``
+
+    expect(parseGeneratedPostFromAgentStdout(stdout)).toEqual(samplePost)
+  })
+
+  it('extracts post json from a result wrapper', () => {
+    const stdout = JSON.stringify({
+      result: JSON.stringify(samplePost)
+    })
+
+    expect(parseGeneratedPostFromAgentStdout(stdout)).toEqual(samplePost)
+  })
+
+  it('does not throw when stdout contains only cursor status text', () => {
+    expect(() => parseGeneratedPostFromAgentStdout('Checking eligibility for workspace access')).toThrow(
+      /status message/
     )
   })
 })

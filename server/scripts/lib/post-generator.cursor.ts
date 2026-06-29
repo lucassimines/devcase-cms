@@ -1,4 +1,4 @@
-import { execFile } from 'node:child_process'
+import { execFile, spawn } from 'node:child_process'
 import { dirname, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
@@ -9,6 +9,148 @@ import { generatedPostSchema } from './post-generator.schema.js'
 
 const execFileAsync = promisify(execFile)
 const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
+
+const WRAPPER_KEYS = ['result', 'text', 'response', 'output', 'content'] as const
+
+function stripAgentNoise(output: string) {
+  return output
+    .split('\n')
+    .filter((line) => !/^cursor-retrieval:/i.test(line.trim()))
+    .join('\n')
+    .trim()
+}
+
+function findJsonObjectCandidates(text: string) {
+  const candidates: string[] = []
+
+  for (let start = 0; start < text.length; start++) {
+    if (text[start] !== '{') continue
+
+    let depth = 0
+    let inString = false
+    let escaped = false
+
+    for (let index = start; index < text.length; index++) {
+      const char = text[index]
+
+      if (inString) {
+        if (escaped) {
+          escaped = false
+          continue
+        }
+
+        if (char === '\\') {
+          escaped = true
+          continue
+        }
+
+        if (char === '"') {
+          inString = false
+        }
+
+        continue
+      }
+
+      if (char === '"') {
+        inString = true
+        continue
+      }
+
+      if (char === '{') {
+        depth++
+        continue
+      }
+
+      if (char === '}') {
+        depth--
+
+        if (depth === 0) {
+          candidates.push(text.slice(start, index + 1))
+          break
+        }
+      }
+    }
+  }
+
+  return candidates
+}
+
+function tryParsePostPayload(value: unknown): GeneratedPostContent | undefined {
+  const parsed = generatedPostSchema.safeParse(value)
+
+  return parsed.success ? parsed.data : undefined
+}
+
+function tryParsePostJsonString(value: string): GeneratedPostContent | undefined {
+  const trimmed = value.trim()
+
+  if (!trimmed) return undefined
+
+  const candidates = [trimmed, extractJson(trimmed)]
+
+  for (const candidate of candidates) {
+    try {
+      const post = tryParsePostPayload(JSON.parse(candidate))
+
+      if (post) return post
+    } catch {
+      // Try the next candidate shape.
+    }
+  }
+
+  return undefined
+}
+
+function isStatusOnlyOutput(text: string) {
+  const cleaned = text.trim()
+
+  if (!cleaned) return true
+  if (cleaned.includes('{')) return false
+
+  return /^(checking|cursor-retrieval:|authenticat)/i.test(cleaned)
+}
+
+function extractPostFromWrapper(record: Record<string, unknown>) {
+  for (const key of WRAPPER_KEYS) {
+    const value = record[key]
+
+    if (typeof value === 'string' && value.trim()) {
+      const post = tryParsePostJsonString(value)
+
+      if (post) return post
+    }
+  }
+
+  if (Array.isArray(record.messages)) {
+    const text = record.messages
+      .flatMap((message) => {
+        if (!message || typeof message !== 'object') return []
+
+        const content = (message as Record<string, unknown>).content
+
+        if (typeof content === 'string') return [content]
+
+        if (Array.isArray(content)) {
+          return content
+            .map((block) =>
+              block && typeof block === 'object' && typeof (block as Record<string, unknown>).text === 'string'
+                ? ((block as Record<string, unknown>).text as string)
+                : ''
+            )
+            .filter(Boolean)
+        }
+
+        return []
+      })
+      .join('\n')
+
+    if (text.trim()) {
+      return tryParsePostJsonString(text)
+    }
+  }
+
+  return tryParsePostPayload(record)
+}
 
 export function parseAgentOutput(stdout: string) {
   const trimmed = stdout.trim()
@@ -25,19 +167,17 @@ export function parseAgentOutput(stdout: string) {
     }
 
     if (parsed && typeof parsed === 'object') {
-      const record = parsed as Record<string, unknown>
-
-      for (const key of ['result', 'text', 'response', 'output']) {
-        const value = record[key]
+      for (const key of WRAPPER_KEYS) {
+        const value = (parsed as Record<string, unknown>)[key]
 
         if (typeof value === 'string' && value.trim()) {
           return value
         }
       }
 
-      if (Array.isArray(record.messages)) {
-        const text = record.messages
-          .flatMap((message) => {
+      if (Array.isArray((parsed as Record<string, unknown>).messages)) {
+        const text = (parsed as Record<string, unknown>).messages
+          ?.flatMap((message) => {
             if (!message || typeof message !== 'object') return []
 
             const content = (message as Record<string, unknown>).content
@@ -68,38 +208,176 @@ export function parseAgentOutput(stdout: string) {
   return trimmed
 }
 
-async function ensureCursorAuth() {
+export function parseGeneratedPostFromAgentStdout(stdout: string): GeneratedPostContent {
+  const cleaned = stripAgentNoise(stdout)
+
+  if (!cleaned) {
+    throw new Error('Cursor agent returned an empty response.')
+  }
+
+  for (const line of cleaned.split('\n')) {
+    const trimmedLine = line.trim()
+
+    if (!trimmedLine.startsWith('{')) continue
+
+    try {
+      const event = JSON.parse(trimmedLine) as unknown
+
+      if (event && typeof event === 'object') {
+        const post = extractPostFromWrapper(event as Record<string, unknown>)
+
+        if (post) return post
+      }
+    } catch {
+      // Try the next stream event.
+    }
+  }
+
   try {
-    await execFileAsync('cursor', ['agent', 'status'], { timeout: 15_000 })
+    const wrapper = JSON.parse(cleaned) as unknown
+
+    if (wrapper && typeof wrapper === 'object') {
+      const post = extractPostFromWrapper(wrapper as Record<string, unknown>)
+
+      if (post) return post
+    }
+
+    if (typeof wrapper === 'string') {
+      const post = tryParsePostJsonString(wrapper)
+
+      if (post) return post
+    }
+  } catch {
+    // Fall through to candidate scanning.
+  }
+
+  const fenced = extractJson(cleaned)
+
+  if (fenced !== cleaned) {
+    const post = tryParsePostJsonString(fenced)
+
+    if (post) return post
+  }
+
+  const candidates = findJsonObjectCandidates(cleaned)
+
+  for (let index = candidates.length - 1; index >= 0; index--) {
+    const candidate = candidates[index]!
+
+    try {
+      const parsed = JSON.parse(candidate) as unknown
+
+      if (parsed && typeof parsed === 'object') {
+        const post = extractPostFromWrapper(parsed as Record<string, unknown>)
+
+        if (post) return post
+      }
+
+      if (typeof parsed === 'string') {
+        const post = tryParsePostJsonString(parsed)
+
+        if (post) return post
+      }
+    } catch {
+      // Try the next candidate object.
+    }
+  }
+
+  const postFromWrapperText = tryParsePostJsonString(parseAgentOutput(cleaned))
+
+  if (postFromWrapperText) return postFromWrapperText
+
+  if (isStatusOnlyOutput(cleaned)) {
+    throw new Error(
+      'Cursor agent returned only a status message and no post content. Run `cursor agent login` or set CURSOR_API_KEY in server/.env, then retry.'
+    )
+  }
+
+  const preview = cleaned.slice(0, 240).replace(/\s+/g, ' ')
+
+  throw new Error(
+    `Cursor agent did not return valid post JSON. Preview: ${preview}${cleaned.length > 240 ? '…' : ''}`
+  )
+}
+
+async function ensureCursorAuth() {
+  if (process.env.CURSOR_API_KEY?.trim()) {
+    return
+  }
+
+  try {
+    const { stdout } = await execFileAsync('cursor', ['agent', 'status'], { timeout: 15_000 })
+
+    if (/not logged in/i.test(stdout)) {
+      throw new Error('not logged in')
+    }
   } catch {
     throw new Error(
-      'Cursor is not authenticated. Run `cursor agent login` once, then retry.'
+      'Cursor is not authenticated. Run `cursor agent login` once, or set CURSOR_API_KEY in server/.env, then retry.'
     )
   }
 }
 
 function buildCursorArgs(prompt: string) {
   const workspace = process.env.POST_GENERATOR_WORKSPACE || repoRoot
+  const outputFormat = process.env.POST_GENERATOR_CURSOR_OUTPUT_FORMAT?.trim() || 'text'
   const args = [
     'agent',
     '--print',
     '--output-format',
-    'json',
+    outputFormat,
     '--mode',
     'ask',
     '--trust',
     '--workspace',
-    workspace,
-    prompt
+    workspace
   ]
+
+  const apiKey = process.env.CURSOR_API_KEY?.trim()
+
+  if (apiKey) {
+    args.push('--api-key', apiKey)
+  }
 
   const model = process.env.POST_GENERATOR_CURSOR_MODEL?.trim()
 
   if (model) {
-    args.splice(args.length - 1, 0, '--model', model)
+    args.push('--model', model)
   }
 
+  args.push(prompt)
+
   return args
+}
+
+function runCursorAgent(args: string[]) {
+  return new Promise<{ stdout: string; stderr: string; exitCode: number }>((resolve, reject) => {
+    const child = spawn('cursor', args, {
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: process.env
+    })
+
+    let stdout = ''
+    let stderr = ''
+
+    child.stdout?.on('data', (chunk) => {
+      stdout += chunk.toString()
+    })
+
+    child.stderr?.on('data', (chunk) => {
+      stderr += chunk.toString()
+    })
+
+    child.on('error', reject)
+
+    child.on('close', (exitCode) => {
+      resolve({
+        stdout,
+        stderr,
+        exitCode: exitCode ?? 1
+      })
+    })
+  })
 }
 
 export async function generatePostWithCursor(
@@ -110,38 +388,16 @@ export async function generatePostWithCursor(
   const prompt = buildPostPrompt(options)
   const args = buildCursorArgs(prompt)
 
-  let stdout = ''
-  let stderr = ''
-
-  try {
-    const result = await execFileAsync('cursor', args, {
-      maxBuffer: 10 * 1024 * 1024,
-      timeout: 10 * 60 * 1000
-    })
-
-    stdout = result.stdout
-    stderr = result.stderr
-  } catch (error) {
-    const execError = error as NodeJS.ErrnoException & {
-      stdout?: string
-      stderr?: string
-    }
-
-    stdout = execError.stdout ?? ''
-    stderr = execError.stderr ?? ''
-
-    if (!stdout.trim()) {
-      const details = [execError.message, stderr.trim()].filter(Boolean).join('\n')
-      throw new Error(`Cursor agent failed.\n${details}`)
-    }
-  }
+  const { stdout, stderr, exitCode } = await runCursorAgent(args)
 
   if (stderr.trim()) {
     console.error(stderr.trim())
   }
 
-  const rawContent = parseAgentOutput(stdout)
-  const parsed = JSON.parse(extractJson(rawContent))
+  if (exitCode !== 0) {
+    const details = [stderr.trim(), stdout.trim()].filter(Boolean).join('\n')
+    throw new Error(`Cursor agent failed (exit ${exitCode}).\n${details}`)
+  }
 
-  return generatedPostSchema.parse(parsed)
+  return parseGeneratedPostFromAgentStdout(stdout)
 }
