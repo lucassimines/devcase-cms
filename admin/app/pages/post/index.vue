@@ -24,6 +24,15 @@ import type { Post } from '~/types/post'
 
 const columns: TableColumn<Post>[] = [
   {
+    id: 'image',
+    accessorKey: 'image',
+    header: $t('image'),
+    meta: {
+      image: true,
+      localized: true
+    }
+  },
+  {
     id: 'name',
     accessorKey: 'name',
     header: $t('name'),

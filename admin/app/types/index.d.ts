@@ -61,6 +61,7 @@ export interface Range {
 
 declare module '@tanstack/vue-table' {
   interface ColumnMeta {
+    image?: boolean
     localized?: boolean
   }
 }

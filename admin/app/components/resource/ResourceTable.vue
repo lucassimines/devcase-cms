@@ -140,16 +140,16 @@ defineSlots<
 const route = useRoute()
 const { format: formatDate } = useDate()
 
-const { $tr } = useNuxtApp()
+const { $tr, $file } = useNuxtApp()
 
 const { locale } = useLocale()
 
-function getColumnKey(column: TableColumn<T>) {
+function getColumnKey(column: TableColumn<T>): keyof T {
   if ('accessorKey' in column && column.accessorKey != null) {
-    return String(column.accessorKey)
+    return column.accessorKey as keyof T
   }
 
-  return String(column.id ?? '')
+  return column.id as keyof T
 }
 
 function isLocalizedFilterKey(key: string) {
@@ -287,6 +287,7 @@ const ULink = resolveComponent('ULink')
 const UButton = resolveComponent('UButton')
 const UBadge = resolveComponent('UBadge')
 const Icon = resolveComponent('Icon')
+const NuxtImg = resolveComponent('NuxtImg')
 
 const baseColumns: TableColumn<T>[] = [
   {
@@ -327,6 +328,25 @@ function makeLinkRow(row: TableRow<T>, key: keyof T) {
     },
     () => $tr(row.original[key] as LocalizedString | string)
   )
+}
+
+function makeImageCell(row: TableRow<T>, key: keyof T, localized: boolean) {
+  const raw = row.original[key] as LocalizedString | string | undefined
+  const filename = localized ? $tr(raw as LocalizedString | string) : String(raw ?? '')
+
+  if (!filename) {
+    return h('div', { class: 'bg-muted flex size-10 items-center justify-center rounded' }, [
+      h(Icon, { name: 'lucide:image', class: 'text-muted size-4' })
+    ])
+  }
+
+  return h(NuxtImg, {
+    src: $file(filename),
+    preset: 'mediaLibraryThumb',
+    class: 'size-10 rounded object-cover',
+    loading: 'lazy',
+    alt: ''
+  })
 }
 
 const orderColumn = computed<TableColumn<T> | undefined>(() => {
@@ -422,6 +442,23 @@ const normalizedColumns = computed<TableColumn<T>[]>(() => {
 
   if (nameColumn) {
     nameColumn.cell = ({ row }) => makeLinkRow(row, 'name')
+  }
+
+  for (const column of props.columns) {
+    if (column.meta?.image !== true) continue
+
+    const key = getColumnKey(column)
+
+    column.cell = ({ row }) => makeImageCell(row, key, column.meta?.localized === true)
+
+    column.meta = {
+      ...column.meta,
+      class: {
+        th: 'w-16',
+        td: 'w-16',
+        ...column.meta?.class
+      }
+    }
   }
 
   return [orderColumn.value, ...baseColumns, ...mergeUserColumns(props.columns)].filter(
