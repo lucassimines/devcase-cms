@@ -28,6 +28,15 @@ import type { Project } from '~/types/project'
 
 const columns: TableColumn<Project>[] = [
   {
+    id: 'image',
+    accessorKey: 'image',
+    header: $t('image'),
+    meta: {
+      image: true,
+      localized: true
+    }
+  },
+  {
     id: 'name',
     accessorKey: 'name',
     header: $t('name'),
