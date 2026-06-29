@@ -41,6 +41,12 @@ prisma-studio:
 prisma-seed:
 	@cd $(SERVER_DIR) && npx prisma db seed
 
+# Generate a bilingual blog post (AI or JSON file)
+# Usage: make generate-post TOPIC="Why Nuxt 4 matters"
+#        make generate-post FROM=server/scripts/posts/example.post.json
+generate-post:
+	@cd $(SERVER_DIR) && npm run generate:post -- $(if $(FROM),--from $(FROM),$(if $(TOPIC),--topic "$(TOPIC)",--help))
+
 # Run Prisma Generate
 prisma-generate:
 	@cd $(SERVER_DIR) && npx prisma generate
@@ -75,6 +81,7 @@ help:
 	@echo "  make help              - Show this help message"
 	@echo "  make prisma-studio     - Run Prisma Studio"
 	@echo "  make prisma-seed       - Run Prisma Seed"
+	@echo "  make generate-post     - Generate bilingual blog post (TOPIC= or FROM=)"
 	@echo "  make prisma-generate   - Run Prisma Generate"
 	@echo "  make prisma-reset      - Wipe local public schema"
 	@echo "  make db-import-prod    - Reset, migrate, download prod data, import"

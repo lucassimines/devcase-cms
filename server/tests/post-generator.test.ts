@@ -1,0 +1,75 @@
+import { describe, expect, it } from 'vitest'
+
+import { parseAgentOutput } from '../scripts/lib/post-generator.cursor.js'
+import { extractJson } from '../scripts/lib/post-generator.prompt.js'
+import { generatedPostSchema } from '../scripts/lib/post-generator.schema.js'
+import { resolvePostSlug } from '../scripts/lib/post-generator.store.js'
+import { resolveProvider } from '../scripts/lib/post-generator.js'
+
+const samplePost = {
+  name: {
+    'en-US': 'Why TypeScript Matters',
+    'pt-BR': 'Por que TypeScript Importa'
+  },
+  excerpt: {
+    'en-US': 'TypeScript helps catch bugs early.',
+    'pt-BR': 'TypeScript ajuda a encontrar bugs cedo.'
+  },
+  content: {
+    'en-US': '<p>English body</p>',
+    'pt-BR': '<p>Corpo em português</p>'
+  }
+}
+
+describe('generatedPostSchema', () => {
+  it('accepts bilingual post payloads', () => {
+    expect(generatedPostSchema.parse(samplePost)).toEqual(samplePost)
+  })
+
+  it('rejects missing locales', () => {
+    expect(() =>
+      generatedPostSchema.parse({
+        ...samplePost,
+        name: { 'en-US': 'Only English' }
+      })
+    ).toThrow()
+  })
+})
+
+describe('resolvePostSlug', () => {
+  it('slugifies the English title by default', () => {
+    expect(resolvePostSlug(samplePost)).toBe('why-typescript-matters')
+  })
+
+  it('uses an explicit slug when provided', () => {
+    expect(resolvePostSlug(samplePost, 'custom-slug')).toBe('custom-slug')
+  })
+})
+
+describe('resolveProvider', () => {
+  it('defaults to openai', () => {
+    expect(resolveProvider()).toBe('openai')
+  })
+
+  it('accepts explicit provider', () => {
+    expect(resolveProvider('cursor')).toBe('cursor')
+  })
+})
+
+describe('parseAgentOutput', () => {
+  it('reads plain JSON text from agent stdout', () => {
+    expect(parseAgentOutput('{"result":"{\\"name\\":{\\"en-US\\":\\"Hi\\"}}"}')).toContain('name')
+  })
+
+  it('extracts result field from json wrapper', () => {
+    expect(parseAgentOutput(JSON.stringify({ result: '{"name":{"en-US":"Hi"}}' }))).toBe(
+      '{"name":{"en-US":"Hi"}}'
+    )
+  })
+})
+
+describe('extractJson', () => {
+  it('unwraps fenced json blocks', () => {
+    expect(extractJson('```json\n{"name":{"en-US":"Hi"}}\n```')).toBe('{"name":{"en-US":"Hi"}}')
+  })
+})
