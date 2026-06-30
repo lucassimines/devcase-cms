@@ -1,6 +1,7 @@
 import type { GeneratePostOptions, GeneratedPostContent } from './post-generator.types.js'
 import { generatePostWithOpenAi } from './post-generator.ai.js'
-import { generatePostWithCursorCli } from './post-generator.cursor.js'
+import { generatePostWithCursorApi } from './post-generator.api.js'
+import { generatePostWithCursorCli, hasCursorCli } from './post-generator.cursor.js'
 
 export type PostGeneratorProvider = 'openai' | 'cursor'
 
@@ -16,6 +17,18 @@ export function resolveProvider(explicit?: string): PostGeneratorProvider {
   return 'cursor'
 }
 
+async function generatePostWithCursor(options: GeneratePostOptions) {
+  if (process.env.POST_GENERATOR_USE_CLI === 'true') {
+    return generatePostWithCursorCli(options)
+  }
+
+  if (process.env.POST_GENERATOR_USE_API === 'true' || !(await hasCursorCli())) {
+    return generatePostWithCursorApi(options)
+  }
+
+  return generatePostWithCursorCli(options)
+}
+
 export async function generatePost(
   options: GeneratePostOptions,
   provider: PostGeneratorProvider = 'cursor'
@@ -24,5 +37,5 @@ export async function generatePost(
     return generatePostWithOpenAi(options)
   }
 
-  return generatePostWithCursorCli(options)
+  return generatePostWithCursor(options)
 }
