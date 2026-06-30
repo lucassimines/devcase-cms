@@ -389,6 +389,7 @@ function buildAgentArgs(prompt: string) {
 async function runCursorAgent(prompt: string) {
   const cli = await resolveCursorCli()
   const args = cli.wrapArgs(buildAgentArgs(prompt))
+  const timeoutMs = Number(process.env.POST_GENERATOR_TIMEOUT_MS) || 15 * 60 * 1000
 
   return new Promise<{ stdout: string; stderr: string; exitCode: number }>((resolve, reject) => {
     const child = spawn(cli.command, args, {
@@ -398,6 +399,12 @@ async function runCursorAgent(prompt: string) {
 
     let stdout = ''
     let stderr = ''
+    let timedOut = false
+
+    const timeout = setTimeout(() => {
+      timedOut = true
+      child.kill('SIGTERM')
+    }, timeoutMs)
 
     child.stdout?.on('data', (chunk) => {
       stdout += chunk.toString()
@@ -407,9 +414,27 @@ async function runCursorAgent(prompt: string) {
       stderr += chunk.toString()
     })
 
-    child.on('error', reject)
+    child.on('error', (error) => {
+      clearTimeout(timeout)
+      reject(
+        new Error(
+          `Failed to start Cursor CLI (${cli.command}): ${error.message}. Ensure CURSOR_API_KEY is set on the server.`
+        )
+      )
+    })
 
     child.on('close', (exitCode) => {
+      clearTimeout(timeout)
+
+      if (timedOut) {
+        reject(
+          new Error(
+            `Cursor agent timed out after ${Math.round(timeoutMs / 1000)}s. Try again or increase POST_GENERATOR_TIMEOUT_MS.`
+          )
+        )
+        return
+      }
+
       resolve({
         stdout,
         stderr,
