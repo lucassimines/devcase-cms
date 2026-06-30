@@ -104,7 +104,7 @@ ${JSON.stringify(samplePost)}
 
   it('does not throw when stdout contains only cursor status text', () => {
     expect(() => parseGeneratedPostFromAgentStdout('Checking eligibility for workspace access')).toThrow(
-      /status message/
+      /status or planning message/
     )
   })
 })
