@@ -64,6 +64,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
     const res = await $adminApi<{ id: string }>('/post/generate', {
       method: 'POST',
+      timeout: 15 * 60 * 1000,
       body: {
         topic: event.data.topic
       }
