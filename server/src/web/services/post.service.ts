@@ -20,8 +20,8 @@ const categoryInclude = {
 export class PostService {
   static paginatedList(query: Request['query'] = {}) {
     return paginate(prisma.post, {
-      limit: POSTS_PER_PAGE,
       ...query,
+      limit: query.limit ?? POSTS_PER_PAGE,
       where: PostQuery.published(),
       orderBy: PostQuery.orderByPosition(),
       include: categoryInclude

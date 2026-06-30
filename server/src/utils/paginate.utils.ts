@@ -12,6 +12,8 @@ const stringArrayQuery = z.preprocess((val) => {
 
 const numericQueryParam = z.union([z.string(), z.number()]).optional()
 
+export const MAX_PAGE_LIMIT = 24
+
 const PaginatedQuerySchema = z.object({
   page: numericQueryParam,
   limit: numericQueryParam,
@@ -45,12 +47,17 @@ function handleQueryParameters(query: object | string = {}): object {
 /**
  * Handle pagination number errors
  */
-function handlePageErrors(page: number, limit: number) {
+function normalizePagination(page: number, limit: number) {
   if (isNaN(page) || page < 1) {
     throw new Error('Page must be a positive number.')
   }
   if (isNaN(limit) || limit < 1) {
     throw new Error('Limit must be a positive number.')
+  }
+
+  return {
+    page,
+    limit: Math.min(limit, MAX_PAGE_LIMIT)
   }
 }
 
@@ -141,7 +148,6 @@ export async function paginate<T = unknown>(model: PrismaDelegate, query: Pagina
     where
   } = normalizedQuery
 
-  // Ensure page and limit are valid numbers
   const pageNumber = Number(page)
   const limitNumber = Number(limit)
 
@@ -151,12 +157,14 @@ export async function paginate<T = unknown>(model: PrismaDelegate, query: Pagina
     whereQuery = mergeWhereQuery(whereQuery, makeFilterQuery(term.toString(), filterBy))
   }
 
-  // Check if page and limit are valid numbers
-  handlePageErrors(pageNumber, limitNumber)
+  const { page: normalizedPage, limit: normalizedLimit } = normalizePagination(
+    pageNumber,
+    limitNumber
+  )
 
   return await findPaginated<T>(model, {
-    page: pageNumber,
-    limit: limitNumber,
+    page: normalizedPage,
+    limit: normalizedLimit,
     where: whereQuery,
     include: handleQueryParameters(include),
     orderBy: handleQueryParameters(orderBy)

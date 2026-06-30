@@ -24,8 +24,8 @@ export class ProjectService {
 
   static paginatedList(query: Request['query'] = {}) {
     return paginate(prisma.project, {
-      limit: PROJECTS_PER_PAGE,
       ...query,
+      limit: query.limit ?? PROJECTS_PER_PAGE,
       where: ProjectQuery.published(),
       orderBy: ProjectQuery.orderByPosition()
     })
