@@ -5,6 +5,14 @@ import { parseGeneratedPostFromAgentStdout } from './post-generator.cursor.js'
 const CURSOR_API_BASE = process.env.CURSOR_API_URL?.trim() || 'https://api.cursor.com'
 const TERMINAL_RUN_STATUSES = new Set(['FINISHED', 'ERROR', 'CANCELLED', 'EXPIRED'])
 const POLL_INTERVAL_MS = 3_000
+const API_PROMPT_SUFFIX = `This is a text-only CMS task with no repository or files.
+Do not create a plan, status update, or research summary.
+Write the full bilingual post and respond in one message with ONLY the JSON object from the schema above.
+No preamble, no markdown fences, no text before or after the JSON.`
+
+const API_FOLLOW_UP_PROMPT = `Output ONLY the final JSON object for the bilingual blog post from my first message.
+Match the exact schema (name, excerpt, content with en-US and pt-BR).
+No plan, no commentary, no markdown fences, no text outside the JSON object.`
 
 type CursorAgentRun = {
   id: string
@@ -99,18 +107,78 @@ async function waitForCursorRun(agentId: string, runId: string) {
   )
 }
 
+function tryParseGeneratedPost(text: string) {
+  try {
+    return parseGeneratedPostFromAgentStdout(text)
+  } catch {
+    return undefined
+  }
+}
+
+function shouldRequestJsonFollowUp(text: string) {
+  const cleaned = text.trim()
+
+  if (!cleaned) return true
+
+  if (tryParseGeneratedPost(cleaned)) {
+    return false
+  }
+
+  return !cleaned.includes('{')
+}
+
+async function startCursorRun(agentId: string, promptText: string) {
+  const response = await cursorApiFetch<{ run: CursorAgentRun }>(`/v1/agents/${agentId}/runs`, {
+    method: 'POST',
+    body: JSON.stringify({
+      prompt: { text: promptText },
+      mode: 'agent'
+    })
+  })
+
+  return response.run
+}
+
+async function runAgentAndParsePost(agentId: string, runId: string) {
+  let run = await waitForCursorRun(agentId, runId)
+
+  if (!run.result?.trim()) {
+    throw new Error('Cursor agent finished without a result.')
+  }
+
+  const parsed = tryParseGeneratedPost(run.result)
+
+  if (parsed) {
+    return parsed
+  }
+
+  if (!shouldRequestJsonFollowUp(run.result)) {
+    return parseGeneratedPostFromAgentStdout(run.result)
+  }
+
+  const followUpRun = await startCursorRun(agentId, API_FOLLOW_UP_PROMPT)
+
+  run = await waitForCursorRun(agentId, followUpRun.id)
+
+  if (!run.result?.trim()) {
+    throw new Error('Cursor agent finished without a result on follow-up.')
+  }
+
+  return parseGeneratedPostFromAgentStdout(run.result)
+}
+
 export async function generatePostWithCursorApi(
   options: GeneratePostOptions
 ): Promise<GeneratedPostContent> {
   const modelId = process.env.POST_GENERATOR_CURSOR_MODEL?.trim() || 'composer-2.5'
-  const prompt = buildPostPrompt(options)
+  const prompt = `${buildPostPrompt(options)}\n\n${API_PROMPT_SUFFIX}`
 
   const created = await cursorApiFetch<CreateAgentResponse>('/v1/agents', {
     method: 'POST',
     body: JSON.stringify({
       prompt: { text: prompt },
       model: { id: modelId },
-      mode: 'plan'
+      mode: 'agent'
     })
   })
 
@@ -118,13 +186,7 @@ export async function generatePostWithCursorApi(
   const runId = created.run.id
 
   try {
-    const run = await waitForCursorRun(agentId, runId)
-
-    if (!run.result?.trim()) {
-      throw new Error('Cursor agent finished without a result.')
-    }
-
-    return parseGeneratedPostFromAgentStdout(run.result)
+    return await runAgentAndParsePost(agentId, runId)
   } finally {
     await archiveCursorAgent(agentId)
   }

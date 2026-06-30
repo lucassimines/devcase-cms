@@ -139,7 +139,7 @@ function isStatusOnlyOutput(text: string) {
   if (!cleaned) return true
   if (cleaned.includes('{')) return false
 
-  return /^(checking|cursor-retrieval:|authenticat)/i.test(cleaned)
+  return /^(checking|cursor-retrieval:|authenticat)/i.test(cleaned) || /content plan|creating a plan/i.test(cleaned)
 }
 
 function extractPostFromWrapper(record: Record<string, unknown>) {
@@ -323,7 +323,7 @@ export function parseGeneratedPostFromAgentStdout(stdout: string): GeneratedPost
 
   if (isStatusOnlyOutput(cleaned)) {
     throw new Error(
-      'Cursor agent returned only a status message and no post content. Run `cursor agent login` or set CURSOR_API_KEY in server/.env, then retry.'
+      'Cursor agent returned a status or planning message instead of post JSON. Retry generation, or use CLI mode locally with `make generate-post`.'
     )
   }
 
