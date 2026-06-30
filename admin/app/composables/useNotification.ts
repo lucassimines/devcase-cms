@@ -5,7 +5,7 @@ export function useNotification() {
 
   const { getApiErrorMessage } = useHelpers()
 
-  const { t } = useI18n()
+  const { t, te } = useI18n()
 
   function success(props: ToastProps = {}) {
     toast.add({
@@ -26,9 +26,14 @@ export function useNotification() {
   }
 
   function serverError(err: unknown = {}) {
+    const message = getApiErrorMessage(err)
+    const description =
+      message && te(`server.error.${message}`)
+        ? t(`server.error.${message}`)
+        : message || t('notification.error.default')
+
     toast.add({
-      description:
-        `${t(`server.error.${getApiErrorMessage(err)}`)}` || t('notification.error.default'),
+      description,
       color: 'error',
       icon: 'lucide:alert-circle'
     })
