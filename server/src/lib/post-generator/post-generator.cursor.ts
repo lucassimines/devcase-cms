@@ -1,6 +1,4 @@
 import { execFile, spawn } from 'node:child_process'
-import { dirname, resolve } from 'node:path'
-import { fileURLToPath } from 'node:url'
 import { promisify } from 'node:util'
 
 import type { GeneratePostOptions, GeneratedPostContent } from './post-generator.types.js'
@@ -8,7 +6,6 @@ import { buildPostPrompt, extractJson } from './post-generator.prompt.js'
 import { generatedPostSchema } from './post-generator.schema.js'
 
 const execFileAsync = promisify(execFile)
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
 
 type CursorCli = {
   command: string
@@ -359,7 +356,7 @@ async function ensureCursorAuth() {
 }
 
 function buildAgentArgs(prompt: string) {
-  const workspace = process.env.POST_GENERATOR_WORKSPACE || repoRoot
+  const workspace = process.env.POST_GENERATOR_WORKSPACE || process.cwd()
   const outputFormat = process.env.POST_GENERATOR_CURSOR_OUTPUT_FORMAT?.trim() || 'text'
   const args = [
     '--print',
