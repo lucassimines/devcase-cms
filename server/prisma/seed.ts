@@ -1,3 +1,4 @@
+import bcrypt from 'bcryptjs'
 import { prisma } from '../src/db'
 
 const bcryptSalt = Number(process.env.BCRYPT_SALT) || 10
