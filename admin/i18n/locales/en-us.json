@@ -93,6 +93,8 @@
     "post": {
       "name": "Post | Posts",
       "create": "Create Post",
+      "generate": "Generate Post",
+      "topic": "Topic or brief",
       "edit": "Edit Post"
     },
     "category": {

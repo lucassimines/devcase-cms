@@ -1,0 +1,14 @@
+{
+  "name": {
+    "en-US": "Getting Started with Nuxt Server Routes",
+    "pt-BR": "Começando com Rotas de Servidor no Nuxt"
+  },
+  "excerpt": {
+    "en-US": "Nuxt server routes let you build API endpoints alongside your frontend without a separate backend. Here is a practical guide to getting started.",
+    "pt-BR": "As rotas de servidor do Nuxt permitem criar endpoints de API junto ao frontend, sem um backend separado. Veja um guia prático para começar."
+  },
+  "content": {
+    "en-US": "<p>Nuxt server routes are one of the most practical features for full-stack Vue applications. They live in the <code>server/</code> directory and are automatically mapped to API endpoints.</p><h2>Why use server routes?</h2><p>Server routes keep your API close to your frontend, reduce deployment complexity, and work great for contact forms, webhooks, and lightweight data fetching.</p><h2>Creating your first route</h2><p>Add a file like <code>server/api/hello.get.ts</code> and export a handler with <code>defineEventHandler</code>. Nuxt maps the file name to the HTTP method and path.</p><h2>When to reach for a separate backend</h2><p>For complex auth, heavy background jobs, or shared APIs across multiple clients, a dedicated backend like Express or Laravel may still be the better fit.</p>",
+    "pt-BR": "<p>As rotas de servidor do Nuxt são um dos recursos mais práticos para aplicações Vue full stack. Elas ficam no diretório <code>server/</code> e são mapeadas automaticamente para endpoints de API.</p><h2>Por que usar rotas de servidor?</h2><p>Elas mantêm a API próxima ao frontend, reduzem a complexidade de deploy e funcionam muito bem para formulários de contato, webhooks e buscas leves de dados.</p><h2>Criando sua primeira rota</h2><p>Adicione um arquivo como <code>server/api/hello.get.ts</code> e exporte um handler com <code>defineEventHandler</code>. O Nuxt mapeia o nome do arquivo para o método HTTP e o caminho.</p><h2>Quando usar um backend separado</h2><p>Para autenticação complexa, jobs pesados em background ou APIs compartilhadas entre vários clientes, um backend dedicado como Express ou Laravel ainda pode ser a melhor escolha.</p>"
+  }
+}
