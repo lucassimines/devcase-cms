@@ -1,4 +1,4 @@
-import type { LocalizedJson } from '../../src/utils/localized-json.utils.js'
+import type { LocalizedJson } from '@src/utils/localized-json.utils.js'
 
 export type GeneratedPostContent = {
   name: LocalizedJson

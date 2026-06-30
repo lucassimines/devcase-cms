@@ -1,7 +1,7 @@
-import { prisma } from '../../src/db.js'
-import { createAtTopOrder } from '../../src/utils/order.utils.js'
-import { toSlug } from '../../src/utils/string.utils.js'
-import { withUniqueSlug } from '../../src/utils/slug.utils.js'
+import { prisma } from '@src/db.js'
+import { createAtTopOrder } from '@src/utils/order.utils.js'
+import { toSlug } from '@src/utils/string.utils.js'
+import { withUniqueSlug } from '@src/utils/slug.utils.js'
 import type { GeneratedPostContent, SavePostOptions, SavedPostResult } from './post-generator.types.js'
 
 export function resolvePostSlug(content: GeneratedPostContent, slug?: string) {
@@ -43,7 +43,7 @@ export async function saveGeneratedPost(
   const unique = await withUniqueSlug(prisma.post, { slug })
   const categoryIds = await findCategoryIds(options.categorySlugs)
 
-  const post = await createAtTopOrder('post', {
+  const post = (await createAtTopOrder('post', {
     name: content.name,
     excerpt: content.excerpt,
     content: content.content,
@@ -54,7 +54,7 @@ export async function saveGeneratedPost(
           connect: categoryIds.map((id) => ({ id }))
         }
       : undefined
-  })
+  })) as unknown as { id: string; slug: string; published: boolean }
 
   return {
     id: post.id,

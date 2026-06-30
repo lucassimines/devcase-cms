@@ -5,6 +5,7 @@ const router = Router()
 
 router.put('/reorder', PostController.reorder)
 router.get('/', PostController.index)
+router.post('/generate', PostController.generate)
 router.post('/', PostController.create)
 router.get('/:id', PostController.getById)
 router.put('/:id', PostController.update)

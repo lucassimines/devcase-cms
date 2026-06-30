@@ -3,6 +3,7 @@
     <template #header-right>
       <ButtonModel entity="category" path="/post/category" />
 
+      <PostFormGenerate />
       <ResourceFormCreate endpoint="/post" has-slug :title="$t('entity.post.create')" />
     </template>
 

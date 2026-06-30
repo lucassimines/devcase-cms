@@ -31,7 +31,15 @@
     
     RUN apk add --no-cache \
         tini \
-        openssl
+        openssl \
+        curl \
+        bash \
+        ca-certificates
+
+    # Cursor CLI (same as local `make generate-post`)
+    RUN curl https://cursor.com/install -fsS | bash
+
+    ENV PATH="/root/.local/bin:${PATH}"
     
     ENTRYPOINT ["/sbin/tini", "--"]
     

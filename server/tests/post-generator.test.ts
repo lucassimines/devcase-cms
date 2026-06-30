@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest'
 
-import { parseAgentOutput, parseGeneratedPostFromAgentStdout } from '../scripts/lib/post-generator.cursor.js'
-import { extractJson } from '../scripts/lib/post-generator.prompt.js'
-import { generatedPostSchema } from '../scripts/lib/post-generator.schema.js'
-import { resolvePostSlug } from '../scripts/lib/post-generator.store.js'
-import { resolveProvider } from '../scripts/lib/post-generator.js'
+import { parseAgentOutput, parseGeneratedPostFromAgentStdout, hasCursorCli } from '@src/lib/post-generator/post-generator.cursor.js'
+import { extractJson } from '@src/lib/post-generator/post-generator.prompt.js'
+import { generatedPostSchema } from '@src/lib/post-generator/post-generator.schema.js'
+import { resolvePostSlug } from '@src/lib/post-generator/post-generator.store.js'
+import { resolveProvider } from '@src/lib/post-generator/post-generator.js'
 
 const samplePost = {
   name: {
@@ -47,12 +47,19 @@ describe('resolvePostSlug', () => {
 })
 
 describe('resolveProvider', () => {
-  it('defaults to openai', () => {
-    expect(resolveProvider()).toBe('openai')
+  it('defaults to cursor', () => {
+    expect(resolveProvider()).toBe('cursor')
   })
 
   it('accepts explicit provider', () => {
+    expect(resolveProvider('openai')).toBe('openai')
     expect(resolveProvider('cursor')).toBe('cursor')
+  })
+})
+
+describe('hasCursorCli', () => {
+  it('returns a boolean', async () => {
+    expect(typeof (await hasCursorCli())).toBe('boolean')
   })
 })
 

@@ -4,10 +4,10 @@ import 'dotenv/config'
 import { parseArgs } from 'node:util'
 
 import { prisma } from '../src/db.js'
-import { generatePost, resolveProvider } from './lib/post-generator.js'
-import { loadPostFromFile } from './lib/post-generator.load.js'
-import { promptPostOptions } from './lib/post-generator.prompts.js'
-import { saveGeneratedPost } from './lib/post-generator.store.js'
+import { generatePost, resolveProvider } from '../src/lib/post-generator/post-generator.js'
+import { loadPostFromFile } from '../src/lib/post-generator/post-generator.load.js'
+import { promptPostOptions } from '../src/lib/post-generator/post-generator.prompts.js'
+import { saveGeneratedPost } from '../src/lib/post-generator/post-generator.store.js'
 
 function printHelp() {
   console.log(`Usage:
@@ -33,17 +33,17 @@ Options:
   --dry-run           Print generated JSON without saving
   --help, -h          Show this help
 
-Environment (OpenAI — default provider):
-  OPENAI_API_KEY            Required for --provider openai
-  POST_GENERATOR_MODEL      Optional (default: gpt-4o-mini)
-  POST_GENERATOR_API_URL    Optional OpenAI-compatible endpoint
-
-Environment (Cursor):
+Environment (Cursor — default):
   CURSOR_API_KEY               API key from Cursor Dashboard → Integrations
   POST_GENERATOR_CURSOR_MODEL  Optional Cursor model
   POST_GENERATOR_CURSOR_OUTPUT_FORMAT  text (default), json, or stream-json
   POST_GENERATOR_WORKSPACE     Optional workspace path
   Or run once: cursor agent login
+
+Environment (OpenAI — optional, --provider openai only):
+  OPENAI_API_KEY
+  POST_GENERATOR_MODEL      Optional (default: gpt-4o-mini)
+  POST_GENERATOR_API_URL    Optional OpenAI-compatible endpoint
 `)
 }
 

@@ -8,7 +8,42 @@ import { buildPostPrompt, extractJson } from './post-generator.prompt.js'
 import { generatedPostSchema } from './post-generator.schema.js'
 
 const execFileAsync = promisify(execFile)
-const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../..')
+const repoRoot = resolve(dirname(fileURLToPath(import.meta.url)), '../../../..')
+
+type CursorCli = {
+  command: string
+  wrapArgs: (agentArgs: string[]) => string[]
+}
+
+async function resolveCursorCli(): Promise<CursorCli> {
+  const candidates: CursorCli[] = [
+    { command: 'cursor', wrapArgs: (args) => ['agent', ...args] },
+    { command: 'cursor-agent', wrapArgs: (args) => args },
+    { command: 'agent', wrapArgs: (args) => args }
+  ]
+
+  for (const candidate of candidates) {
+    try {
+      await execFileAsync(candidate.command, ['--version'], { timeout: 5_000 })
+      return candidate
+    } catch {
+      // Try the next CLI binary name.
+    }
+  }
+
+  throw new Error(
+    'Cursor CLI is not installed. Install it with: curl https://cursor.com/install -fsS | bash'
+  )
+}
+
+export async function hasCursorCli() {
+  try {
+    await resolveCursorCli()
+    return true
+  } catch {
+    return false
+  }
+}
 
 const WRAPPER_KEYS = ['result', 'text', 'response', 'output', 'content'] as const
 
@@ -175,9 +210,11 @@ export function parseAgentOutput(stdout: string) {
         }
       }
 
-      if (Array.isArray((parsed as Record<string, unknown>).messages)) {
-        const text = (parsed as Record<string, unknown>).messages
-          ?.flatMap((message) => {
+      const messages = (parsed as Record<string, unknown>).messages
+
+      if (Array.isArray(messages)) {
+        const text = messages
+          .flatMap((message: unknown) => {
             if (!message || typeof message !== 'object') return []
 
             const content = (message as Record<string, unknown>).content
@@ -306,23 +343,25 @@ async function ensureCursorAuth() {
   }
 
   try {
-    const { stdout } = await execFileAsync('cursor', ['agent', 'status'], { timeout: 15_000 })
+    const cli = await resolveCursorCli()
+    const { stdout } = await execFileAsync(cli.command, cli.wrapArgs(['status']), {
+      timeout: 15_000
+    })
 
     if (/not logged in/i.test(stdout)) {
       throw new Error('not logged in')
     }
   } catch {
     throw new Error(
-      'Cursor is not authenticated. Run `cursor agent login` once, or set CURSOR_API_KEY in server/.env, then retry.'
+      'Cursor is not authenticated. Set CURSOR_API_KEY in server/.env, or run `cursor agent login` once.'
     )
   }
 }
 
-function buildCursorArgs(prompt: string) {
+function buildAgentArgs(prompt: string) {
   const workspace = process.env.POST_GENERATOR_WORKSPACE || repoRoot
   const outputFormat = process.env.POST_GENERATOR_CURSOR_OUTPUT_FORMAT?.trim() || 'text'
   const args = [
-    'agent',
     '--print',
     '--output-format',
     outputFormat,
@@ -350,9 +389,12 @@ function buildCursorArgs(prompt: string) {
   return args
 }
 
-function runCursorAgent(args: string[]) {
+async function runCursorAgent(prompt: string) {
+  const cli = await resolveCursorCli()
+  const args = cli.wrapArgs(buildAgentArgs(prompt))
+
   return new Promise<{ stdout: string; stderr: string; exitCode: number }>((resolve, reject) => {
-    const child = spawn('cursor', args, {
+    const child = spawn(cli.command, args, {
       stdio: ['ignore', 'pipe', 'pipe'],
       env: process.env
     })
@@ -380,15 +422,13 @@ function runCursorAgent(args: string[]) {
   })
 }
 
-export async function generatePostWithCursor(
+export async function generatePostWithCursorCli(
   options: GeneratePostOptions
 ): Promise<GeneratedPostContent> {
   await ensureCursorAuth()
 
   const prompt = buildPostPrompt(options)
-  const args = buildCursorArgs(prompt)
-
-  const { stdout, stderr, exitCode } = await runCursorAgent(args)
+  const { stdout, stderr, exitCode } = await runCursorAgent(prompt)
 
   if (stderr.trim()) {
     console.error(stderr.trim())
