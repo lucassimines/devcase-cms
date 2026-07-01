@@ -4,7 +4,7 @@ import { paginate } from '@src/utils/paginate.utils.js'
 import { PostQuery } from '@src/web/queries/post.query.js'
 import type { Request } from 'express'
 
-const POSTS_PER_PAGE = 12
+const POSTS_PER_PAGE = 13
 
 const categoryInclude = {
   categories: {
@@ -21,7 +21,7 @@ export class PostService {
   static paginatedList(query: Request['query'] = {}) {
     return paginate(prisma.post, {
       ...query,
-      limit: query.limit ?? POSTS_PER_PAGE,
+      limit: Number(query.limit ?? POSTS_PER_PAGE),
       where: PostQuery.published(),
       orderBy: PostQuery.orderByPosition(),
       include: categoryInclude
