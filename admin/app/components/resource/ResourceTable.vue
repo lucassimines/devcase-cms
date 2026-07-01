@@ -343,7 +343,7 @@ function makeImageCell(row: TableRow<T>, key: keyof T, localized: boolean) {
   return h(NuxtImg, {
     src: $file(filename),
     preset: 'mediaLibraryThumb',
-    class: 'size-10 rounded object-cover',
+    class: 'size-10 bg-muted rounded object-cover',
     loading: 'lazy',
     alt: ''
   })

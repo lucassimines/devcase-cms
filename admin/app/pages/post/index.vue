@@ -4,10 +4,11 @@
       <ButtonModel entity="category" path="/post/category" />
 
       <PostFormGenerate />
+
       <ResourceFormCreate endpoint="/post" has-slug :title="$t('entity.post.create')" />
     </template>
 
-    <ResourceTable :columns="columns" endpoint="/post" filter-by="name" reorderable show-published>
+    <ResourceTable :columns="columns" endpoint="/post" filter-by="name" show-published>
       <template #actions-cell="{ row, refresh }">
         <ResourceTableActions
           :to="{ name: 'post-id', params: { id: row.original.id } }"
@@ -45,17 +46,6 @@ const columns: TableColumn<Post>[] = [
     id: 'slug',
     accessorKey: 'slug',
     header: $t('slug')
-  },
-  {
-    id: 'sortOrder',
-    accessorKey: 'order',
-    header: $t('order'),
-    meta: {
-      class: {
-        th: 'w-20',
-        td: 'w-20 tabular-nums'
-      }
-    }
   },
   {
     id: 'actions'
