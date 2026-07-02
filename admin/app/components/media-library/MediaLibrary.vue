@@ -46,10 +46,9 @@
     <template v-if="(mediaMeta?.last_page || 1) > 1" #footer>
       <div class="flex w-full justify-center">
         <UPagination
-          :items-per-page="mediaMeta?.limit ?? paginationQuery.limit"
-          :page="mediaMeta?.page ?? paginationQuery.page"
-          :total="mediaMeta?.total ?? 0"
-          @update:page="goToPage"
+          v-model:page="paginationQuery.page"
+          :items-per-page="paginationQuery.limit"
+          :total="mediaMeta?.total"
         />
       </div>
     </template>
@@ -100,13 +99,6 @@ async function onModalOpen() {
   if (hasFetchedOnce.value) return
 
   await fetchFiles()
-}
-
-function goToPage(page: number) {
-  if (paginationQuery.value.page === page) return
-
-  paginationQuery.value.page = page
-  fetchFiles()
 }
 
 watch(files, (newFiles) => {
