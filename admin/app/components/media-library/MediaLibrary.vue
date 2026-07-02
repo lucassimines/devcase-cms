@@ -12,7 +12,7 @@
           class="grid max-h-[80vh] min-h-100 grow grid-cols-2 items-start gap-4 overflow-y-auto pb-4 max-sm:order-2 sm:grid-cols-3 sm:py-6 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6"
         >
           <template v-if="status === 'pending'">
-            <USkeleton v-for="i in 60" :key="i" class="aspect-square" />
+            <USkeleton v-for="i in paginationQuery.limit" :key="i" class="aspect-square" />
           </template>
 
           <template v-else>
@@ -46,9 +46,10 @@
     <template v-if="(mediaMeta?.last_page || 1) > 1" #footer>
       <div class="flex w-full justify-center">
         <UPagination
-          v-model:page="paginationQuery.page"
-          :items-per-page="paginationQuery.limit"
-          :total="mediaMeta?.total"
+          :items-per-page="mediaMeta?.limit ?? paginationQuery.limit"
+          :page="mediaMeta?.page ?? paginationQuery.page"
+          :total="mediaMeta?.total ?? 0"
+          @update:page="goToPage"
         />
       </div>
     </template>
@@ -80,7 +81,7 @@ function triggerFileInput() {
 
 const paginationQuery = ref<PaginationQuery>({
   page: 1,
-  limit: 60
+  limit: 24
 })
 
 const {
@@ -99,6 +100,13 @@ async function onModalOpen() {
   if (hasFetchedOnce.value) return
 
   await fetchFiles()
+}
+
+function goToPage(page: number) {
+  if (paginationQuery.value.page === page) return
+
+  paginationQuery.value.page = page
+  fetchFiles()
 }
 
 watch(files, (newFiles) => {
