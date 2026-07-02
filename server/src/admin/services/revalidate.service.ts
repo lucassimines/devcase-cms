@@ -1,5 +1,4 @@
 import logger from '@src/utils/logger.utils.js'
-import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 
 const headerName = 'x-prerender-revalidate' as const
 
@@ -10,8 +9,6 @@ const headerName = 'x-prerender-revalidate' as const
  */
 export class RevalidateService {
   static async revalidateFrontend(): Promise<void> {
-    WebCacheInvalidation.all()
-
     const url = process.env.FRONTEND_URL
     const token = process.env.PRERENDER_REVALIDATE_TOKEN
 
