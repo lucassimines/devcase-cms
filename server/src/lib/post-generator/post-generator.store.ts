@@ -2,6 +2,7 @@ import { prisma } from '@src/db.js'
 import { createAtTopOrder } from '@src/utils/order.utils.js'
 import { toSlug } from '@src/utils/string.utils.js'
 import { withUniqueSlug } from '@src/utils/slug.utils.js'
+import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 import type { GeneratedPostContent, SavePostOptions, SavedPostResult } from './post-generator.types.js'
 
 export function resolvePostSlug(content: GeneratedPostContent, slug?: string) {
@@ -55,6 +56,8 @@ export async function saveGeneratedPost(
         }
       : undefined
   })) as unknown as { id: string; slug: string; published: boolean }
+
+  WebCacheInvalidation.posts()
 
   return {
     id: post.id,

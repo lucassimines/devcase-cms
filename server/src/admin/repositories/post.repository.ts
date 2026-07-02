@@ -1,6 +1,7 @@
 import { prisma } from '@src/db.js'
 import type { Prisma } from '@src/generated/prisma/client.js'
 import type { PostCreateInput, PostUpdateInput } from '@src/generated/prisma/models.js'
+import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 import { createAtTopOrder } from '@src/utils/order.utils.js'
 
 type PostWithIncludes = Prisma.PostGetPayload<{
@@ -26,8 +27,12 @@ export class PostRepository {
     return normalizePostToForm(post)
   }
 
-  static create(data: PostCreateInput) {
-    return createAtTopOrder('post', data)
+  static async create(data: PostCreateInput) {
+    const post = await createAtTopOrder('post', data)
+
+    WebCacheInvalidation.posts()
+
+    return post
   }
 
   static async update(id: string, data: PostUpdateInput & { categories?: string[] }) {
@@ -44,18 +49,28 @@ export class PostRepository {
       include: { categories: true }
     })
 
+    WebCacheInvalidation.posts()
+
     return normalizePostToForm(post)
   }
 
-  static deleteMany(ids: string[]) {
-    return prisma.post.deleteMany({
+  static async deleteMany(ids: string[]) {
+    const result = await prisma.post.deleteMany({
       where: { id: { in: ids } }
     })
+
+    WebCacheInvalidation.posts()
+
+    return result
   }
 
-  static delete(id: string) {
-    return prisma.post.delete({
+  static async delete(id: string) {
+    const result = await prisma.post.delete({
       where: { id }
     })
+
+    WebCacheInvalidation.posts()
+
+    return result
   }
 }

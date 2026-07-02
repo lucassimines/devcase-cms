@@ -1,3 +1,4 @@
+import webCacheMiddleware from '@src/web/middleware/web-cache.middleware.js'
 import { Router } from 'express'
 
 import bootstrap from './bootstrap.route.js'
@@ -8,6 +9,8 @@ import project from './project.route.js'
 import sitemap from './sitemap.route.js'
 
 const router = Router()
+
+router.use(webCacheMiddleware)
 
 const routes = [
   ['bootstrap', bootstrap],

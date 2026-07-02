@@ -1,5 +1,6 @@
 import { prisma } from '@src/db.js'
 import type { TechnologyCreateInput, TechnologyUpdateInput } from '@src/generated/prisma/models.js'
+import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 
 export class TechnologyRepository {
   static all() {
@@ -12,28 +13,44 @@ export class TechnologyRepository {
     })
   }
 
-  static create(data: TechnologyCreateInput) {
-    return prisma.technology.create({
+  static async create(data: TechnologyCreateInput) {
+    const technology = await prisma.technology.create({
       data
     })
+
+    WebCacheInvalidation.projects()
+
+    return technology
   }
 
-  static update(id: string, data: TechnologyUpdateInput) {
-    return prisma.technology.update({
+  static async update(id: string, data: TechnologyUpdateInput) {
+    const technology = await prisma.technology.update({
       where: { id },
       data
     })
+
+    WebCacheInvalidation.projects()
+
+    return technology
   }
 
-  static deleteMany(ids: string[]) {
-    return prisma.technology.deleteMany({
+  static async deleteMany(ids: string[]) {
+    const result = await prisma.technology.deleteMany({
       where: { id: { in: ids } }
     })
+
+    WebCacheInvalidation.projects()
+
+    return result
   }
 
-  static delete(id: string) {
-    return prisma.technology.delete({
+  static async delete(id: string) {
+    const result = await prisma.technology.delete({
       where: { id }
     })
+
+    WebCacheInvalidation.projects()
+
+    return result
   }
 }

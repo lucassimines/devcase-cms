@@ -1,6 +1,7 @@
 import { prisma } from '@src/db.js'
 import type { CategoryType } from '@src/generated/prisma/client.js'
 import type { CategoryCreateInput, CategoryUpdateInput } from '@src/generated/prisma/models.js'
+import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 import { createAtTopOrder } from '@src/utils/order.utils.js'
 
 export class CategoryRepository {
@@ -17,26 +18,50 @@ export class CategoryRepository {
     })
   }
 
-  static create(data: CategoryCreateInput) {
-    return createAtTopOrder('category', data)
+  static async create(data: CategoryCreateInput) {
+    const category = await createAtTopOrder('category', data)
+
+    if (data.type === 'POST') {
+      WebCacheInvalidation.posts()
+    }
+
+    return category
   }
 
-  static update(id: string, type: CategoryType, data: CategoryUpdateInput) {
-    return prisma.category.update({
+  static async update(id: string, type: CategoryType, data: CategoryUpdateInput) {
+    const category = await prisma.category.update({
       where: { id, type },
       data
     })
+
+    if (type === 'POST') {
+      WebCacheInvalidation.posts()
+    }
+
+    return category
   }
 
-  static deleteMany(ids: string[], type: CategoryType) {
-    return prisma.category.deleteMany({
+  static async deleteMany(ids: string[], type: CategoryType) {
+    const result = await prisma.category.deleteMany({
       where: { id: { in: ids }, type }
     })
+
+    if (type === 'POST') {
+      WebCacheInvalidation.posts()
+    }
+
+    return result
   }
 
-  static delete(id: string, type: CategoryType) {
-    return prisma.category.delete({
+  static async delete(id: string, type: CategoryType) {
+    const result = await prisma.category.delete({
       where: { id, type }
     })
+
+    if (type === 'POST') {
+      WebCacheInvalidation.posts()
+    }
+
+    return result
   }
 }
