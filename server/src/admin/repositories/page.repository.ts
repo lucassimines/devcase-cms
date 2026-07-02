@@ -1,6 +1,5 @@
 import { prisma } from '@src/db.js'
 import type { PageCreateInput, PageUpdateInput } from '@src/generated/prisma/models.js'
-import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 import { resolveLocalizedText } from '@src/utils/locale.utils.js'
 import { createAtTopOrder } from '@src/utils/order.utils.js'
 import { toSlug } from '@src/utils/string.utils.js'
@@ -12,45 +11,29 @@ export class PageRepository {
     })
   }
 
-  static async create(data: PageCreateInput) {
-    const page = await createAtTopOrder('page', {
+  static create(data: PageCreateInput) {
+    return createAtTopOrder('page', {
       ...data,
       code: toSlug(resolveLocalizedText(data.name))
     })
-
-    WebCacheInvalidation.pages()
-
-    return page
   }
 
-  static async update(id: string, data: PageUpdateInput) {
-    const page = await prisma.page.update({
+  static update(id: string, data: PageUpdateInput) {
+    return prisma.page.update({
       where: { id },
       data
     })
-
-    WebCacheInvalidation.pages()
-
-    return page
   }
 
-  static async deleteMany(ids: string[]) {
-    const result = await prisma.page.deleteMany({
+  static deleteMany(ids: string[]) {
+    return prisma.page.deleteMany({
       where: { id: { in: ids } }
     })
-
-    WebCacheInvalidation.pages()
-
-    return result
   }
 
-  static async delete(id: string) {
-    const result = await prisma.page.delete({
+  static delete(id: string) {
+    return prisma.page.delete({
       where: { id }
     })
-
-    WebCacheInvalidation.pages()
-
-    return result
   }
 }

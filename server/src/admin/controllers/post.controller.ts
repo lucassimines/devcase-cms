@@ -5,14 +5,11 @@ import { BadRequestError } from '@src/errors/bad-request.error.js'
 import { prisma } from '@src/db.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { reorder } from '@src/utils/reorder.utils.js'
-import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 import { Request, Response } from 'express'
 
 export class PostController {
   static async reorder(req: Request, res: Response) {
     const result = await reorder(prisma.post, req.body)
-
-    WebCacheInvalidation.posts()
 
     return res.json(result)
   }

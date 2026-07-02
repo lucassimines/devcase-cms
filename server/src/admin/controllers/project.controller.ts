@@ -2,14 +2,11 @@ import { ProjectRepository } from '@src/admin/repositories/project.repository.js
 import { prisma } from '@src/db.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { reorder } from '@src/utils/reorder.utils.js'
-import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 import { Request, Response } from 'express'
 
 export class ProjectController {
   static async reorder(req: Request, res: Response) {
     const result = await reorder(prisma.project, req.body)
-
-    WebCacheInvalidation.projects()
 
     return res.json(result)
   }

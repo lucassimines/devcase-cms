@@ -3,7 +3,6 @@ import { prisma } from '@src/db.js'
 import { parseCategoryTypeParam } from '@src/utils/category-type.utils.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { reorder } from '@src/utils/reorder.utils.js'
-import { WebCacheInvalidation } from '@src/web/cache/web-cache.invalidation.js'
 import { Request, Response } from 'express'
 
 type CategoryRouteParams = {
@@ -18,10 +17,6 @@ function getCategoryType(req: Request<CategoryRouteParams>) {
 export class CategoryController {
   static async reorder(req: Request<CategoryRouteParams>, res: Response) {
     const result = await reorder(prisma.category, req.body)
-
-    if (getCategoryType(req) === 'POST') {
-      WebCacheInvalidation.posts()
-    }
 
     return res.json(result)
   }
