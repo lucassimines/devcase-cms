@@ -26,6 +26,10 @@ function setCache(key: string, data: Buffer) {
   cache.set(key, { data, timestamp: Date.now() })
 }
 
+export function clearSitemapCache() {
+  cache.clear()
+}
+
 function xmlHeaders(res: Response) {
   res.header('Content-Type', 'application/xml')
   res.header('Content-Encoding', 'gzip')

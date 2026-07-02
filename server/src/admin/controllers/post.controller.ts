@@ -9,7 +9,9 @@ import { Request, Response } from 'express'
 
 export class PostController {
   static async reorder(req: Request, res: Response) {
-    return res.json(await reorder(prisma.post, req.body))
+    const result = await reorder(prisma.post, req.body)
+
+    return res.json(result)
   }
 
   static async index(req: Request, res: Response) {

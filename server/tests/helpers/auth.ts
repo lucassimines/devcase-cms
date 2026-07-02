@@ -1,5 +1,5 @@
-import type { Express } from 'express'
 import bcrypt from 'bcryptjs'
+import type { Express } from 'express'
 import request from 'supertest'
 
 import { prismaRaw } from '@src/db.js'

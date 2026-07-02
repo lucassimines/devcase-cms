@@ -1,5 +1,6 @@
 import { PrismaPg } from '@prisma/adapter-pg'
 import type { WhereScopedOperation } from '@src/types/prisma.js'
+import { webCachePrismaExtension } from '@src/web/cache/web-cache.prisma-hook.js'
 import { Prisma, PrismaClient } from './generated/prisma/client.js'
 import { getRequestContext } from './request-context.js'
 
@@ -67,7 +68,7 @@ function addUserIdToCreateData<T>(data: T, userId: string): T {
 /* Prisma extension */
 /* ---------------------------------- */
 
-const prisma = prismaRaw.$extends({
+const prismaScoped = prismaRaw.$extends({
   query: {
     $allModels: {
       async $allOperations({ model, operation, args, query }) {
@@ -103,5 +104,7 @@ const prisma = prismaRaw.$extends({
     }
   }
 })
+
+const prisma = prismaScoped.$extends(webCachePrismaExtension)
 
 export { prisma, prismaRaw }

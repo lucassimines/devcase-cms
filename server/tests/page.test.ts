@@ -1,13 +1,11 @@
+import { createApp } from '@src/app.js'
+import { prismaRaw } from '@src/db.js'
+import { TEST_ENV } from '@tests/env'
+import { loginAsTestUser, seedTestUser } from '@tests/helpers/auth'
+import { prepareTestDatabase } from '@tests/helpers/database'
 import type { Express } from 'express'
 import request from 'supertest'
 import { afterEach, beforeAll, describe, expect, it } from 'vitest'
-
-import { createApp } from '@src/app.js'
-import { prismaRaw } from '@src/db.js'
-
-import { TEST_ENV } from '@tests/env'
-import { prepareTestDatabase } from '@tests/helpers/database'
-import { loginAsTestUser, seedTestUser } from '@tests/helpers/auth'
 
 const basePath = TEST_ENV.API_BASE_PATH
 

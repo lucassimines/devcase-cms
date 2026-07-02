@@ -26,7 +26,7 @@ export class PostRepository {
     return normalizePostToForm(post)
   }
 
-  static create(data: PostCreateInput) {
+  static async create(data: PostCreateInput) {
     return createAtTopOrder('post', data)
   }
 

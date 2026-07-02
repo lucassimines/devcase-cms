@@ -92,11 +92,11 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
     notify.success()
 
-    try {
-      await $adminApi('/revalidate', { method: 'POST' })
-    } catch (revalidateErr: unknown) {
-      console.warn('ISR revalidate request failed:', revalidateErr)
-    }
+    // try {
+    //   await $adminApi('/revalidate', { method: 'POST' })
+    // } catch (revalidateErr: unknown) {
+    //   console.warn('ISR revalidate request failed:', revalidateErr)
+    // }
   } catch (err: unknown) {
     if (err instanceof Error) {
       notify.error({ description: err.message })

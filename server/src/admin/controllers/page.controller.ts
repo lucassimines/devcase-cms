@@ -6,7 +6,9 @@ import { Request, Response } from 'express'
 
 export class PageController {
   static async reorder(req: Request, res: Response) {
-    return res.json(await reorder(prisma.page, req.body))
+    const result = await reorder(prisma.page, req.body)
+
+    return res.json(result)
   }
 
   static async index(req: Request, res: Response) {
