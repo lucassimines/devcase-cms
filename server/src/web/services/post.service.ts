@@ -21,6 +21,7 @@ const listSelect: PostSelect = {
   id: true,
   name: true,
   slug: true,
+  image: true,
   excerpt: true,
   createdAt: true,
   categories: categorySelect
