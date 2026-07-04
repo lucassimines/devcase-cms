@@ -19,7 +19,9 @@ function cacheKey(req: Request) {
 
 function resolveTags(path: string): WebCacheTag[] {
   if (path.startsWith('/bootstrap')) return [WEB_CACHE_TAGS.bootstrap]
-  if (path.startsWith('/posts')) return [WEB_CACHE_TAGS.posts]
+  if (path.startsWith('/posts') || path.startsWith('/post-categories')) {
+    return [WEB_CACHE_TAGS.posts]
+  }
   if (path.startsWith('/projects')) return [WEB_CACHE_TAGS.projects]
   if (path.startsWith('/pages')) return [WEB_CACHE_TAGS.pages]
   if (path.startsWith('/sitemap')) return [WEB_CACHE_TAGS.sitemap]
