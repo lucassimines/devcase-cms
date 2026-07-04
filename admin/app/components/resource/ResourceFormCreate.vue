@@ -1,7 +1,5 @@
 <template>
   <UModal v-model:open="open" :title="title">
-    <UButton icon="lucide:plus" :label="title" variant="soft" />
-
     <template #body>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <FieldText v-model="state.name" :label="$t('name')" name="name" translate />
@@ -16,7 +14,7 @@
             color="neutral"
             variant="subtle"
             size="lg"
-            @click="open = false"
+            @click="close()"
           />
           <UButton
             :label="$t('button.create')"
@@ -80,11 +78,15 @@ watch(
   }
 )
 
-const open = ref(false)
+const open = defineModel<boolean>('open', { default: false })
 
 const notify = useNotification()
 
 const route = useRoute()
+
+function close() {
+  open.value = false
+}
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   const { slug, ...dataWithoutSlug } = event.data

@@ -1,12 +1,5 @@
 <template>
   <UModal v-model:open="open" :title="$t('entity.post.generate')">
-    <UButton
-      icon="lucide:sparkles"
-      :label="$t('entity.post.generate')"
-      color="primary"
-      variant="soft"
-    />
-
     <template #body>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <UFormField :label="$t('entity.post.topic')" name="topic">
@@ -19,7 +12,7 @@
             color="neutral"
             variant="subtle"
             size="lg"
-            @click="open = false"
+            @click="close()"
           />
           <UButton
             :label="$t('entity.post.generate')"
@@ -50,9 +43,15 @@ const state = reactive<Schema>({
   topic: ''
 })
 
-const open = ref(false)
+const open = defineModel<boolean>('open', { default: false })
+
 const notify = useNotification()
+
 const route = useRoute()
+
+function close() {
+  open.value = false
+}
 
 watch(open, (isOpen) => {
   if (!isOpen) {
