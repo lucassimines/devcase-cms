@@ -15,4 +15,11 @@ export class PostCategoryService {
       select: categorySelect
     })
   }
+
+  static findBySlug(slug: string) {
+    return prisma.category.findFirst({
+      where: { slug, type: CategoryType.POST },
+      select: categorySelect
+    })
+  }
 }

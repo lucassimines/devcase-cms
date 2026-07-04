@@ -1,7 +1,9 @@
 import { prisma } from '@src/db.js'
+import { NotFoundError } from '@src/errors/index.js'
 import type { PostSelect } from '@src/generated/prisma/models.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { PostQuery } from '@src/web/queries/post.query.js'
+import { PostCategoryService } from '@src/web/services/post-category.service.js'
 import type { Request } from 'express'
 
 const POSTS_PER_PAGE = 12
@@ -18,9 +20,17 @@ const categoryInclude = {
 }
 
 export class PostService {
-  static paginatedList(query: Request['query'] = {}) {
+  static async paginatedList(query: Request['query'] = {}) {
     const { category: categorySlug, ...restQuery } = query as {
       category?: string
+    }
+
+    if (categorySlug) {
+      const category = await PostCategoryService.findBySlug(categorySlug)
+
+      if (!category) {
+        throw new NotFoundError('Post category not found')
+      }
     }
 
     const where = {
