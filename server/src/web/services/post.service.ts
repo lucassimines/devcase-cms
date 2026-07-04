@@ -4,7 +4,7 @@ import { paginate } from '@src/utils/paginate.utils.js'
 import { PostQuery } from '@src/web/queries/post.query.js'
 import type { Request } from 'express'
 
-const POSTS_PER_PAGE = 2
+const POSTS_PER_PAGE = 12
 
 const categoryInclude = {
   categories: {
