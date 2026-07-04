@@ -1,5 +1,9 @@
 <template>
   <UModal v-model:open="open" :title="title">
+    <template v-if="!hideTrigger" #default>
+      <UButton icon="lucide:plus" :label="title" variant="soft" />
+    </template>
+
     <template #body>
       <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
         <FieldText v-model="state.name" :label="$t('name')" name="name" translate />
@@ -40,6 +44,7 @@ const props = defineProps<{
   title: string
   endpoint: string
   hasSlug?: boolean
+  hideTrigger?: boolean
 }>()
 
 const { toSlug } = useHelpers()
