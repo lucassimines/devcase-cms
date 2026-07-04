@@ -111,22 +111,15 @@ watch(item, (newItem) => {
 
 async function onSubmit(event: FormSubmitEvent<Schema>) {
   try {
-    await $adminApi<FormModel<T>>(props.endpoint, {
+    const res = await $adminApi<FormModel<T>>(props.endpoint, {
       method: 'PUT',
       body: event.data as FormModel<T>
     })
 
-    // if (res?.id) {
-    //   notify.success()
-    //   item.value = res as unknown as typeof item.value
-    //   try {
-    //     await $adminApi('/revalidate', { method: 'POST' })
-    //   } catch (revalidateErr: unknown) {
-    //     /* ISR webhook is best-effort; save already persisted */
-    //     console.warn('ISR revalidate request failed:', revalidateErr)
-    //   }
-    //   return
-    // }
+    if (res?.id) {
+      notify.success()
+      item.value = res as unknown as typeof item.value
+    }
   } catch (err: unknown) {
     if (err instanceof Error) {
       notify.error({ description: err.message })
