@@ -6,10 +6,15 @@ import { getRequestContext } from './request-context.js'
 
 const connectionString = process.env.DATABASE_URL!
 
-// Prisma ORM v7 pg defaults: idleTimeoutMillis=10s, connectionTimeoutMillis=0 (no limit).
-// That drops DB connections quickly and can hang for a long time on reconnect.
+function withLibpqCompat(url: string) {
+  if (url.includes('uselibpqcompat=')) return url
+
+  return `${url}${url.includes('?') ? '&' : '?'}uselibpqcompat=true`
+}
+
 const adapter = new PrismaPg({
-  connectionString,
+  connectionString: withLibpqCompat(connectionString),
+  // Prisma ORM v7 pg defaults drop idle connections after 10s and have no connect timeout.
   connectionTimeoutMillis: 5_000,
   idleTimeoutMillis: 300_000
 })

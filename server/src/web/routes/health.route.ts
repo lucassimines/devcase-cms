@@ -7,9 +7,10 @@ router.get('/', async (_req, res) => {
   try {
     await prisma.$queryRaw`SELECT 1`
 
-    res.status(200).json({ status: 'ok' })
-  } catch (err) {
-    res.status(503).json({ status: 'unavailable' })
+    res.status(200).json({ status: 'ok', db: 'ok' })
+  } catch {
+    // Keep the process alive for Railway; report DB status in the body.
+    res.status(200).json({ status: 'ok', db: 'unavailable' })
   }
 })
 
