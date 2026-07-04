@@ -23,12 +23,17 @@ export class ProjectService {
   }
 
   static paginatedList(query: Request['query'] = {}) {
-    return paginate(prisma.project, {
-      ...query,
-      limit: Number(query.limit ?? PROJECTS_PER_PAGE),
-      where: ProjectQuery.published(),
-      orderBy: ProjectQuery.orderByPosition()
-    })
+    return paginate(
+      prisma.project,
+      {
+        ...query,
+        limit: Number(query.limit ?? PROJECTS_PER_PAGE),
+        orderBy: ProjectQuery.orderByPosition()
+      },
+      {
+        where: ProjectQuery.published()
+      }
+    )
   }
 
   static async findBySlug(slug: string) {

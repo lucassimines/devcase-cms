@@ -8,15 +8,26 @@ import type { Request } from 'express'
 
 const POSTS_PER_PAGE = 12
 
-const categoryInclude = {
-  categories: {
-    orderBy: { order: 'asc' as const },
-    select: {
-      id: true,
-      name: true,
-      slug: true
-    }
+const categorySelect = {
+  orderBy: { order: 'asc' as const },
+  select: {
+    id: true,
+    name: true,
+    slug: true
   }
+}
+
+const listSelect: PostSelect = {
+  id: true,
+  name: true,
+  slug: true,
+  excerpt: true,
+  createdAt: true,
+  categories: categorySelect
+}
+
+const categoryInclude = {
+  categories: categorySelect
 }
 
 export class PostService {
@@ -44,13 +55,18 @@ export class PostService {
         : {})
     }
 
-    return paginate(prisma.post, {
-      ...restQuery,
-      limit: Number(query.limit ?? POSTS_PER_PAGE),
-      where,
-      orderBy: PostQuery.orderByPosition(),
-      include: categoryInclude
-    })
+    return paginate(
+      prisma.post,
+      {
+        ...restQuery,
+        limit: Number(query.limit ?? POSTS_PER_PAGE),
+        orderBy: PostQuery.orderByPosition()
+      },
+      {
+        where,
+        select: listSelect
+      }
+    )
   }
 
   static async findBySlug(slug: string) {

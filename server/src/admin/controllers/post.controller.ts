@@ -1,8 +1,8 @@
 import { PostRepository } from '@src/admin/repositories/post.repository.js'
-import { PostGenerateService } from '@src/admin/services/post-generate.service.js'
 import { postGenerateSchema } from '@src/admin/schemas/post-generate.schema.js'
-import { BadRequestError } from '@src/errors/bad-request.error.js'
+import { PostGenerateService } from '@src/admin/services/post-generate.service.js'
 import { prisma } from '@src/db.js'
+import { BadRequestError } from '@src/errors/bad-request.error.js'
 import { paginate } from '@src/utils/paginate.utils.js'
 import { reorder } from '@src/utils/reorder.utils.js'
 import { Request, Response } from 'express'
@@ -15,7 +15,17 @@ export class PostController {
   }
 
   static async index(req: Request, res: Response) {
-    res.json(await paginate(prisma.post, req.query))
+    res.json(
+      await paginate(prisma.post, req.query, {
+        select: {
+          id: true,
+          name: true,
+          slug: true,
+          image: true,
+          createdAt: true
+        }
+      })
+    )
   }
 
   static async getById(req: Request<{ id: string }>, res: Response) {
