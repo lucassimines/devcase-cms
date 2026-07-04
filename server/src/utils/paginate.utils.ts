@@ -1,4 +1,9 @@
-import type { PaginatedArgs, PaginateInput } from '@src/types/paginate.js'
+import type {
+  PaginatedArgs,
+  PaginatedResult,
+  PaginateOptions,
+  PaginateQuery
+} from '@src/types/paginate.js'
 import type { PrismaDelegate } from '@src/types/prisma.js'
 
 import { z } from 'zod'
@@ -14,34 +19,30 @@ const numericQueryParam = z.union([z.string(), z.number()]).optional()
 
 export const MAX_PAGE_LIMIT = 24
 
-const PaginatedQuerySchema = z.object({
+const PaginateQuerySchema = z.object({
   page: numericQueryParam,
   limit: numericQueryParam,
   term: z.string().optional(),
   filterBy: stringArrayQuery.default([]),
-  include: jsonStringOrObject.optional(),
-  orderBy: jsonStringOrObject.optional(),
-  where: jsonStringOrObject.optional()
+  orderBy: jsonStringOrObject.optional()
 })
 
-/**
- * Handle query parameters
- */
-function handleQueryParameters(query: object | string = {}): object {
-  if (typeof query === 'string') {
+function parseJsonQuery(value: object | string | undefined): Record<string, unknown> | undefined {
+  if (value === undefined) return undefined
+
+  if (typeof value === 'string') {
     try {
-      query = JSON.parse(query)
-    } catch (error) {
+      const parsed = JSON.parse(value)
+      if (typeof parsed !== 'object' || parsed === null) {
+        throw new Error('Invalid query format. Please provide a valid JSON string.')
+      }
+      return parsed as Record<string, unknown>
+    } catch {
       throw new Error('Invalid query format. Please provide a valid JSON string.')
     }
   }
 
-  // Ensure the result is an object
-  if (typeof query !== 'object' || query === null) {
-    throw new Error('Query must be an object.')
-  }
-
-  return query
+  return value as Record<string, unknown>
 }
 
 /**
@@ -78,7 +79,7 @@ function makeJsonPathFilter(field: string, path: string[], term: string) {
 /**
  * Make filter query based on filter keys and term
  */
-function makeFilterQuery(term: string, filterKeys: string[]) {
+function makeFilterQuery(term: string, filterKeys: string[]): Record<string, unknown> {
   const orConditions: Record<string, unknown>[] = []
 
   filterKeys.forEach((key) => {
@@ -100,24 +101,34 @@ function makeFilterQuery(term: string, filterKeys: string[]) {
   return { OR: orConditions }
 }
 
-function mergeWhereQuery(baseWhere: object, termWhere: object) {
+function mergeWhereQuery(
+  baseWhere: Record<string, unknown>,
+  termWhere: Record<string, unknown>
+): Record<string, unknown> {
   if (!hasWhereConditions(termWhere)) return baseWhere
   if (!hasWhereConditions(baseWhere)) return termWhere
 
   return { AND: [baseWhere, termWhere] }
 }
 
-async function findPaginated<T>(model: PrismaDelegate, args: PaginatedArgs) {
-  const { page, limit, where, include, orderBy } = args
+async function findPaginated<T>(model: PrismaDelegate, args: PaginatedArgs): Promise<PaginatedResult<T>> {
+  const { page, limit, where, include, select, orderBy = { createdAt: 'desc' } } = args
+
+  const findManyArgs: Record<string, unknown> = {
+    where,
+    orderBy: [orderBy, { id: 'asc' }],
+    skip: (page - 1) * limit,
+    take: limit
+  }
+
+  if (select) {
+    findManyArgs.select = select
+  } else if (include) {
+    findManyArgs.include = include
+  }
 
   const [data, total] = await Promise.all([
-    model.findMany({
-      where,
-      include,
-      orderBy: [orderBy, { id: 'asc' }],
-      skip: (page - 1) * limit,
-      take: limit
-    }) as Promise<T[]>,
+    model.findMany(findManyArgs) as Promise<T[]>,
     model.count({ where })
   ])
 
@@ -133,25 +144,23 @@ async function findPaginated<T>(model: PrismaDelegate, args: PaginatedArgs) {
 }
 
 /**
- * Fetch paginated list items
+ * Fetch a paginated list.
+ *
+ * `query` accepts pagination/search/sort params from the request.
+ * `options` controls server-side Prisma findMany args (where, select, include).
  */
-export async function paginate<T = unknown>(model: PrismaDelegate, query: PaginateInput) {
-  const normalizedQuery = PaginatedQuerySchema.parse(query)
-
-  const {
-    page = '1',
-    limit = '10',
-    term,
-    filterBy,
-    include,
-    orderBy = { createdAt: 'desc' },
-    where
-  } = normalizedQuery
+export async function paginate<T = unknown>(
+  model: PrismaDelegate,
+  query: PaginateQuery = {},
+  options: PaginateOptions = {}
+): Promise<PaginatedResult<T>> {
+  const { page = '1', limit = '10', term, filterBy, orderBy } = PaginateQuerySchema.parse(query)
+  const { where = {}, select, include } = options
 
   const pageNumber = Number(page)
   const limitNumber = Number(limit)
 
-  let whereQuery = handleQueryParameters(where)
+  let whereQuery = { ...where }
 
   if (term && filterBy.length > 0) {
     whereQuery = mergeWhereQuery(whereQuery, makeFilterQuery(term.toString(), filterBy))
@@ -162,11 +171,12 @@ export async function paginate<T = unknown>(model: PrismaDelegate, query: Pagina
     limitNumber
   )
 
-  return await findPaginated<T>(model, {
+  return findPaginated<T>(model, {
     page: normalizedPage,
     limit: normalizedLimit,
     where: whereQuery,
-    include: handleQueryParameters(include),
-    orderBy: handleQueryParameters(orderBy)
+    orderBy: parseJsonQuery(orderBy),
+    select,
+    include
   })
 }

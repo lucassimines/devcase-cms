@@ -1,19 +1,29 @@
-export type PaginatedArgs = {
-  page: number
-  limit: number
-  where?: Record<string, any>
-  include?: Record<string, any>
-  orderBy?: Record<string, any>
-}
-
-export type PaginateInput = {
-  where?: any
-  orderBy?: any
-  skip?: number
-  take?: number
-  include?: any
+export type PaginateQuery = {
   page?: string | number
   limit?: string | number
   term?: string
   filterBy?: string | string[]
+  orderBy?: Record<string, unknown> | string
+}
+
+export type PaginateOptions = {
+  where?: Record<string, unknown>
+  select?: Record<string, unknown>
+  include?: Record<string, unknown>
+}
+
+export type PaginatedArgs = PaginateOptions & {
+  page: number
+  limit: number
+  orderBy?: Record<string, unknown>
+}
+
+export type PaginatedResult<T> = {
+  data: T[]
+  meta: {
+    page: number
+    total: number
+    limit: number
+    last_page: number
+  }
 }

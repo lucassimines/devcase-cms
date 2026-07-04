@@ -31,8 +31,7 @@ export class CategoryController {
     const type = getCategoryType(req)
 
     res.json(
-      await paginate(prisma.category, {
-        ...req.query,
+      await paginate(prisma.category, req.query, {
         where: { type }
       })
     )

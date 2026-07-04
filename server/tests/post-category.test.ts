@@ -126,10 +126,23 @@ describe('Post categories', () => {
         .query({ category: 'development' })
         .expect(200)
 
-      expect(res.body.data.map((post: { slug: string }) => post.slug)).toEqual(['dev-post'])
-      expect(res.body.data[0].categories.map((category: { slug: string }) => category.slug)).toEqual([
-        'development'
+      expect(res.body.data.map((post: { name: { 'en-US': string } }) => post.name['en-US'])).toEqual([
+        'dev-post'
       ])
+      expect(res.body.data[0]).toEqual({
+        id: expect.any(String),
+        name: { 'en-US': 'dev-post', 'pt-BR': 'dev-post' },
+        slug: 'dev-post',
+        excerpt: null,
+        createdAt: expect.any(String),
+        categories: [
+          {
+            id: development.id,
+            name: { 'en-US': 'Development', 'pt-BR': 'Desenvolvimento' },
+            slug: 'development'
+          }
+        ]
+      })
     })
 
     it('returns 404 for an unknown category slug', async () => {
@@ -164,10 +177,12 @@ describe('Post categories', () => {
         .query({ category: 'design' })
         .expect(200)
 
-      expect(developmentRes.body.data.map((post: { slug: string }) => post.slug)).toEqual([
+      expect(developmentRes.body.data.map((post: { name: { 'en-US': string } }) => post.name['en-US'])).toEqual([
         'shared-post'
       ])
-      expect(designRes.body.data.map((post: { slug: string }) => post.slug)).toEqual(['shared-post'])
+      expect(designRes.body.data.map((post: { name: { 'en-US': string } }) => post.name['en-US'])).toEqual([
+        'shared-post'
+      ])
     })
   })
 
@@ -187,7 +202,7 @@ describe('Post categories', () => {
         .query({ page: 2, limit: 2 })
         .expect(200)
 
-      expect(pageOne.body.data.map((post: { slug: string }) => post.slug)).toEqual([
+      expect(pageOne.body.data.map((post: { name: { 'en-US': string } }) => post.name['en-US'])).toEqual([
         'post-1',
         'post-2'
       ])
@@ -198,7 +213,7 @@ describe('Post categories', () => {
         last_page: 2
       })
 
-      expect(pageTwo.body.data.map((post: { slug: string }) => post.slug)).toEqual(['post-3'])
+      expect(pageTwo.body.data.map((post: { name: { 'en-US': string } }) => post.name['en-US'])).toEqual(['post-3'])
       expect(pageTwo.body.meta.page).toBe(2)
     })
 
@@ -223,7 +238,7 @@ describe('Post categories', () => {
         .query({ category: 'development', page: 2, limit: 2 })
         .expect(200)
 
-      expect(pageOne.body.data.map((post: { slug: string }) => post.slug)).toEqual([
+      expect(pageOne.body.data.map((post: { name: { 'en-US': string } }) => post.name['en-US'])).toEqual([
         'dev-1',
         'dev-2'
       ])
@@ -234,7 +249,7 @@ describe('Post categories', () => {
         last_page: 2
       })
 
-      expect(pageTwo.body.data.map((post: { slug: string }) => post.slug)).toEqual(['dev-3'])
+      expect(pageTwo.body.data.map((post: { name: { 'en-US': string } }) => post.name['en-US'])).toEqual(['dev-3'])
     })
   })
 })
