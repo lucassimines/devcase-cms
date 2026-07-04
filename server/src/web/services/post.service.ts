@@ -19,10 +19,25 @@ const categoryInclude = {
 
 export class PostService {
   static paginatedList(query: Request['query'] = {}) {
+    const { category: categorySlug, ...restQuery } = query as {
+      category?: string
+    }
+
+    const where = {
+      ...PostQuery.published(),
+      ...(categorySlug
+        ? {
+            categories: {
+              some: { slug: categorySlug }
+            }
+          }
+        : {})
+    }
+
     return paginate(prisma.post, {
-      ...query,
+      ...restQuery,
       limit: Number(query.limit ?? POSTS_PER_PAGE),
-      where: PostQuery.published(),
+      where,
       orderBy: PostQuery.orderByPosition(),
       include: categoryInclude
     })

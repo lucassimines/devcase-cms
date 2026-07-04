@@ -5,6 +5,7 @@ import bootstrap from './bootstrap.route.js'
 import health from './health.route.js'
 import page from './page.route.js'
 import post from './post.route.js'
+import postCategory from './post-category.route.js'
 import project from './project.route.js'
 import sitemap from './sitemap.route.js'
 
@@ -17,6 +18,7 @@ const routes = [
   ['health', health],
   ['pages', page],
   ['posts', post],
+  ['post-categories', postCategory],
   ['projects', project],
   ['sitemap', sitemap]
 ] as const
