@@ -23,10 +23,11 @@
     # --------------------
     FROM node:24-alpine AS final
     
-    ARG PORT=8080
+    ARG PORT=80
+    ENV PORT=$PORT
     ENV NODE_ENV=production
     
-    WORKDIR /usr/src/app/server
+    WORKDIR /usr/src/app
     
     RUN apk add --no-cache \
         tini \
@@ -39,4 +40,4 @@
     
     EXPOSE $PORT
     
-    CMD ["node", "dist/src/server.js"]
+    CMD ["node", "server/dist/server.js"]
