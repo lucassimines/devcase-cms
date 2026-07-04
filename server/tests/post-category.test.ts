@@ -132,16 +132,15 @@ describe('Post categories', () => {
       ])
     })
 
-    it('returns an empty page for an unknown category slug', async () => {
+    it('returns 404 for an unknown category slug', async () => {
       await seedPublishedPost('orphan-post')
 
       const res = await request(app)
         .get(`${basePath}/posts`)
         .query({ category: 'missing' })
-        .expect(200)
+        .expect(404)
 
-      expect(res.body.data).toEqual([])
-      expect(res.body.meta.total).toBe(0)
+      expect(res.body).toEqual({ message: 'Post category not found' })
     })
 
     it('includes posts that belong to multiple categories', async () => {
