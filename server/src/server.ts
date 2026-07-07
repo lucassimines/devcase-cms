@@ -1,6 +1,6 @@
+import { prisma } from '@src/db.js'
 import logger from '@src/utils/logger.utils.js'
 import { staticDirectory } from '@src/utils/storage-path.utils.js'
-import { prisma } from '@src/db.js'
 import dotenv from 'dotenv'
 import type { Server } from 'node:http'
 import * as path from 'path'
@@ -16,7 +16,12 @@ const basePath = process.env.API_BASE_PATH
 const app = await createApp()
 
 const server: Server = app.listen(port, '0.0.0.0', () => {
-  logger.info('Listening on port %d with base path %s serving static from %s', port, basePath, staticDirectory)
+  logger.info(
+    'Listening on port %d with base path %s serving static from %s',
+    port,
+    basePath,
+    staticDirectory
+  )
 
   void prisma
     .$connect()
@@ -31,6 +36,3 @@ function shutdown(signal: string) {
     void prisma.$disconnect().finally(() => process.exit(0))
   })
 }
-
-process.on('SIGTERM', () => shutdown('SIGTERM'))
-process.on('SIGINT', () => shutdown('SIGINT'))
