@@ -6,18 +6,7 @@ import { getRequestContext } from './request-context.js'
 
 const connectionString = process.env.DATABASE_URL!
 
-function withLibpqCompat(url: string) {
-  if (url.includes('uselibpqcompat=')) return url
-
-  return `${url}${url.includes('?') ? '&' : '?'}uselibpqcompat=true`
-}
-
-const adapter = new PrismaPg({
-  connectionString: withLibpqCompat(connectionString),
-  // Prisma ORM v7 pg defaults drop idle connections after 10s and have no connect timeout.
-  connectionTimeoutMillis: 5_000,
-  idleTimeoutMillis: 300_000
-})
+const adapter = new PrismaPg({ connectionString })
 const prismaRaw = new PrismaClient({ adapter })
 
 /* ---------------------------------- */
