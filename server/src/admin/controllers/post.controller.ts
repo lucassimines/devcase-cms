@@ -19,6 +19,7 @@ export class PostController {
       await paginate(prisma.post, req.query, {
         select: {
           id: true,
+          published: true,
           name: true,
           slug: true,
           image: true,
