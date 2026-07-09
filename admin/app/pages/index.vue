@@ -6,7 +6,7 @@
 
     <template #body>
       <div class="w-full max-w-2xl">
-        <div class="grid gap-4 sm:grid-cols-2">
+        <div class="grid gap-4 sm:grid-cols-3">
           <ULink
             v-for="card in dashboardCards"
             :key="card.path"
