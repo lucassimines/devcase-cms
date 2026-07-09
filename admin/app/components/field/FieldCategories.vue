@@ -1,5 +1,5 @@
 <template>
-  <UFormField :label="$t('entity.category.name', 2)" :name="name">
+  <UFormField v-if="categoryItems.length" :label="$t('entity.category.name', 2)" :name="name">
     <USelectMenu
       v-model="model"
       :items="categoryItems"

@@ -42,6 +42,7 @@
 interface DashboardStats {
   pages: number
   projects: number
+  posts: number
 }
 
 const { $entities } = useNuxtApp()
@@ -61,6 +62,12 @@ const dashboardCards = computed(() => {
       path: $entities.project.path,
       icon: $entities.project.icon,
       total: status.value === 'pending' ? '...' : (stats.value?.projects ?? 0)
+    },
+    {
+      label: $entities.post.label,
+      path: $entities.post.path,
+      icon: $entities.post.icon,
+      total: status.value === 'pending' ? '...' : (stats.value?.posts ?? 0)
     }
   ]
 })

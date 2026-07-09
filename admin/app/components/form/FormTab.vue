@@ -8,7 +8,7 @@
       <h1 class="text-toned font-medium" v-text="resolvedTitle" />
     </div>
 
-    <UPageCard variant="subtle">
+    <UPageCard variant="subtle" :ui="{ container: 'w-full' }">
       <slot />
     </UPageCard>
   </div>
