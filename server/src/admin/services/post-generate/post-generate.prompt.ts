@@ -1,4 +1,4 @@
-import type { GeneratePostOptions } from './post-generator.types.js'
+import type { GeneratePostOptions } from './post-generate.types.js'
 
 export function buildPostInstructions() {
   return `You are a senior full-stack developer writing technical blog posts for a developer portfolio site.

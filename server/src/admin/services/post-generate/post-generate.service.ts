@@ -1,12 +1,12 @@
 import { HttpError } from '@src/errors/http.error.js'
-import { generatePost } from '@src/lib/post-generator/post-generator.js'
-import { saveGeneratedPost } from '@src/lib/post-generator/post-generator.store.js'
 import type { PostGenerateInput } from '@src/admin/schemas/post-generate.schema.js'
+import { generatePostWithCursorApi } from './providers/cursor-agent.provider.js'
+import { saveGeneratedPost } from './post-generate.store.js'
 
 export class PostGenerateService {
   static async generateAndSave({ topic }: PostGenerateInput) {
     try {
-      const content = await generatePost({ topic }, 'cursor')
+      const content = await generatePostWithCursorApi({ topic })
 
       return saveGeneratedPost(content, {
         published: false

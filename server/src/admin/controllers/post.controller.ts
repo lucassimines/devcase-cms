@@ -1,6 +1,7 @@
 import { PostRepository } from '@src/admin/repositories/post.repository.js'
 import { postGenerateSchema } from '@src/admin/schemas/post-generate.schema.js'
-import { PostGenerateService } from '@src/admin/services/post-generate.service.js'
+import { PostGenerateService } from '@src/admin/services/post-generate/post-generate.service.js'
+import { PostGenerateImageService } from '@src/admin/services/post-generate-image/post-generate-image.service.js'
 import { prisma } from '@src/db.js'
 import { BadRequestError } from '@src/errors/bad-request.error.js'
 import { paginate } from '@src/utils/paginate.utils.js'
@@ -47,6 +48,12 @@ export class PostController {
     }
 
     res.json(await PostGenerateService.generateAndSave(parsed.data))
+  }
+
+  static async generateImage(req: Request<{ id: string }>, res: Response) {
+    const { id } = req.params
+
+    res.json(await PostGenerateImageService.generateAndSave(id))
   }
 
   static async update(req: Request<{ id: string }>, res: Response) {

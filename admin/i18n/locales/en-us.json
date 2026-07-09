@@ -94,6 +94,8 @@
       "name": "Post | Posts",
       "create": "Create Post",
       "generate": "Generate Post",
+      "generateImage": "Generate cover",
+      "generateImageConfirm": "Replace the current cover image?",
       "topic": "Topic or brief",
       "edit": "Edit Post"
     },

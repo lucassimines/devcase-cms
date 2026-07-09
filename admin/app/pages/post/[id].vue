@@ -14,7 +14,13 @@
 
         <FieldCategories v-model="state.categories" name="categories" type="POST" />
 
-        <FieldImage v-model="state.image" name="image" translate />
+        <div class="flex items-end gap-3">
+          <div class="min-w-0 flex-1">
+            <FieldImage v-model="state.image" name="image" translate />
+          </div>
+
+          <PostFormGenerateImage v-model="state.image" :post-id="String(route.params.id)" />
+        </div>
       </FormTab>
 
       <FormTab :title="$t('content')">

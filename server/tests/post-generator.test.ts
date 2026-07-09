@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { parseAgentOutput, parseGeneratedPostFromAgentStdout, hasCursorCli } from '@src/lib/post-generator/post-generator.cursor.js'
-import { extractJson } from '@src/lib/post-generator/post-generator.prompt.js'
-import { generatedPostSchema } from '@src/lib/post-generator/post-generator.schema.js'
-import { resolvePostSlug } from '@src/lib/post-generator/post-generator.store.js'
-import { resolveProvider } from '@src/lib/post-generator/post-generator.js'
+import { extractJson } from '@src/admin/services/post-generate/post-generate.prompt.js'
+import { generatedPostSchema } from '@src/admin/services/post-generate/post-generate.schema.js'
+import { resolvePostSlug } from '@src/admin/services/post-generate/post-generate.store.js'
+import {
+  parseAgentOutput,
+  parseGeneratedPostFromAgentStdout
+} from '@src/admin/services/post-generate/providers/cursor-agent.parse.js'
 
 const samplePost = {
   name: {
@@ -43,23 +45,6 @@ describe('resolvePostSlug', () => {
 
   it('uses an explicit slug when provided', () => {
     expect(resolvePostSlug(samplePost, 'custom-slug')).toBe('custom-slug')
-  })
-})
-
-describe('resolveProvider', () => {
-  it('defaults to cursor', () => {
-    expect(resolveProvider()).toBe('cursor')
-  })
-
-  it('accepts explicit provider', () => {
-    expect(resolveProvider('openai')).toBe('openai')
-    expect(resolveProvider('cursor')).toBe('cursor')
-  })
-})
-
-describe('hasCursorCli', () => {
-  it('returns a boolean', async () => {
-    expect(typeof (await hasCursorCli())).toBe('boolean')
   })
 })
 
@@ -103,9 +88,9 @@ ${JSON.stringify(samplePost)}
   })
 
   it('does not throw when stdout contains only cursor status text', () => {
-    expect(() => parseGeneratedPostFromAgentStdout('Checking eligibility for workspace access')).toThrow(
-      /status or planning message/
-    )
+    expect(() =>
+      parseGeneratedPostFromAgentStdout('Checking eligibility for workspace access')
+    ).toThrow(/status or planning message/)
   })
 })
 
