@@ -49,7 +49,7 @@ const schema: z.ZodType<ModelInput<CategoryUpdate>> = z.object({
 const { data: categories } = useAdminApi<Category[]>(() => `${apiPath.value}/all`)
 
 const parentItems = computed(() => {
-  const currentId = route.params.id as string
+  const currentId = String(route.params.id)
 
   return [
     { label: $t('entity.category.noParent'), value: null },
