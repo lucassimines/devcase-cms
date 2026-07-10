@@ -5,7 +5,7 @@ interface ConfirmDialogOptions {
   description?: string
 }
 
-export const useConfirmDialog = () => {
+export function useConfirmDialog() {
   const overlay = useOverlay()
 
   return (options: ConfirmDialogOptions): Promise<boolean> => {
