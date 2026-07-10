@@ -1,7 +1,7 @@
 import { prisma } from '@src/db.js'
 import { HttpError } from '@src/errors/http.error.js'
 import { isLocalizedString } from '@src/utils/localized-json.utils.js'
-import { generateCoverImageWithGemini } from './post-generate-image.gemini.js'
+import { generateCoverImageWithCursor } from './post-generate-image.cursor.js'
 import { storeGeneratedCoverImage } from './post-generate-image.store.js'
 
 function localizedText(value: unknown, preferred: 'en-US' | 'pt-BR' = 'en-US') {
@@ -34,7 +34,7 @@ export class PostGenerateImageService {
     }
 
     try {
-      const buffer = await generateCoverImageWithGemini({ title, excerpt })
+      const buffer = await generateCoverImageWithCursor({ title, excerpt })
       const stored = await storeGeneratedCoverImage(buffer, post.slug)
 
       await prisma.post.update({
