@@ -1,6 +1,6 @@
-import type { GeneratePostOptions, GeneratedPostContent } from './post-generator.types.js'
-import { buildPostPrompt } from './post-generator.prompt.js'
-import { parseGeneratedPostFromAgentStdout } from './post-generator.cursor.js'
+import type { GeneratePostOptions, GeneratedPostContent } from '../post-generate.types.js'
+import { buildPostPrompt } from '../post-generate.prompt.js'
+import { parseGeneratedPostFromAgentStdout } from './cursor-agent.parse.js'
 
 const CURSOR_API_BASE = process.env.CURSOR_API_URL?.trim() || 'https://api.cursor.com'
 const TERMINAL_RUN_STATUSES = new Set(['FINISHED', 'ERROR', 'CANCELLED', 'EXPIRED'])
@@ -37,7 +37,7 @@ function cursorAuthHeaders() {
 
   if (!apiKey) {
     throw new Error(
-      'CURSOR_API_KEY is not set. Add it to Railway env vars for server-side post generation.'
+      'CURSOR_API_KEY is not set. Add it to server env vars for post generation.'
     )
   }
 
@@ -51,7 +51,7 @@ function formatCursorApiError(status: number, body: string) {
   if (/feature_unavailable|storage mode is disabled/i.test(body)) {
     return (
       'Cursor Cloud Agents are unavailable for this account (storage/privacy mode). ' +
-      'Enable cloud agent storage in Cursor settings, or generate posts locally with `make generate-post`.'
+      'Enable cloud agent storage in Cursor settings.'
     )
   }
 

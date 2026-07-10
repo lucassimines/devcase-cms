@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "prisma generate && tsx watch src/server.ts",
     "migrate:projects": "tsx scripts/migrate-project-localization.ts",
-    "generate:post": "tsx scripts/generate-post.ts",
     "build": "prisma generate && tsc && tsc-alias",
     "release": "prisma migrate deploy",
     "build:prod": "npm run build && npm run release",

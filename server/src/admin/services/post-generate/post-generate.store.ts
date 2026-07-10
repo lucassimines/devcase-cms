@@ -2,7 +2,7 @@ import { prisma } from '@src/db.js'
 import { createAtTopOrder } from '@src/utils/order.utils.js'
 import { toSlug } from '@src/utils/string.utils.js'
 import { withUniqueSlug } from '@src/utils/slug.utils.js'
-import type { GeneratedPostContent, SavePostOptions, SavedPostResult } from './post-generator.types.js'
+import type { GeneratedPostContent, SavePostOptions, SavedPostResult } from './post-generate.types.js'
 
 export function resolvePostSlug(content: GeneratedPostContent, slug?: string) {
   const base = slug?.trim() || toSlug(content.name['en-US'])
