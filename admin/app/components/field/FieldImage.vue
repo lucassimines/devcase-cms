@@ -1,7 +1,7 @@
 <template>
   <UFormField :label="label" :name="fieldName">
     <NavTranslate v-model="locale" :translate="translate">
-      <div class="relative flex aspect-video flex-col gap-4">
+      <div :class="cn('relative flex aspect-video flex-col gap-4', ui?.wrapper)">
         <UButton
           icon="lucide:x"
           class="absolute -top-3 -right-3 z-2 flex size-6 items-center justify-center rounded-full"
@@ -63,6 +63,9 @@ interface Props {
   name: string
   label?: string
   translate?: boolean
+  ui?: {
+    wrapper?: string
+  }
 }
 
 const props = defineProps<Props>()

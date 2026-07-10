@@ -18,7 +18,18 @@
       </figure>
     </UButton>
 
-    <footer class="bg-muted flex w-full items-center rounded-b-md p-1">
+    <footer class="bg-muted flex w-full items-center gap-1 rounded-b-md p-1">
+      <UButton
+        icon="lucide:download"
+        color="neutral"
+        variant="soft"
+        size="xs"
+        :href="downloadUrl"
+        :download="file.filename"
+        target="_blank"
+        external
+      />
+
       <UButton
         icon="lucide:trash"
         color="error"
@@ -43,6 +54,10 @@ const emit = defineEmits<{
   (e: 'delete:file', filename: string): void
 }>()
 
+const config = useRuntimeConfig()
+
+const downloadUrl = computed(() => `${config.public.apiUrl}/static/images/${props.file.filename}`)
+
 const { status, execute: deleteFile } = await useAdminApi<File>(`/file`, {
   method: 'DELETE',
   immediate: false,
@@ -51,7 +66,18 @@ const { status, execute: deleteFile } = await useAdminApi<File>(`/file`, {
   }
 })
 
+const confirm = useConfirmDialog()
+
+const { t } = useI18n()
+
 async function deleteCurrentFile() {
+  const confirmed = await confirm({
+    title: t('dialog.delete.title'),
+    description: t('dialog.delete.description')
+  })
+
+  if (!confirmed) return
+
   await deleteFile()
   emit('delete:file', props.file.filename)
 }

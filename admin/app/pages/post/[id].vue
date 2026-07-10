@@ -1,5 +1,5 @@
 <template>
-  <ResourceFormUpdate :schema="schema" :endpoint="`/post/${route.params.id}`">
+  <ResourceFormUpdate :schema="schema" :endpoint="`/post/${id}`">
     <template #right>
       <ButtonModel entity="post" />
     </template>
@@ -14,13 +14,11 @@
 
         <FieldCategories v-model="state.categories" name="categories" type="POST" />
 
-        <div class="flex items-end gap-3">
-          <div class="min-w-0 flex-1">
-            <FieldImage v-model="state.image" name="image" translate />
-          </div>
-
-          <PostFormGenerateImage v-model="state.image" :post-id="String(route.params.id)" />
+        <div>
+          <PostFormGenerateImage v-model="state.image" :post-id="id" />
         </div>
+
+        <FieldImage v-model="state.image" name="image" translate :ui="{ wrapper: 'aspect-5/3' }" />
       </FormTab>
 
       <FormTab :title="$t('content')">
@@ -47,4 +45,6 @@ const schema: z.ZodType<ModelInput<PostUpdate>> = z.object({
 })
 
 const route = useRoute()
+
+const id = computed(() => String(route.params.id))
 </script>

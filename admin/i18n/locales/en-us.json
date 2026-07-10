@@ -67,6 +67,7 @@
     "upload": "Upload",
     "create": "Create",
     "cancel": "Cancel",
+    "confirm": "Confirm",
     "signup": "Sign up",
     "login": "Login",
     "add": "Add | Add {name}"
@@ -131,6 +132,12 @@
   },
   "validation": {
     "password": "Password must contain letters and numbers"
+  },
+  "dialog": {
+    "delete": {
+      "title": "Delete",
+      "description": "Are you sure you want to delete this item?"
+    }
   },
   "notification": {
     "success": {

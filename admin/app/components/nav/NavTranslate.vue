@@ -11,7 +11,7 @@
         :ui="{ label: 'uppercase' }"
         :color="activeLocale === locale.code ? 'primary' : 'neutral'"
         :variant="activeLocale === locale.code ? 'subtle' : 'ghost'"
-        @click="activeLocale = locale.code"
+        @click="setLocale(locale.code)"
       />
     </nav>
   </div>
@@ -29,4 +29,8 @@ defineProps<{
 const activeLocale = defineModel<LocaleCode>({
   default: () => DEFAULT_LOCALE
 })
+
+function setLocale(locale: LocaleCode) {
+  activeLocale.value = locale
+}
 </script>

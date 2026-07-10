@@ -25,7 +25,10 @@ async function normalizeCoverToWebp(buffer: Buffer) {
   return { buffer: data, size: info.size }
 }
 
-export async function storeGeneratedCoverImage(buffer: Buffer, slug: string): Promise<GeneratedCoverImage> {
+export async function storeGeneratedCoverImage(
+  buffer: Buffer,
+  slug: string
+): Promise<GeneratedCoverImage> {
   await fs.promises.mkdir(storageDirectory, { recursive: true })
 
   const baseFilename = buildBaseFilename(slug)
@@ -47,7 +50,7 @@ export async function storeGeneratedCoverImage(buffer: Buffer, slug: string): Pr
 
   const image = {
     'en-US': webpName,
-    'pt-BR': webpName
+    'pt-BR': ''
   }
 
   return {
