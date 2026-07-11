@@ -1,3 +1,4 @@
+import type { PostGenerateImageInput } from '@src/admin/schemas/post-generate-image.schema.js'
 import { prisma } from '@src/db.js'
 import { HttpError } from '@src/errors/http.error.js'
 import { isLocalizedString } from '@src/utils/localized-json.utils.js'
@@ -12,7 +13,7 @@ function localizedText(value: unknown, preferred: 'en-US' | 'pt-BR' = 'en-US') {
 }
 
 export class PostGenerateImageService {
-  static async generateAndSave(postId: string) {
+  static async generateAndSave(postId: string, options: PostGenerateImageInput = {}) {
     const post = await prisma.post.findUnique({
       where: { id: postId },
       select: {
@@ -35,7 +36,11 @@ export class PostGenerateImageService {
     }
 
     try {
-      const buffer = await generateCoverImageWithCursor({ title, excerpt })
+      const buffer = await generateCoverImageWithCursor({
+        title,
+        excerpt,
+        style: options.style
+      })
       const stored = await storeGeneratedCoverImage(buffer, post.slug)
 
       await prisma.post.update({

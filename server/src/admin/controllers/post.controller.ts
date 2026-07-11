@@ -1,4 +1,5 @@
 import { PostRepository } from '@src/admin/repositories/post.repository.js'
+import { postGenerateImageSchema } from '@src/admin/schemas/post-generate-image.schema.js'
 import { postGenerateSchema } from '@src/admin/schemas/post-generate.schema.js'
 import { PostGenerateImageService } from '@src/admin/services/post-generate/post-generate-image.service.js'
 import { PostGenerateService } from '@src/admin/services/post-generate/post-generate.service.js'
@@ -52,8 +53,13 @@ export class PostController {
 
   static async generateImage(req: Request<{ id: string }>, res: Response) {
     const { id } = req.params
+    const parsed = postGenerateImageSchema.safeParse(req.body ?? {})
 
-    res.json(await PostGenerateImageService.generateAndSave(id))
+    if (!parsed.success) {
+      throw new BadRequestError(parsed.error.issues[0]?.message ?? 'Invalid request body.')
+    }
+
+    res.json(await PostGenerateImageService.generateAndSave(id, parsed.data))
   }
 
   static async update(req: Request<{ id: string }>, res: Response) {

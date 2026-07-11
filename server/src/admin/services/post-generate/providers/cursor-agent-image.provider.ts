@@ -44,7 +44,7 @@ function buildApiPromptSuffix() {
   return `This is an image-only CMS task with no repository or code to edit.
 
 Steps:
-1. Use the image generation tool to create ONE blog cover image (${COVER_WIDTH}×${COVER_HEIGHT}px, aspect ${COVER_ASPECT}, 2D pixel art).
+1. Use the image generation tool to create ONE blog cover image (${COVER_WIDTH}×${COVER_HEIGHT}px, aspect ${COVER_ASPECT}) in the requested style.
 2. The tool may save under assets/ — copy or move the generated file to ${COVER_ARTIFACT_PATH} (must be under artifacts/).
 3. Confirm the file exists at ${COVER_ARTIFACT_PATH}.
 
