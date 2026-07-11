@@ -1,48 +1,30 @@
+import { cursorApiFetch } from '@src/integrations/cursor-agent/cursor-agent.client.js'
+import {
+  archiveCursorAgent,
+  createCursorAgent,
+  sleep,
+  startCursorRun,
+  waitForCursorRun
+} from '@src/integrations/cursor-agent/cursor-agent.run.js'
+import { extractJson } from '@src/utils/agent-json.utils.js'
 import {
   buildCoverImagePrompt,
   COVER_ARTIFACT_PATH,
   COVER_ASPECT,
   COVER_HEIGHT,
   COVER_WIDTH
-} from './post-generate-image.prompt.js'
-import { extractJson } from '../post-generate/post-generate.prompt.js'
-import type { CoverImageInput } from './post-generate-image.types.js'
+} from '../post-generate-image.prompt.js'
+import type { CoverImageInput } from '../post-generate-image.types.js'
 
-const CURSOR_API_BASE = process.env.CURSOR_API_URL?.trim() || 'https://api.cursor.com'
 const DEFAULT_IMAGE_MODEL = 'composer-2.5'
-const TERMINAL_RUN_STATUSES = new Set(['FINISHED', 'ERROR', 'CANCELLED', 'EXPIRED'])
-const POLL_INTERVAL_MS = 3_000
+const DEFAULT_TIMEOUT_MS = 15 * 60 * 1000
 const ARTIFACT_POLL_ATTEMPTS = 8
 const ARTIFACT_POLL_INTERVAL_MS = 2_000
 const IMAGE_EXTENSIONS = ['.png', '.jpg', '.jpeg', '.webp', '.gif']
 
-function buildApiPromptSuffix() {
-  return `This is an image-only CMS task with no repository or code to edit.
-
-Steps:
-1. Use the image generation tool to create ONE blog cover image (${COVER_WIDTH}×${COVER_HEIGHT}px, aspect ${COVER_ASPECT}, 2D pixel art).
-2. The tool may save under assets/ — copy or move the generated file to ${COVER_ARTIFACT_PATH} (must be under artifacts/).
-3. Confirm the file exists at ${COVER_ARTIFACT_PATH}.
-
-When finished, respond with ONLY valid JSON: {"path":"${COVER_ARTIFACT_PATH}"}
-No plan, no commentary, no markdown fences, no text outside the JSON object.`
-}
-
 const API_FOLLOW_UP_PROMPT = `The cover image is missing from artifacts/.
 Use the image generation tool again if needed, then COPY the generated file to ${COVER_ARTIFACT_PATH}.
 Confirm the file exists under artifacts/, then respond with ONLY valid JSON: {"path":"${COVER_ARTIFACT_PATH}"}`
-
-type CursorAgentRun = {
-  id: string
-  agentId: string
-  status: string
-  result?: string
-}
-
-type CreateAgentResponse = {
-  agent: { id: string }
-  run: CursorAgentRun
-}
 
 type ArtifactItem = {
   path: string
@@ -58,101 +40,27 @@ type ArtifactDownloadResponse = {
   url: string
 }
 
-function sleep(ms: number) {
-  return new Promise<void>((resolve) => {
-    setTimeout(resolve, ms)
-  })
-}
+function buildApiPromptSuffix() {
+  return `This is an image-only CMS task with no repository or code to edit.
 
-function cursorAuthHeaders() {
-  const apiKey = process.env.CURSOR_API_KEY?.trim()
+Steps:
+1. Use the image generation tool to create ONE blog cover image (${COVER_WIDTH}×${COVER_HEIGHT}px, aspect ${COVER_ASPECT}, 2D pixel art).
+2. The tool may save under assets/ — copy or move the generated file to ${COVER_ARTIFACT_PATH} (must be under artifacts/).
+3. Confirm the file exists at ${COVER_ARTIFACT_PATH}.
 
-  if (!apiKey) {
-    throw new Error(
-      'CURSOR_API_KEY is not set. Add it to server env vars for cover image generation.'
-    )
-  }
-
-  return {
-    Authorization: `Basic ${Buffer.from(`${apiKey}:`).toString('base64')}`,
-    'Content-Type': 'application/json'
-  }
-}
-
-function formatCursorApiError(status: number, body: string) {
-  if (/feature_unavailable|storage mode is disabled/i.test(body)) {
-    return (
-      'Cursor Cloud Agents are unavailable for this account (storage/privacy mode). ' +
-      'Enable cloud agent storage in Cursor settings.'
-    )
-  }
-
-  return `Cursor API failed (${status}): ${body}`
-}
-
-async function cursorApiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const response = await fetch(`${CURSOR_API_BASE}${path}`, {
-    ...init,
-    headers: {
-      ...cursorAuthHeaders(),
-      ...init.headers
-    }
-  })
-
-  const body = await response.text()
-
-  if (!response.ok) {
-    throw new Error(formatCursorApiError(response.status, body))
-  }
-
-  return JSON.parse(body) as T
-}
-
-async function archiveCursorAgent(agentId: string) {
-  try {
-    await cursorApiFetch(`/v1/agents/${agentId}/archive`, { method: 'POST' })
-  } catch {
-    // Best-effort cleanup — generation already succeeded.
-  }
+When finished, respond with ONLY valid JSON: {"path":"${COVER_ARTIFACT_PATH}"}
+No plan, no commentary, no markdown fences, no text outside the JSON object.`
 }
 
 function imageGeneratorTimeoutMs() {
-  return Number(process.env.IMAGE_GENERATOR_TIMEOUT_MS || process.env.POST_GENERATOR_TIMEOUT_MS) || 15 * 60 * 1000
+  return Number(process.env.IMAGE_GENERATOR_TIMEOUT_MS || process.env.POST_GENERATOR_TIMEOUT_MS) || DEFAULT_TIMEOUT_MS
 }
 
-async function waitForCursorRun(agentId: string, runId: string) {
-  const timeoutMs = imageGeneratorTimeoutMs()
-  const startedAt = Date.now()
-
-  while (Date.now() - startedAt < timeoutMs) {
-    const run = await cursorApiFetch<CursorAgentRun>(`/v1/agents/${agentId}/runs/${runId}`)
-
-    if (run.status === 'FINISHED') {
-      return run
-    }
-
-    if (TERMINAL_RUN_STATUSES.has(run.status)) {
-      throw new Error(`Cursor agent run ended with status ${run.status}.`)
-    }
-
-    await sleep(POLL_INTERVAL_MS)
-  }
-
-  throw new Error(
-    `Cursor agent timed out after ${Math.round(timeoutMs / 1000)}s. Try again or increase IMAGE_GENERATOR_TIMEOUT_MS.`
-  )
-}
-
-async function startCursorRun(agentId: string, promptText: string) {
-  const response = await cursorApiFetch<{ run: CursorAgentRun }>(`/v1/agents/${agentId}/runs`, {
-    method: 'POST',
-    body: JSON.stringify({
-      prompt: { text: promptText },
-      mode: 'agent'
-    })
+function waitForImageRun(agentId: string, runId: string) {
+  return waitForCursorRun(agentId, runId, {
+    timeoutMs: imageGeneratorTimeoutMs(),
+    timeoutEnvironmentVariable: 'IMAGE_GENERATOR_TIMEOUT_MS'
   })
-
-  return response.run
 }
 
 function parseAgentImagePayload(result: string) {
@@ -234,7 +142,6 @@ async function downloadArtifact(agentId: string, artifactPath: string) {
   const response = await cursorApiFetch<ArtifactDownloadResponse>(
     `/v1/agents/${agentId}/artifacts/download?path=${encodeURIComponent(artifactPath)}`
   )
-
   const imageResponse = await fetch(response.url)
 
   if (!imageResponse.ok) {
@@ -274,7 +181,6 @@ async function resolveCoverImageBuffer(agentId: string, result: string) {
   }
 
   if (payload?.type === 'path') {
-    // Last resort: try claimed path variants only after listing came up empty.
     let lastError: Error | undefined
 
     for (const candidate of artifactPathCandidates(payload.data)) {
@@ -299,7 +205,7 @@ async function resolveCoverImageBuffer(agentId: string, result: string) {
 }
 
 async function runAgentAndFetchImage(agentId: string, runId: string) {
-  let run = await waitForCursorRun(agentId, runId)
+  let run = await waitForImageRun(agentId, runId)
 
   if (!run.result?.trim()) {
     throw new Error('Cursor agent finished without a result.')
@@ -310,7 +216,7 @@ async function runAgentAndFetchImage(agentId: string, runId: string) {
   } catch (firstError) {
     const followUpRun = await startCursorRun(agentId, API_FOLLOW_UP_PROMPT)
 
-    run = await waitForCursorRun(agentId, followUpRun.id)
+    run = await waitForImageRun(agentId, followUpRun.id)
 
     if (!run.result?.trim()) {
       throw new Error('Cursor agent finished without a result on follow-up.')
@@ -338,21 +244,11 @@ function resolveImageModelId() {
 export async function generateCoverImageWithCursor(input: CoverImageInput): Promise<Buffer> {
   const modelId = resolveImageModelId()
   const prompt = `${buildCoverImagePrompt(input)}\n\n${buildApiPromptSuffix()}`
-
-  const created = await cursorApiFetch<CreateAgentResponse>('/v1/agents', {
-    method: 'POST',
-    body: JSON.stringify({
-      prompt: { text: prompt },
-      model: { id: modelId },
-      mode: 'agent'
-    })
-  })
-
+  const created = await createCursorAgent(prompt, modelId)
   const agentId = created.agent.id
-  const runId = created.run.id
 
   try {
-    return await runAgentAndFetchImage(agentId, runId)
+    return await runAgentAndFetchImage(agentId, created.run.id)
   } finally {
     await archiveCursorAgent(agentId)
   }

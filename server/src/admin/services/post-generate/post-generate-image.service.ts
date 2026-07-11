@@ -1,7 +1,8 @@
 import { prisma } from '@src/db.js'
 import { HttpError } from '@src/errors/http.error.js'
 import { isLocalizedString } from '@src/utils/localized-json.utils.js'
-import { generateCoverImageWithCursor } from './post-generate-image.cursor.js'
+import { generateCoverImageWithCursor } from './providers/cursor-agent-image.provider.js'
+import { throwGenerationHttpError } from './post-generate.error.js'
 import { storeGeneratedCoverImage } from './post-generate-image.store.js'
 
 function localizedText(value: unknown, preferred: 'en-US' | 'pt-BR' = 'en-US') {
@@ -46,13 +47,7 @@ export class PostGenerateImageService {
 
       return stored
     } catch (err) {
-      if (err instanceof HttpError) {
-        throw err
-      }
-
-      const message = err instanceof Error ? err.message : 'Cover image generation failed.'
-
-      throw new HttpError(502, message)
+      throwGenerationHttpError(err, 'Cover image generation failed.')
     }
   }
 }

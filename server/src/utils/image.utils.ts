@@ -1,7 +1,7 @@
 import path from 'path'
 import sharp from 'sharp'
 
-const WEBP_QUALITY = 80
+export const WEBP_QUALITY = 80
 
 const CONVERTIBLE_IMAGE_MIMES = new Set([
   'image/jpeg',

@@ -1,7 +1,7 @@
 import { PostRepository } from '@src/admin/repositories/post.repository.js'
 import { postGenerateSchema } from '@src/admin/schemas/post-generate.schema.js'
+import { PostGenerateImageService } from '@src/admin/services/post-generate/post-generate-image.service.js'
 import { PostGenerateService } from '@src/admin/services/post-generate/post-generate.service.js'
-import { PostGenerateImageService } from '@src/admin/services/post-generate-image/post-generate-image.service.js'
 import { prisma } from '@src/db.js'
 import { BadRequestError } from '@src/errors/bad-request.error.js'
 import { paginate } from '@src/utils/paginate.utils.js'

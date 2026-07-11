@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
-import { extractJson } from '@src/admin/services/post-generate/post-generate.prompt.js'
-import { generatedPostSchema } from '@src/admin/services/post-generate/post-generate.schema.js'
+import { generatedPostSchema } from '@src/admin/schemas/generated-post.schema.js'
 import { resolvePostSlug } from '@src/admin/services/post-generate/post-generate.store.js'
 import {
   parseAgentOutput,
   parseGeneratedPostFromAgentStdout
 } from '@src/admin/services/post-generate/providers/cursor-agent.parse.js'
+import { extractJson } from '@src/utils/agent-json.utils.js'
 
 const samplePost = {
   name: {
