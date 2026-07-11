@@ -138,6 +138,7 @@ describe('Post categories', () => {
         name: { 'en-US': 'dev-post', 'pt-BR': 'dev-post' },
         slug: 'dev-post',
         excerpt: null,
+        image: null,
         createdAt: expect.any(String),
         categories: [
           {
