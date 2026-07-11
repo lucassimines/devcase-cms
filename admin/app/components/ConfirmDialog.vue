@@ -12,11 +12,7 @@
         variant="outline"
         @click="emits('close', false)"
       />
-      <UButton
-        :label="confirmLabel"
-        :color="confirmColor"
-        @click="emits('close', true)"
-      />
+      <UButton :label="confirmLabel" :color="confirmColor" @click="emits('close', true)" />
     </template>
   </UModal>
 </template>
