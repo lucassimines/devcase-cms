@@ -20,8 +20,8 @@
 
     "paths": {
       "@src/*": ["./src/*"],
-      "@tests/*": ["./tests/*"]
+      "@tests/*": ["./tests/*.ts"]
     }
   },
-  "include": ["src/**/*", "tests/**/*", "vitest.config.ts"]
+  "include": ["src/**/*"]
 }
