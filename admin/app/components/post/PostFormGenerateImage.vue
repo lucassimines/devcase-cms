@@ -1,13 +1,26 @@
 <template>
-  <UButton
-    :label="$t('entity.post.generateImage')"
-    icon="lucide:sparkles"
-    color="primary"
-    variant="subtle"
-    size="sm"
-    loading-auto
-    @click="generate()"
-  />
+  <UFormField
+    :label="$t('imageStyle')"
+    name="imageStyle"
+    :ui="{ container: 'flex max-sm:flex-col items-start sm:items-center gap-4' }"
+  >
+    <USelectMenu
+      v-model="imageStyle"
+      :items="imageStyles"
+      value-key="value"
+      :placeholder="$t('select.label')"
+    />
+
+    <UButton
+      :label="$t('entity.post.generateImage')"
+      icon="lucide:sparkles"
+      color="primary"
+      variant="subtle"
+      size="sm"
+      loading-auto
+      @click="generate()"
+    />
+  </UFormField>
 </template>
 
 <script setup lang="ts">
@@ -16,6 +29,19 @@ import type { LocalizedString } from '~/types/locale'
 const props = defineProps<{
   postId: string
 }>()
+
+const imageStyles = [
+  {
+    label: '2d Pixel Art',
+    value: '2d-pixel-art'
+  },
+  {
+    label: 'Isometric Technology',
+    value: 'isometric-technology'
+  }
+]
+
+const imageStyle = ref<string>(imageStyles[0]?.value ?? '')
 
 const image = defineModel<string | LocalizedString>({ required: true })
 
@@ -41,7 +67,10 @@ async function generate() {
       `/post/${props.postId}/generate-image`,
       {
         method: 'POST',
-        timeout: 3 * 60 * 1000
+        timeout: 3 * 60 * 1000,
+        body: {
+          style: imageStyle.value
+        }
       }
     )
 

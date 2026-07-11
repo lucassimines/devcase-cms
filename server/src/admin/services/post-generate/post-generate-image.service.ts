@@ -2,14 +2,19 @@ import type { PostGenerateImageInput } from '@src/admin/schemas/post-generate-im
 import { prisma } from '@src/db.js'
 import { HttpError } from '@src/errors/http.error.js'
 import { isLocalizedString } from '@src/utils/localized-json.utils.js'
-import { generateCoverImageWithCursor } from './providers/cursor-agent-image.provider.js'
-import { throwGenerationHttpError } from './post-generate.error.js'
 import { storeGeneratedCoverImage } from './post-generate-image.store.js'
+import { throwGenerationHttpError } from './post-generate.error.js'
+import { generateCoverImageWithCursor } from './providers/cursor-agent-image.provider.js'
 
 function localizedText(value: unknown, preferred: 'en-US' | 'pt-BR' = 'en-US') {
   if (!isLocalizedString(value)) return ''
 
   return value[preferred]?.trim() || value['pt-BR']?.trim() || value['en-US']?.trim() || ''
+}
+
+const IMAGE_STYLES = {
+  '2d-pixel-art': '2d-pixel-art',
+  'isometric-technology': 'isometric-technology'
 }
 
 export class PostGenerateImageService {

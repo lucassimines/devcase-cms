@@ -1,5 +1,3 @@
-import { describe, expect, it } from 'vitest'
-
 import { generatedPostSchema } from '@src/admin/schemas/generated-post.schema.js'
 import { postGenerateImageSchema } from '@src/admin/schemas/post-generate-image.schema.js'
 import {
@@ -12,6 +10,7 @@ import {
   parseGeneratedPostFromAgentStdout
 } from '@src/admin/services/post-generate/providers/cursor-agent.parse.js'
 import { extractJson } from '@src/utils/agent-json.utils.js'
+import { describe, expect, it } from 'vitest'
 
 const samplePost = {
   name: {
