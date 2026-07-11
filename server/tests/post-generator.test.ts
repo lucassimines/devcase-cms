@@ -1,12 +1,16 @@
-import { describe, expect, it } from 'vitest'
-
-import { extractJson } from '@src/admin/services/post-generate/post-generate.prompt.js'
-import { generatedPostSchema } from '@src/admin/services/post-generate/post-generate.schema.js'
+import { generatedPostSchema } from '@src/admin/schemas/generated-post.schema.js'
+import { postGenerateImageSchema } from '@src/admin/schemas/post-generate-image.schema.js'
+import {
+  buildCoverImagePrompt,
+  DEFAULT_IMAGE_STYLE
+} from '@src/admin/services/post-generate/post-generate-image.prompt.js'
 import { resolvePostSlug } from '@src/admin/services/post-generate/post-generate.store.js'
 import {
   parseAgentOutput,
   parseGeneratedPostFromAgentStdout
 } from '@src/admin/services/post-generate/providers/cursor-agent.parse.js'
+import { extractJson } from '@src/utils/agent-json.utils.js'
+import { describe, expect, it } from 'vitest'
 
 const samplePost = {
   name: {
@@ -97,5 +101,28 @@ ${JSON.stringify(samplePost)}
 describe('extractJson', () => {
   it('unwraps fenced json blocks', () => {
     expect(extractJson('```json\n{"name":{"en-US":"Hi"}}\n```')).toBe('{"name":{"en-US":"Hi"}}')
+  })
+})
+
+describe('cover image prompt', () => {
+  it('includes the requested image style', () => {
+    const prompt = buildCoverImagePrompt({
+      title: 'Type-safe APIs',
+      style: 'isometric clay illustration'
+    })
+
+    expect(prompt).toContain('Image style: isometric clay illustration')
+  })
+
+  it('uses the default style when none is provided', () => {
+    const prompt = buildCoverImagePrompt({ title: 'Type-safe APIs' })
+
+    expect(prompt).toContain(`Image style: ${DEFAULT_IMAGE_STYLE}`)
+  })
+
+  it('validates and trims image styles from the request', () => {
+    expect(postGenerateImageSchema.parse({ style: '  watercolor  ' })).toEqual({
+      style: 'watercolor'
+    })
   })
 })

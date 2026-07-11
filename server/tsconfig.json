@@ -19,7 +19,8 @@
     "experimentalDecorators": true,
 
     "paths": {
-      "@src/*": ["./src/*"]
+      "@src/*": ["./src/*"],
+      "@tests/*": ["./tests/*.ts"]
     }
   },
   "include": ["src/**/*"]

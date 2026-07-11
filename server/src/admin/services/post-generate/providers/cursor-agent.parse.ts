@@ -1,6 +1,6 @@
+import { generatedPostSchema } from '@src/admin/schemas/generated-post.schema.js'
+import { extractJson } from '@src/utils/agent-json.utils.js'
 import type { GeneratedPostContent } from '../post-generate.types.js'
-import { extractJson } from '../post-generate.prompt.js'
-import { generatedPostSchema } from '../post-generate.schema.js'
 
 const WRAPPER_KEYS = ['result', 'text', 'response', 'output', 'content'] as const
 

@@ -1,11 +1,15 @@
 import { describe, expect, it, vi } from 'vitest'
 
+import type { PaginateQuery } from '@src/types/paginate.js'
 import type { PrismaDelegate } from '@src/types/prisma.js'
 import { MAX_PAGE_LIMIT, paginate } from '@src/utils/paginate.utils.js'
 
 function createMockModel(total: number, data: unknown[] = []): PrismaDelegate {
   return {
     findMany: vi.fn().mockResolvedValue(data),
+    findUnique: vi.fn(),
+    findFirst: vi.fn(),
+    update: vi.fn(),
     count: vi.fn().mockResolvedValue(total)
   }
 }
@@ -101,14 +105,15 @@ describe('paginate.utils', () => {
   it('ignores include, select, and where passed in query', async () => {
     const model = createMockModel(0)
     const select = { id: true, name: true }
-
-    await paginate(model, {
+    const unsafeQuery = {
       limit: 10,
       include: { categories: true },
       select,
       where: { published: true },
       orderBy: { slug: 'asc' }
-    })
+    } as PaginateQuery
+
+    await paginate(model, unsafeQuery)
 
     expect(model.findMany).toHaveBeenCalledWith(
       expect.not.objectContaining({
