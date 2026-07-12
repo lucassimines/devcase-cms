@@ -6,6 +6,15 @@ import { ProjectQuery } from '@src/web/queries/project.query.js'
 
 const CHUNK_SIZE = 100
 
+/** Frontend tool routes (devcase-web). Keep in sync with app/utils/tools.ts */
+export const TOOL_SITEMAP_PATHS = [
+  '/tools',
+  '/tools/json-formatter',
+  '/tools/jwt-decoder',
+  '/tools/unix-timestamp',
+  '/tools/og-preview'
+] as const
+
 function paginate(page: number) {
   return { skip: (page - 1) * CHUNK_SIZE, take: CHUNK_SIZE }
 }
@@ -25,8 +34,15 @@ export class SitemapService {
       pages: Math.max(1, Math.ceil(pages / CHUNK_SIZE)),
       posts: Math.max(1, Math.ceil(posts / CHUNK_SIZE)),
       projects: Math.max(1, Math.ceil(projects / CHUNK_SIZE)),
-      'post-categories': Math.max(1, Math.ceil(postCategories / CHUNK_SIZE))
+      'post-categories': Math.max(1, Math.ceil(postCategories / CHUNK_SIZE)),
+      tools: Math.max(1, Math.ceil(TOOL_SITEMAP_PATHS.length / CHUNK_SIZE))
     }
+  }
+
+  static getTools(page: number) {
+    const { skip, take } = paginate(page)
+
+    return TOOL_SITEMAP_PATHS.slice(skip, skip + take)
   }
 
   static async getPages(page: number) {
