@@ -25,18 +25,28 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import PageHome from '~/components/page/PageHome.vue'
+import PageTools from '~/components/page/PageTools.vue'
 import type { PageUpdate } from '~/types/page'
 import type { ModelInput } from '~/types/utils'
 
 const route = useRoute()
 
 const componentContentMap: Record<string, Component> = {
-  home: PageHome
+  home: PageHome,
+  tools: PageTools
 }
 
 function getContentSchema(code: string) {
   switch (code) {
     case 'home':
+      return z.object({
+        intro: z.object({
+          title: localizedStringSchema(),
+          description: localizedStringSchema()
+        })
+      })
+
+    case 'tools':
       return z.object({
         intro: z.object({
           title: localizedStringSchema(),

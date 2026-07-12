@@ -24,3 +24,12 @@ export const PAGE_HOME_DEFAULT = {
 }
 
 export type PageHome = typeof PAGE_HOME_DEFAULT
+
+export const PAGE_TOOLS_DEFAULT = {
+  intro: {
+    title: emptyLocalizedString(),
+    description: emptyLocalizedString()
+  }
+}
+
+export type PageTools = typeof PAGE_TOOLS_DEFAULT
