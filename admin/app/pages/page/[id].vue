@@ -13,11 +13,11 @@
         <FieldText v-model="state.code" :label="$t('code')" name="code" />
       </FormTab>
 
+      <component :is="componentContentMap[state.code]" v-model="state.content" :code="state.code" />
+
       <FormTab :title="$t('block', 2)">
         <FieldBlockRepeater v-model="state.blocks" />
       </FormTab>
-
-      <component :is="componentContentMap[state.code]" v-model="state.content" :code="state.code" />
     </template>
   </ResourceFormUpdate>
 </template>
@@ -43,6 +43,10 @@ function getContentSchema(code: string) {
         intro: z.object({
           title: localizedStringSchema(),
           description: localizedStringSchema()
+        }),
+        tools: z.object({
+          title: localizedStringSchema(),
+          cta_text: localizedStringSchema()
         })
       })
 

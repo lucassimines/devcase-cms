@@ -5,7 +5,6 @@ import type {
   PaginateQuery
 } from '@src/types/paginate.js'
 import type { PrismaDelegate } from '@src/types/prisma.js'
-
 import { z } from 'zod'
 
 const jsonStringOrObject = z.union([z.string(), z.record(z.string(), z.any())])
@@ -111,7 +110,10 @@ function mergeWhereQuery(
   return { AND: [baseWhere, termWhere] }
 }
 
-async function findPaginated<T>(model: PrismaDelegate, args: PaginatedArgs): Promise<PaginatedResult<T>> {
+async function findPaginated<T>(
+  model: PrismaDelegate,
+  args: PaginatedArgs
+): Promise<PaginatedResult<T>> {
   const { page, limit, where, include, select, orderBy = { createdAt: 'desc' } } = args
 
   const findManyArgs: Record<string, unknown> = {

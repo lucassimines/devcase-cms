@@ -20,6 +20,10 @@ export const PAGE_HOME_DEFAULT = {
   intro: {
     title: emptyLocalizedString(),
     description: emptyLocalizedString()
+  },
+  tools: {
+    title: emptyLocalizedString(),
+    cta_text: emptyLocalizedString()
   }
 }
 

@@ -1,20 +1,38 @@
 <template>
-  <FormTab v-if="model" :title="$t('content')">
-    <FieldText
-      v-model="model.intro.title"
-      :label="$t('title')"
-      name="content.intro.title"
-      translate
-    />
+  <template v-if="model">
+    <FormTab :title="$t('intro')">
+      <FieldText
+        v-model="model.intro.title"
+        :label="$t('title')"
+        name="content.intro.title"
+        translate
+      />
 
-    <FieldTextarea
-      v-model="model.intro.description"
-      :label="$t('description')"
-      name="content.intro.description"
-      :rows="8"
-      translate
-    />
-  </FormTab>
+      <FieldTextarea
+        v-model="model.intro.description"
+        :label="$t('description')"
+        name="content.intro.description"
+        :rows="8"
+        translate
+      />
+    </FormTab>
+
+    <FormTab :title="$t('tools')">
+      <FieldText
+        v-model="model.tools.title"
+        :label="$t('title')"
+        name="content.tools.title"
+        translate
+      />
+
+      <FieldText
+        v-model="model.tools.cta_text"
+        :label="$t('ctaText')"
+        name="content.tools.cta_text"
+        translate
+      />
+    </FormTab>
+  </template>
 </template>
 
 <script setup lang="ts">
