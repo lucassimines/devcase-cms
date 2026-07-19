@@ -17,6 +17,22 @@
       />
     </FormTab>
 
+    <FormTab :title="$t('entity.project.name', 2)">
+      <FieldText
+        v-model="model.projects.title"
+        :label="$t('title')"
+        name="content.projects.title"
+        translate
+      />
+
+      <FieldText
+        v-model="model.projects.cta_text"
+        :label="$t('ctaText')"
+        name="content.projects.cta_text"
+        translate
+      />
+    </FormTab>
+
     <FormTab :title="$t('tools')">
       <FieldText
         v-model="model.tools.title"

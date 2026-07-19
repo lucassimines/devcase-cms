@@ -44,6 +44,10 @@ function getContentSchema(code: string) {
           title: localizedStringSchema(),
           description: localizedStringSchema()
         }),
+        projects: z.object({
+          title: localizedStringSchema(),
+          cta_text: localizedStringSchema()
+        }),
         tools: z.object({
           title: localizedStringSchema(),
           cta_text: localizedStringSchema()

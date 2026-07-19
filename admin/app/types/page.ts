@@ -21,6 +21,10 @@ export const PAGE_HOME_DEFAULT = {
     title: emptyLocalizedString(),
     description: emptyLocalizedString()
   },
+  projects: {
+    title: emptyLocalizedString(),
+    cta_text: emptyLocalizedString()
+  },
   tools: {
     title: emptyLocalizedString(),
     cta_text: emptyLocalizedString()
