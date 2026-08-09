@@ -1,6 +1,7 @@
 import { clearSitemapCache } from '@src/web/controllers/sitemap.controller.js'
 import { webCache } from '@src/web/cache/web-cache.service.js'
 import { WEB_CACHE_TAGS, type WebCacheTag } from '@src/web/cache/web-cache.tags.js'
+import { RevalidateService } from '@src/admin/services/revalidate.service.js'
 
 const INVALIDATION_GROUPS = {
   posts: [WEB_CACHE_TAGS.posts, WEB_CACHE_TAGS.bootstrap, WEB_CACHE_TAGS.sitemap],
@@ -14,6 +15,7 @@ function flush(tags: readonly WebCacheTag[]) {
 
   if (tags.includes(WEB_CACHE_TAGS.sitemap)) {
     clearSitemapCache()
+    void RevalidateService.revalidateSitemap()
   }
 }
 
@@ -25,5 +27,6 @@ export const WebCacheInvalidation = {
   all: () => {
     webCache.flushAll()
     clearSitemapCache()
+    void RevalidateService.revalidateSitemap()
   }
 }

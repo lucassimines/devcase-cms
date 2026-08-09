@@ -51,4 +51,41 @@ export class RevalidateService {
       logger.error('Frontend revalidate request error (%s): %o', url, err)
     }
   }
+
+  /**
+   * Warm-then-swap sitemap LKG on the frontend.
+   * Best-effort: logs failures and never throws.
+   */
+  static async revalidateSitemap(): Promise<void> {
+    const baseUrl = process.env.FRONTEND_URL
+    const token = process.env.PRERENDER_REVALIDATE_TOKEN
+
+    if (!baseUrl || !token) {
+      return
+    }
+
+    const url = `${baseUrl.replace(/\/$/, '')}/api/revalidate/sitemap`
+    const headers = {
+      [headerName]: token,
+      'content-type': 'application/json'
+    }
+
+    try {
+      const res = await fetch(url, { method: 'POST', headers })
+      if (!res.ok) {
+        const text = await res.text().catch(() => '')
+        logger.error(
+          'Frontend sitemap revalidate failed: POST %s status=%d %s',
+          url,
+          res.status,
+          text
+        )
+        return
+      }
+
+      logger.info('Frontend sitemap revalidate ok: POST %s status=%d', url, res.status)
+    } catch (err) {
+      logger.error('Frontend sitemap revalidate request error (%s): %o', url, err)
+    }
+  }
 }
