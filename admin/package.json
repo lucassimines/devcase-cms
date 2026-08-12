@@ -12,7 +12,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "check": "npm run lint && npm run format"
   },
   "dependencies": {
     "@iconify-json/simple-icons": "^1.2.68",
