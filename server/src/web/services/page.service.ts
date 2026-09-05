@@ -5,8 +5,7 @@ export class PageService {
   static async menuPages() {
     const pages = await prisma.page.findMany({
       where: {
-        ...PageQuery.published(),
-        code: { not: 'priceflip' }
+        ...PageQuery.published()
       },
       orderBy: PageQuery.orderByPosition(),
       select: {
