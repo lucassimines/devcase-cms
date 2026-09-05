@@ -1,0 +1,12 @@
+---
+description: Devcase CMS uses npm only — never pnpm or yarn
+alwaysApply: true
+---
+
+# Package manager: npm only
+
+This repo uses **npm** with `package-lock.json` (root, `admin/`, and `server/`).
+
+- Never run `pnpm`, `pnpm exec`, `pnpm dlx`, or yarn.
+- Never create `pnpm-lock.yaml`, `.pnpm-store`, or `node_modules/.pnpm`.
+- Use `npm install`, `npm ci`, `npm run`, and `npx` only.
