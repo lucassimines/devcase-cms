@@ -34,8 +34,7 @@ export const PAGE_HOME_DEFAULT = {
     title: emptyLocalizedString(),
     description: emptyLocalizedString(),
     cta_text: emptyLocalizedString(),
-    image: emptyLocalizedString(),
-    ios_url: ''
+    image: emptyLocalizedString()
   }
 }
 

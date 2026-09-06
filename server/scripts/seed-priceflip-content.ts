@@ -18,8 +18,7 @@ const homePriceFlip = {
     'Convert prices while you travel with the exchange rate you actually paid. Scan a tag, add taxes, and see the real cost in your currency — not a generic mid-market quote.'
   ),
   cta_text: t('Conhecer o PriceFlip', 'Get PriceFlip'),
-  image: t('priceflip-scan-pt-br.webp', 'priceflip-scan-en-us.webp'),
-  ios_url: IOS_URL
+  image: t('priceflip-scan-pt-br.webp', 'priceflip-scan-en-us.webp')
 }
 
 const priceflipContent = {
@@ -207,16 +206,28 @@ const priceflipContent = {
   privacy_label: t('Política de privacidade do PriceFlip', 'PriceFlip privacy policy')
 }
 
+function asRecord(value: unknown): Record<string, unknown> | null {
+  if (value && typeof value === 'object' && !Array.isArray(value)) {
+    return value as Record<string, unknown>
+  }
+
+  return null
+}
+
+function nonEmptyString(value: unknown): string {
+  return typeof value === 'string' ? value.trim() : ''
+}
+
 async function main() {
   const home = await prisma.page.findFirst({
     where: { code: 'home' }
   })
 
+  let leftoverHomeIos = ''
+
   if (home) {
-    const current =
-      home.content && typeof home.content === 'object' && !Array.isArray(home.content)
-        ? (home.content as Record<string, unknown>)
-        : {}
+    const current = asRecord(home.content) ?? {}
+    leftoverHomeIos = nonEmptyString(asRecord(current.priceflip)?.ios_url)
 
     await prisma.page.update({
       where: { id: home.id },
@@ -228,7 +239,7 @@ async function main() {
       }
     })
 
-    console.log(`Updated home page ${home.id} with PriceFlip section copy`)
+    console.log(`Updated home page ${home.id} with PriceFlip section copy (store URLs live on the PriceFlip page)`)
   } else {
     console.log('Home page not found — skipped homepage PriceFlip fields')
   }
@@ -237,12 +248,22 @@ async function main() {
     where: { OR: [{ slug: 'priceflip' }, { code: 'priceflip' }] }
   })
 
+  const existingDownload = asRecord(asRecord(existing?.content)?.download)
+  const downloadIos =
+    nonEmptyString(existingDownload?.ios_url) || leftoverHomeIos || IOS_URL
+
   const pageData = {
     name: t('PriceFlip', 'PriceFlip'),
     code: 'priceflip',
     slug: 'priceflip',
     published: true,
-    content: priceflipContent,
+    content: {
+      ...priceflipContent,
+      download: {
+        ...priceflipContent.download,
+        ios_url: downloadIos
+      }
+    },
     blocks: existing?.blocks ?? []
   }
 

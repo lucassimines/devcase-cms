@@ -64,8 +64,7 @@ function getContentSchema(code: string) {
           title: localizedStringSchema(),
           description: localizedStringSchema(),
           cta_text: localizedStringSchema(),
-          image: localizedStringSchema(),
-          ios_url: z.string().default('')
+          image: localizedStringSchema()
         })
       })
 

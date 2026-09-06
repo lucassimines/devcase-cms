@@ -59,6 +59,7 @@
   "androidSoon": "Android coming soon",
   "iosUrl": "iOS App Store URL",
   "androidUrl": "Android Play Store URL",
+  "storeUrlsHint": "These URLs are used on this page, home badges, and SEO.",
   "privacy": "Privacy",
   "privacyLabel": "Privacy policy label",
   "item": "Item | Items",

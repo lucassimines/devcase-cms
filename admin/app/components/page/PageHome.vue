@@ -79,12 +79,6 @@
         translate
       />
 
-      <FieldText
-        v-model="model.priceflip.ios_url"
-        :label="$t('iosUrl')"
-        name="content.priceflip.ios_url"
-      />
-
       <FieldImage
         v-model="model.priceflip.image"
         :label="$t('image')"

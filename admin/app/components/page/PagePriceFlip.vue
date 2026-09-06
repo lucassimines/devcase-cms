@@ -155,6 +155,8 @@
     </FormTab>
 
     <FormTab :title="$t('download')">
+      <p class="text-muted text-sm" v-text="$t('storeUrlsHint')" />
+
       <FieldText
         v-model="model.download.title"
         :label="$t('title')"
