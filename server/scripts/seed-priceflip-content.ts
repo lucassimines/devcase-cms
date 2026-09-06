@@ -239,7 +239,9 @@ async function main() {
       }
     })
 
-    console.log(`Updated home page ${home.id} with PriceFlip section copy (store URLs live on the PriceFlip page)`)
+    console.log(
+      `Updated home page ${home.id} with PriceFlip section copy (store URLs live on the PriceFlip page)`
+    )
   } else {
     console.log('Home page not found — skipped homepage PriceFlip fields')
   }

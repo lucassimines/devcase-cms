@@ -7,6 +7,8 @@ description: Nuxt 4 admin SPA patterns for Devcase CMS — resource tables, Zod 
 
 Package: `admin/`. Nuxt 4 + Nuxt UI v4 + Pinia + Tailwind 4. Framework details: existing `nuxt`, `vue`, `nuxt-ui` skills under `admin/.agents/skills/`.
 
+Use Tailwind **v4 canonical class names** (`.cursor/rules/tailwind-v4.mdc`). If the editor says `The class X can be written as Y`, use Y (`bg-(--token)` not `bg-[var(--token)]`, `outline-hidden` not `outline-none`, `shadow-xs` not v3 `shadow-sm`).
+
 ## Data access
 
 - `$adminApi` / `useAdminApi`: `public.adminApiUrl`, `Authorization: Bearer` from `useAuthStore`.
