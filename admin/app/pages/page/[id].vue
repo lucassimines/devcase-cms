@@ -60,6 +60,9 @@ function getContentSchema(code: string) {
           cta_text: localizedStringSchema()
         }),
         priceflip: z.object({
+          heading: z.object({
+            title: localizedStringSchema()
+          }),
           badge: localizedStringSchema(),
           title: localizedStringSchema(),
           description: localizedStringSchema(),

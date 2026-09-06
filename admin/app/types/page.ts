@@ -30,6 +30,9 @@ export const PAGE_HOME_DEFAULT = {
     cta_text: emptyLocalizedString()
   },
   priceflip: {
+    heading: {
+      title: emptyLocalizedString()
+    },
     badge: emptyLocalizedString(),
     title: emptyLocalizedString(),
     description: emptyLocalizedString(),

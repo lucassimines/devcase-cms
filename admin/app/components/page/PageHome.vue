@@ -51,6 +51,13 @@
 
     <FormTab :title="$t('priceflip')">
       <FieldText
+        v-model="model.priceflip.heading.title"
+        :label="$t('headingTitle')"
+        name="content.priceflip.heading.title"
+        translate
+      />
+
+      <FieldText
         v-model="model.priceflip.badge"
         :label="$t('badge')"
         name="content.priceflip.badge"
