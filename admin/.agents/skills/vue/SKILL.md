@@ -1,6 +1,6 @@
 ---
 name: vue
-description: Use when editing .vue files, creating Vue 3 components, writing composables, or testing Vue code - provides Composition API patterns, props/emits best practices, VueUse integration, and reactive destructuring guidance
+description: Use when editing .vue files, creating Vue 3 components, writing composables, or testing Vue code - provides Composition API patterns, props/emits best practices, and VueUse integration. Do not destructure defineProps; use const props = defineProps and props.foo.
 license: MIT
 ---
 
@@ -69,12 +69,12 @@ Progressive reference system for Vue 3 projects. Load only files relevant to cur
 
 ```vue
 <script setup lang="ts">
-const { count = 0 } = defineProps<{ count?: number }>()
+const props = withDefaults(defineProps<{ count?: number }>(), { count: 0 })
 const emit = defineEmits<{ update: [value: number] }>()
 </script>
 
 <template>
-  <button @click="emit('update', count + 1)">
+  <button @click="emit('update', props.count + 1)">
     Count: {{ count }}
   </button>
 </template>
@@ -82,7 +82,7 @@ const emit = defineEmits<{ update: [value: number] }>()
 
 ## Available Guidance
 
-**[references/components.md](references/components.md)** - Props with reactive destructuring, emits patterns, defineModel for v-model, slots shorthand
+**[references/components.md](references/components.md)** - Props via `const props = defineProps` (never destructure), emits patterns, defineModel for v-model, slots shorthand
 
 **[references/composables.md](references/composables.md)** - Composition API structure, VueUse integration, lifecycle hooks, async patterns, reactivity gotchas
 
