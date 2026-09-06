@@ -1,0 +1,35 @@
+---
+description: Use Tailwind 4 canonical class names (avoid “X can be written as Y”)
+globs: "**/*.{vue,css,ts}"
+alwaysApply: false
+---
+
+# Tailwind 4 class names
+
+Admin is Tailwind **v4**. Write the v4 canonical class. If the editor says `The class X can be written as Y`, use **Y** — do not leave the old form.
+
+## CSS variables
+
+Use parentheses, not `var()` or square-bracket `--` tokens:
+
+```html
+<!-- ❌ -->
+<div class="max-w-[var(--ui-radius)] bg-[--color] w-[100%]" />
+
+<!-- ✅ -->
+<div class="max-w-(--ui-radius) bg-(--color) w-full" />
+```
+
+## Renamed utilities (v3 → v4)
+
+| Do not use | Use instead |
+| --- | --- |
+| `shadow-sm` / `shadow` | `shadow-xs` / `shadow-sm` |
+| `rounded-sm` / `rounded` | `rounded-xs` / `rounded-sm` |
+| `blur-sm` / `blur` | `blur-xs` / `blur-sm` |
+| `outline-none` | `outline-hidden` |
+| `flex-shrink-0` / `flex-grow` | `shrink-0` / `grow` |
+| `overflow-ellipsis` | `text-ellipsis` |
+| `bg-black bg-opacity-50` | `bg-black/50` |
+
+Prefer Nuxt UI tokens and existing `ui` slots over raw one-off v3 class strings.

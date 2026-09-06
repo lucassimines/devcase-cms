@@ -5,6 +5,8 @@
   "scripts": {
     "dev": "prisma generate && tsx watch src/server.ts",
     "migrate:projects": "tsx scripts/migrate-project-localization.ts",
+    "seed:priceflip": "tsx scripts/seed-priceflip-content.ts",
+    "import:priceflip-screenshots": "tsx scripts/import-priceflip-screenshots.ts",
     "build": "prisma generate && tsc && tsc-alias",
     "release": "prisma migrate deploy",
     "build:prod": "npm run build && npm run release",

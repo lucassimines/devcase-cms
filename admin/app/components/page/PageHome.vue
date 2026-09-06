@@ -48,6 +48,44 @@
         translate
       />
     </FormTab>
+
+    <FormTab :title="$t('priceflip')">
+      <FieldText
+        v-model="model.priceflip.badge"
+        :label="$t('badge')"
+        name="content.priceflip.badge"
+        translate
+      />
+
+      <FieldText
+        v-model="model.priceflip.title"
+        :label="$t('title')"
+        name="content.priceflip.title"
+        translate
+      />
+
+      <FieldTextarea
+        v-model="model.priceflip.description"
+        :label="$t('description')"
+        name="content.priceflip.description"
+        :rows="6"
+        translate
+      />
+
+      <FieldText
+        v-model="model.priceflip.cta_text"
+        :label="$t('ctaText')"
+        name="content.priceflip.cta_text"
+        translate
+      />
+
+      <FieldImage
+        v-model="model.priceflip.image"
+        :label="$t('image')"
+        name="content.priceflip.image"
+        translate
+      />
+    </FormTab>
   </template>
 </template>
 

@@ -6,7 +6,7 @@ Patterns for Vue 3 components using Composition API with `<script setup>`.
 
 | Pattern               | Syntax                                                          |
 | --------------------- | --------------------------------------------------------------- |
-| Props (destructured)  | `const { name = 'default' } = defineProps<{ name?: string }>()` |
+| Props (script)        | `const props = defineProps<{ name: string }>()` then `props.name` |
 | Props (template-only) | `defineProps<{ name: string }>()`                               |
 | Emits                 | `const emit = defineEmits<{ click: [id: number] }>()`           |
 | Two-way binding       | `const model = defineModel<string>()`                           |
@@ -22,24 +22,29 @@ Patterns for Vue 3 components using Composition API with `<script setup>`.
 
 ## Props
 
-**Destructure with defaults (Vue 3.5+)** when used in script or need defaults:
+**Never destructure props** (including Vue 3.5+ reactive destructure). Assign `defineProps` and use `props.foo` in script. Use `withDefaults` for defaults.
 
 ```ts
-const { count = 0, message = 'Hello' } = defineProps<{
-  count?: number
-  message?: string
-  required: boolean
-}>()
+const props = withDefaults(
+  defineProps<{
+    count?: number
+    message?: string
+    required: boolean
+  }>(),
+  { count: 0, message: 'Hello' }
+)
 
-// Use directly - maintains reactivity
-console.log(count + 1)
-
-// ⚠️ When passing to watchers/functions, wrap in getter:
-watch(() => count, (newVal) => { ... }) // ✅ Correct
-watch(count, (newVal) => { ... })        // ❌ Won't work
+console.log(props.count + 1)
+watch(() => props.count, (newVal) => { ... })
 ```
 
-**Non-destructured** only if props ONLY used in template:
+```ts
+// ❌ Do not destructure defineProps or `props`
+const { count } = defineProps<{ count: number }>()
+const { count } = props
+```
+
+**Template-only** (no script access):
 
 ```ts
 defineProps<{ count: number }>()
@@ -52,8 +57,6 @@ defineProps<{ count: number }>()
 <MyComponent :count :user :items />
 <!-- Same as: :count="count" :user="user" :items="items" -->
 ```
-
-[Reactive destructuring docs](https://vuejs.org/guide/components/props#reactive-props-destructure)
 
 ## Emits
 
@@ -302,12 +305,17 @@ Without `defer`, teleport to `#late-div` would fail since it doesn't exist yet.
 
 ## Common Mistakes
 
-**Using `const props =` with destructured values:**
+**Destructuring props:**
 
 ```ts
-// ❌ Wrong
+// ❌ Wrong — never destructure defineProps or `props`
+const { count } = defineProps<{ count: number }>()
 const props = defineProps<{ count: number }>()
-const { count } = props // Loses reactivity
+const { count } = props
+
+// ✅ Correct
+const props = defineProps<{ count: number }>()
+watch(() => props.count, () => {})
 ```
 
 **Forgetting TypeScript types:**

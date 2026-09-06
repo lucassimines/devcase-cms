@@ -1,3 +1,5 @@
+import type { Prisma } from '@src/generated/prisma/client.js'
+
 const DEFAULT_LOCALE = 'en-US'
 const SECONDARY_LOCALE = 'pt-BR'
 
@@ -114,10 +116,33 @@ export function migrateProjectBlock(block: unknown): unknown {
   }
 }
 
-export function migrateProjectBlocks(blocks: unknown): unknown[] {
+function toInputJsonValue(value: unknown): Prisma.InputJsonValue {
+  if (typeof value === 'string' || typeof value === 'number' || typeof value === 'boolean') {
+    return value
+  }
+
+  if (Array.isArray(value)) {
+    return value.map((item) => (item === null ? null : toInputJsonValue(item)))
+  }
+
+  if (value !== null && typeof value === 'object') {
+    const jsonObject: Record<string, Prisma.InputJsonValue | null> = {}
+
+    for (const [key, nested] of Object.entries(value)) {
+      if (nested === undefined) continue
+      jsonObject[key] = nested === null ? null : toInputJsonValue(nested)
+    }
+
+    return jsonObject
+  }
+
+  return {}
+}
+
+export function migrateProjectBlocks(blocks: unknown): Prisma.InputJsonValue {
   if (!Array.isArray(blocks)) return []
 
-  return blocks.map(migrateProjectBlock)
+  return toInputJsonValue(blocks.map(migrateProjectBlock))
 }
 
 export function projectBlocksNeedMigration(blocks: unknown): boolean {

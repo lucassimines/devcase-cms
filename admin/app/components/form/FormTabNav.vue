@@ -7,8 +7,8 @@
       :icon="tab.icon"
       :variant="getActiveTab === tab.value ? 'soft' : 'ghost'"
       :color="getActiveTab === tab.value ? 'primary' : 'neutral'"
-      :to="tab.to"
-      @click="activeTab = tab.value"
+      :to="{ query: { tab: tab.value } }"
+      @click="activateTab(tab.value)"
     />
   </nav>
 </template>
@@ -27,6 +27,10 @@ onUnmounted(() => {
 })
 
 const route = useRoute()
+
+function activateTab(tab: string) {
+  activeTab.value = tab
+}
 
 onMounted(() => {
   activeTab.value = route.query.tab?.toString() || props.tabs[0]?.value || ''

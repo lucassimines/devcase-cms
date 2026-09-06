@@ -4,7 +4,9 @@ import { PageQuery } from '@src/web/queries/page.query.js'
 export class PageService {
   static async menuPages() {
     const pages = await prisma.page.findMany({
-      where: PageQuery.published(),
+      where: {
+        ...PageQuery.published()
+      },
       orderBy: PageQuery.orderByPosition(),
       select: {
         id: true,

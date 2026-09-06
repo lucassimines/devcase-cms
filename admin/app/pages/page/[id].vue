@@ -25,6 +25,7 @@
 <script setup lang="ts">
 import * as z from 'zod'
 import PageHome from '~/components/page/PageHome.vue'
+import PagePriceFlip from '~/components/page/PagePriceFlip.vue'
 import PageTools from '~/components/page/PageTools.vue'
 import type { PageUpdate } from '~/types/page'
 import type { ModelInput } from '~/types/utils'
@@ -33,8 +34,14 @@ const route = useRoute()
 
 const componentContentMap: Record<string, Component> = {
   home: PageHome,
-  tools: PageTools
+  tools: PageTools,
+  priceflip: PagePriceFlip
 }
+
+const localizedItemSchema = z.object({
+  title: localizedStringSchema(),
+  description: localizedStringSchema()
+})
 
 function getContentSchema(code: string) {
   switch (code) {
@@ -51,6 +58,13 @@ function getContentSchema(code: string) {
         tools: z.object({
           title: localizedStringSchema(),
           cta_text: localizedStringSchema()
+        }),
+        priceflip: z.object({
+          badge: localizedStringSchema(),
+          title: localizedStringSchema(),
+          description: localizedStringSchema(),
+          cta_text: localizedStringSchema(),
+          image: localizedStringSchema()
         })
       })
 
@@ -60,6 +74,52 @@ function getContentSchema(code: string) {
           title: localizedStringSchema(),
           description: localizedStringSchema()
         })
+      })
+
+    case 'priceflip':
+      return z.object({
+        seo: z.object({
+          title: localizedStringSchema(),
+          description: localizedStringSchema(),
+          keywords: localizedStringSchema()
+        }),
+        hero: z.object({
+          badge: localizedStringSchema(),
+          title: localizedStringSchema(),
+          subtitle: localizedStringSchema(),
+          description: localizedStringSchema(),
+          image: localizedStringSchema()
+        }),
+        highlights: z.array(localizedItemSchema).default([]),
+        how_it_works: z.object({
+          title: localizedStringSchema(),
+          items: z.array(localizedItemSchema).default([])
+        }),
+        features: z.object({
+          title: localizedStringSchema(),
+          items: z.array(localizedItemSchema).default([])
+        }),
+        download: z.object({
+          title: localizedStringSchema(),
+          description: localizedStringSchema(),
+          ios_label: localizedStringSchema(),
+          android_label: localizedStringSchema(),
+          android_soon: localizedStringSchema(),
+          ios_url: z.string().default(''),
+          android_url: z.string().default('')
+        }),
+        faq: z.object({
+          title: localizedStringSchema(),
+          items: z
+            .array(
+              z.object({
+                question: localizedStringSchema(),
+                answer: localizedStringSchema()
+              })
+            )
+            .default([])
+        }),
+        privacy_label: localizedStringSchema()
       })
 
     default:

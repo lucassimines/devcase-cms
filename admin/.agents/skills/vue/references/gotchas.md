@@ -190,20 +190,21 @@ emit('update-user', { ...props.user, name: 'New' })
 const localUser = ref({ ...props.user })
 ```
 
-### Destructured Props Don't Update Watchers (pre-3.5)
+### Do Not Destructure Props
+
+This project disallows destructuring props even on Vue 3.5+ (reactive destructure). Always keep the `props` object.
 
 ```ts
-// WRONG (Vue < 3.5)
+// WRONG
 const { count } = defineProps<{ count: number }>()
-watch(count, () => {})  // Won't trigger!
+watch(() => count, () => {})
 
-// CORRECT - use getter
+const props = defineProps<{ count: number }>()
+const { count } = props
+
+// CORRECT
 const props = defineProps<{ count: number }>()
 watch(() => props.count, () => {})
-
-// Vue 3.5+ - destructuring works with reactive props
-const { count } = defineProps<{ count: number }>()
-watch(() => count, () => {})  // Works in 3.5+
 ```
 
 ## Lifecycle Hooks

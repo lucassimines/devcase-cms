@@ -1,0 +1,34 @@
+---
+description: Keep Vue props on the props object — do not destructure defineProps
+globs: "**/*.vue"
+alwaysApply: false
+---
+
+# Vue props: no destructuring
+
+Always assign `defineProps` to `props` and read fields as `props.foo`. Do not destructure props — including Vue 3.5+ reactive destructure — so script usage stays consistent.
+
+Keep `withDefaults(defineProps<...>(), { ... })` when the component already uses it.
+
+```ts
+// ❌ BAD — destructure defineProps (even Vue 3.5+ reactive destructure)
+const { label } = defineProps<{ label: string }>()
+
+// ❌ BAD — destructure the props object in script
+const props = defineProps<{ label: string }>()
+const { label } = props
+
+// ✅ GOOD — typed props, access via props
+const props = defineProps<{ label: string }>()
+watch(() => props.label, () => {})
+
+// ✅ GOOD — defaults
+const props = withDefaults(defineProps<{ color?: 'green' | 'gray' }>(), {
+  color: 'gray'
+})
+
+// ✅ GOOD — template-only (no script access)
+defineProps<{ title: string }>()
+```
+
+In templates, `{{ label }}` is fine. In `<script setup>`, always use `props.label`.
