@@ -25,6 +25,7 @@ export type EntityKey =
   | 'project'
   | 'technology'
   | 'solution'
+  | 'resume'
   | 'settings'
 
 /** Shape of $entities from the entities plugin. Use `typeof nuxtApp.$entities` at runtime if you need the exact object type. */

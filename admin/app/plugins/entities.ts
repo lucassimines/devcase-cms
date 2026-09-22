@@ -50,6 +50,12 @@ export default defineNuxtPlugin({
         icon: 'lucide:puzzle',
         label: i18n.t('entity.solution.name', 2)
       },
+      resume: {
+        model: 'resume',
+        path: '/resume',
+        icon: 'lucide:file-user',
+        label: i18n.t('entity.resume.name')
+      },
       settings: {
         model: 'settings',
         path: '/settings',

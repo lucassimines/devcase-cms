@@ -24,6 +24,7 @@ function resolveTags(path: string): WebCacheTag[] {
   }
   if (path.startsWith('/projects')) return [WEB_CACHE_TAGS.projects]
   if (path.startsWith('/pages')) return [WEB_CACHE_TAGS.pages]
+  if (path.startsWith('/resume')) return [WEB_CACHE_TAGS.resume]
   if (path.startsWith('/sitemap')) return [WEB_CACHE_TAGS.sitemap]
 
   return []
