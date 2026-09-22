@@ -34,11 +34,11 @@
       @submit="onSubmit"
     >
       <FormTab :title="$t('content')">
-        <FieldTextarea
+        <FieldEditor
           v-model="state.content"
           :label="$t('content')"
           name="content"
-          :rows="24"
+          content-type="markdown"
           translate
         />
       </FormTab>
@@ -77,10 +77,7 @@ watch(
   (value) => {
     if (!value) return
 
-    state.value.content = useDataNormalizer(
-      value.content,
-      structuredClone(RESUME_DEFAULT.content)
-    )
+    state.value.content = useDataNormalizer(value.content, structuredClone(RESUME_DEFAULT.content))
   },
   { immediate: true }
 )
