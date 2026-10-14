@@ -2,7 +2,8 @@
   "nav": {
     "home": "Home",
     "projects": "Projects",
-    "settings": "Settings"
+    "settings": "Settings",
+    "resume": "Resume"
   },
   "general": "General",
   "title": "Title",
@@ -148,6 +149,10 @@
       "name": "Solution | Solutions",
       "create": "Create Solution",
       "edit": "Edit Solution"
+    },
+    "resume": {
+      "name": "Resume",
+      "edit": "Edit Resume"
     },
     "settings": {
       "name": "Settings",

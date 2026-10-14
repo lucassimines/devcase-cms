@@ -2,15 +2,16 @@
   <UFormField :label="label" :name="fieldName">
     <NavTranslate v-model="locale" :translate="translate">
       <UEditor
+        :key="editorKey"
         v-slot="{ editor }"
         v-model="localizedModel"
-        content-type="html"
+        :content-type="contentType"
         :ui="{ root: 'bg-default rounded-md w-full', content: 'min-h-74 py-6' }"
         :placeholder="$t('editor.placeholder')"
       >
         <UEditorToolbar
           :editor="editor"
-          :items="items"
+          :items="toolbarItems"
           class="border-muted overflow-x-auto border-b p-2"
         >
           <template #link>
@@ -26,11 +27,16 @@
 import type { EditorToolbarItem } from '@nuxt/ui'
 import { DEFAULT_LOCALE, type LocaleCode } from '~/types/locale'
 
-const props = defineProps<{
+interface Props {
   label?: string
   name: string
   translate?: boolean
-}>()
+  contentType?: 'html' | 'markdown'
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  contentType: 'html'
+})
 
 const model = defineModel<string | Record<string, string>>({ required: true })
 
@@ -41,6 +47,8 @@ const { defineLocalizedModel, normalizeFieldName } = useLocalizedModel(props.tra
 const fieldName = normalizeFieldName(props.name)
 
 const localizedModel = defineLocalizedModel(model)
+
+const editorKey = computed(() => (props.contentType === 'markdown' ? locale.value : 'html'))
 
 const items = [
   [
@@ -109,4 +117,14 @@ const items = [
     }
   ]
 ] satisfies EditorToolbarItem[][]
+
+const toolbarItems = computed(() => {
+  if (props.contentType !== 'markdown') {
+    return items
+  }
+
+  return items.map((group) =>
+    group.filter((item) => !('mark' in item && item.mark === 'underline'))
+  )
+})
 </script>

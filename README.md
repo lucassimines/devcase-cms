@@ -78,6 +78,7 @@ Base path: `/api/v1` (configurable via `API_BASE_PATH`).
 | GET    | `/bootstrap`          | Site menu / bootstrap data |
 | GET    | `/pages/:slug`        | Page by slug             |
 | GET    | `/projects/:slug`     | Project by slug          |
+| GET    | `/resume`             | Resume markdown (en-US and pt-BR) |
 | GET    | `/sitemap`            | Sitemap entries          |
 | GET    | `/health`             | Health check             |
 | GET    | `/static/images/*`    | Uploaded media           |
@@ -89,6 +90,7 @@ Base path: `/api/v1` (configurable via `API_BASE_PATH`).
 | `/auth`             | Login, register, token refresh         |
 | `/admin/page`       | Pages CRUD                             |
 | `/admin/project`    | Projects CRUD                          |
+| `/admin/resume`     | Resume document                        |
 | `/admin/solution`   | Solutions CRUD                         |
 | `/admin/technology` | Technologies CRUD                    |
 | `/admin/file`       | Media uploads                          |

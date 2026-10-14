@@ -20,6 +20,7 @@ const MODEL_INVALIDATION_GROUP = {
   Technology: 'projects',
   Solution: 'projects',
   Page: 'pages',
+  Resume: 'resume',
   Setting: 'bootstrap'
 } as const satisfies Partial<Record<Prisma.ModelName, keyof typeof WebCacheInvalidation>>
 

@@ -3,6 +3,7 @@ export const WEB_CACHE_TAGS = {
   posts: 'posts',
   projects: 'projects',
   pages: 'pages',
+  resume: 'resume',
   sitemap: 'sitemap'
 } as const
 

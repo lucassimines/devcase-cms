@@ -7,6 +7,7 @@ import page from './page.route.js'
 import post from './post.route.js'
 import postCategory from './post-category.route.js'
 import project from './project.route.js'
+import resume from './resume.route.js'
 import sitemap from './sitemap.route.js'
 
 const router = Router()
@@ -20,6 +21,7 @@ const routes = [
   ['posts', post],
   ['post-categories', postCategory],
   ['projects', project],
+  ['resume', resume],
   ['sitemap', sitemap]
 ] as const
 
