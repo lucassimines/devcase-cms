@@ -19,7 +19,7 @@ dev:
 
 # Run development server for server directory
 dev-server:
-	@cd $(SERVER_DIR) && && npm run dev
+	@cd $(SERVER_DIR) && npm run dev
 
 # Run development server for admin directory
 dev-admin:
